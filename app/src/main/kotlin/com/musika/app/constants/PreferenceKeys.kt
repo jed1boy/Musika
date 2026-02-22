@@ -12,6 +12,15 @@ val DynamicThemeKey = booleanPreferencesKey("dynamicTheme")
 val MaterialYouKey = booleanPreferencesKey("materialYou")
 val DarkModeKey = stringPreferencesKey("darkMode")
 val PureBlackKey = booleanPreferencesKey("pureBlack")
+
+enum class ComponentAccentMode {
+    DEFAULT,
+    CUSTOM,
+}
+
+val ComponentAccentModeKey = stringPreferencesKey("componentAccentMode")
+val ComponentAccentColorKey = intPreferencesKey("componentAccentColor")
+
 val DefaultOpenTabKey = stringPreferencesKey("defaultOpenTab")
 val SlimNavBarKey = booleanPreferencesKey("slimNavBar")
 val GridItemsSizeKey = stringPreferencesKey("gridItemSize")

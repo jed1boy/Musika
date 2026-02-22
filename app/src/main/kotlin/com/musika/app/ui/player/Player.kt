@@ -242,8 +242,8 @@ fun BottomSheetPlayer(
         playerConnection.service.addToQueueAutomix(automix[0], 0)
     }
 
-    val defaultGradientColors = listOf(Color(0xFF1C1B1F), Color(0xFF2B2930))
-    val fallbackColor = Color(0xFF1C1B1F).toArgb()
+val defaultGradientColors = listOf(MaterialTheme.colorScheme.surfaceContainer, MaterialTheme.colorScheme.surfaceContainerHigh)
+    val fallbackColor = MaterialTheme.colorScheme.surfaceContainer.toArgb()
 
     LaunchedEffect(mediaMetadata?.id, playerBackground) {
         if (playerBackground == PlayerBackgroundStyle.GRADIENT) {
@@ -289,7 +289,7 @@ fun BottomSheetPlayer(
 
     val TextBackgroundColor = Color.White
 
-    val icBackgroundColor = Color(0xFF1C1B1F)
+    val icBackgroundColor = MaterialTheme.colorScheme.surfaceContainer
 
     val (textButtonColor, iconButtonColor) = when (playerButtonsStyle) {
         PlayerButtonsStyle.DEFAULT -> Pair(TextBackgroundColor, icBackgroundColor)

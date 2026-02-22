@@ -130,11 +130,11 @@ fun SupporterScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Emagik Card
+// Emagik Card
             Card(
                 modifier = Modifier.weight(1f),
                 colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFF0d0d0d)
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer
                 ),
                 shape = RoundedCornerShape(20.dp)
             ) {
@@ -197,11 +197,11 @@ fun SupporterScreen(
                 }
             }
 
-            // AdamPoy Card
+// AdamPoy Card
             Card(
                 modifier = Modifier.weight(1f),
                 colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFF0d0d0d)
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer
                 ),
                 shape = RoundedCornerShape(20.dp)
             ) {
@@ -282,11 +282,11 @@ fun SupporterScreen(
 
         Spacer(Modifier.height(12.dp))
 
-        // Support Options Card
+// Support Options Card
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
-                containerColor = Color(0xFF0d0d0d)
+                containerColor = MaterialTheme.colorScheme.surfaceContainer
             ),
             shape = RoundedCornerShape(20.dp)
         ) {
@@ -338,11 +338,11 @@ fun SupporterScreen(
 
         Spacer(Modifier.height(24.dp))
 
-        // Thank You Message Card
+// Thank You Message Card
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
-                containerColor = Color(0xFF0d0d0d)
+                containerColor = MaterialTheme.colorScheme.surfaceContainer
             ),
             shape = RoundedCornerShape(20.dp)
         ) {

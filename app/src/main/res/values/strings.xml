@@ -256,6 +256,10 @@
     <string name="dark_mode_auto">Device default</string>
     <string name="dark_theme_follow_system">Follow system</string>
     <string name="pure_black">Pure black</string>
+    <string name="component_accent_mode">Component accent</string>
+    <string name="accent_default">Default</string>
+    <string name="accent_custom">Custom color</string>
+    <string name="custom_accent_color">Custom accent color</string>
     <string name="customize_navigation_tabs">Customize navigation tabs</string>
     <string name="player">Player</string>
     <string name="player_text_alignment">Player text alignment</string>

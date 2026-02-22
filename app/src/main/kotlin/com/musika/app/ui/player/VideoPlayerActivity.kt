@@ -614,8 +614,8 @@ class VideoPlayerActivity : ComponentActivity() {
                             .align(Alignment.Center)
                             .widthIn(max = 300.dp),
                         shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFF1C1C1E)
+colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainer
                         )
                     ) {
                         Column(

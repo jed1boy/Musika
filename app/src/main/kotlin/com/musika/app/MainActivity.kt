@@ -463,7 +463,7 @@ class MainActivity : ComponentActivity() {
             val enableMaterialYou by rememberPreference(MaterialYouKey, defaultValue = false)
             
             // Read dark mode preference
-            val darkModePreference by rememberEnumPreference(DarkModeKey, defaultValue = DarkMode.ON)
+            val darkModePreference by rememberEnumPreference(DarkModeKey, defaultValue = DarkMode.AUTO)
             val useDarkTheme = when (darkModePreference) {
                 DarkMode.ON -> true
                 DarkMode.OFF -> false

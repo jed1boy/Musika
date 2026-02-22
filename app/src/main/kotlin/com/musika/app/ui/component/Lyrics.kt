@@ -569,7 +569,7 @@ fun Lyrics(
     var showImageCustomizationDialog by remember { mutableStateOf(false) }
     var shareDialogData by remember { mutableStateOf<Triple<String, String, String>?>(null) }
 
-    var showColorPickerDialog by remember { mutableStateOf(false) }
+var showColorPickerDialog by remember { mutableStateOf(false) }
     var previewBackgroundColor by remember { mutableStateOf(Color(0xFF242424)) }
     var previewTextColor by remember { mutableStateOf(Color.White) }
     var previewSecondaryTextColor by remember { mutableStateOf(Color.White.copy(alpha = 0.7f)) }

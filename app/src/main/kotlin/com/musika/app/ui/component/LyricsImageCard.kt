@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -132,9 +133,9 @@ fun LyricsImageCard(
     val padding = 28.dp
     val coverArtSize = 64.dp
 
-    val backgroundGradient = backgroundColor ?: if (darkBackground) Color(0xFF121212) else Color(0xFFF5F5F5)
-    val mainTextColor = textColor ?: if (darkBackground) Color.White else Color.Black
-    val secondaryColor = secondaryTextColor ?: if (darkBackground) Color.White.copy(alpha = 0.7f) else Color.Black.copy(alpha = 0.7f)
+val backgroundGradient = backgroundColor ?: MaterialTheme.colorScheme.surface
+    val mainTextColor = textColor ?: MaterialTheme.colorScheme.onSurface
+    val secondaryColor = secondaryTextColor ?: MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
 
     val painter = rememberAsyncImagePainter(
         ImageRequest.Builder(context)
