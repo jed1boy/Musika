@@ -174,6 +174,9 @@ import com.musika.app.constants.NavigationBarAnimationSpec
 import com.musika.app.constants.NavigationBarHeight
 import com.musika.app.constants.PauseSearchHistoryKey
 import com.musika.app.constants.PureBlackKey
+import com.musika.app.constants.ComponentAccentModeKey
+import com.musika.app.constants.ComponentAccentColorKey
+import com.musika.app.constants.ComponentAccentMode
 import com.musika.app.constants.SYSTEM_DEFAULT
 import com.musika.app.constants.SearchSource
 import com.musika.app.constants.SearchSourceKey
@@ -475,9 +478,15 @@ class MainActivity : ComponentActivity() {
             }
 
             val pureBlackEnabled by rememberPreference(PureBlackKey, defaultValue = false)
-            val pureBlack = remember(pureBlackEnabled, useDarkTheme) {
+val pureBlack = remember(pureBlackEnabled, useDarkTheme) {
                 pureBlackEnabled && useDarkTheme 
             }
+
+            val componentAccentMode by rememberEnumPreference(ComponentAccentModeKey, defaultValue = ComponentAccentMode.DEFAULT)
+            val componentAccentColorInt by rememberPreference(ComponentAccentColorKey, defaultValue = 0xFFFFFFFF.toInt())
+            val componentAccentColor = if (componentAccentMode == ComponentAccentMode.CUSTOM) {
+                Color(componentAccentColorInt)
+            } else null
 
             var themeColor by rememberSaveable(stateSaver = ColorSaver) {
                 mutableStateOf(DefaultThemeColor)
@@ -517,11 +526,12 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            MusikaTheme(
+MusikaTheme(
                 darkTheme = useDarkTheme,
                 pureBlack = pureBlack,
                 themeColor = themeColor,
                 isDynamicColor = enableMaterialYou,
+                componentAccentColor = componentAccentColor,
             ) {
                 BoxWithConstraints(
                         modifier =
