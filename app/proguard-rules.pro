@@ -95,11 +95,11 @@
 
 ## Queue Persistence Rules
 # Keep queue-related classes to prevent serialization issues in release builds
--keep class iad1tya.echo.music.models.PersistQueue { *; }
--keep class iad1tya.echo.music.models.PersistPlayerState { *; }
--keep class iad1tya.echo.music.models.QueueData { *; }
--keep class iad1tya.echo.music.models.QueueType { *; }
--keep class iad1tya.echo.music.playback.queues.** { *; }
+-keep class com.musika.app.models.PersistQueue { *; }
+-keep class com.musika.app.models.PersistPlayerState { *; }
+-keep class com.musika.app.models.QueueData { *; }
+-keep class com.musika.app.models.QueueType { *; }
+-keep class com.musika.app.playback.queues.** { *; }
 
 # Keep serialization methods for queue persistence
 -keepclassmembers class * implements java.io.Serializable {
@@ -207,12 +207,12 @@
 -dontwarn okio.**
 
 ## Keep App Classes
--keep class iad1tya.echo.music.** { *; }
--keep interface iad1tya.echo.music.** { *; }
+-keep class com.musika.app.** { *; }
+-keep interface com.musika.app.** { *; }
 
 ## Keep all model classes
--keep class iad1tya.echo.music.models.** { *; }
--keep class iad1tya.echo.music.db.entities.** { *; }
+-keep class com.musika.app.models.** { *; }
+-keep class com.musika.app.db.entities.** { *; }
 
 ## Keep service classes - Critical for preventing service crashes
 -keep class * extends android.app.Service {
@@ -235,7 +235,7 @@
 }
 
 ## Keep MusicService specifically to prevent crashes
--keep class iad1tya.echo.music.playback.MusicService {
+-keep class com.musika.app.playback.MusicService {
     <init>();
     *** player;
     *** mediaSession;
@@ -250,7 +250,7 @@
 }
 
 ## Keep ExoDownloadService
--keep class iad1tya.echo.music.playback.ExoDownloadService {
+-keep class com.musika.app.playback.ExoDownloadService {
     <init>();
     *** onCreate();
     *** onDestroy();
@@ -269,15 +269,15 @@
 -dontwarn org.json.**
 
 ## Innertube Rules
--keep class com.echo.innertube.** { *; }
--keep interface com.echo.innertube.** { *; }
--dontwarn com.echo.innertube.**
+-keep class com.musika.innertube.** { *; }
+-keep interface com.musika.innertube.** { *; }
+-dontwarn com.musika.innertube.**
 
 ## Shazam Signature Rules
 -keep class com.alexmercerind.audire.native.** { *; }
 -keep interface com.alexmercerind.audire.native.** { *; }
 
 ## KuGou Rules
--keep class com.echo.kugou.** { *; }
--keep interface com.echo.kugou.** { *; }
--dontwarn com.echo.kugou.**
+-keep class com.musika.kugou.** { *; }
+-keep interface com.musika.kugou.** { *; }
+-dontwarn com.musika.kugou.**
