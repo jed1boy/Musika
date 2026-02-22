@@ -1,5 +1,7 @@
 ﻿package com.musika.app.ui.component
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -355,4 +358,92 @@ fun PreferenceGroupTitle(
         color = MaterialTheme.colorScheme.primary,
         modifier = modifier.padding(16.dp),
     )
+}
+
+@Composable
+fun ColorPickerPreference(
+    title: @Composable () -> Unit,
+    selectedColor: Color?,
+    onColorSelected: (Color?) -> Unit,
+    modifier: Modifier = Modifier,
+    icon: (@Composable () -> Unit)? = null,
+) {
+    val presets = listOf(
+        null to "Default",
+        Color.White to "White",
+        Color(0xFFED5564) to "Red",
+        Color(0xFF42A5F5) to "Blue",
+        Color(0xFF66BB6A) to "Green",
+        Color(0xFFFFA726) to "Orange",
+        Color(0xFFAB47BC) to "Purple",
+        Color(0xFF26A69A) to "Teal",
+        Color(0xFFEF5350) to "Coral",
+    )
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            if (icon != null) {
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .padding(horizontal = 4.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Box(modifier = Modifier.size(24.dp)) {
+                        icon()
+                    }
+                }
+                Spacer(Modifier.width(12.dp))
+            }
+            title()
+        }
+
+        Spacer(Modifier.height(12.dp))
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            presets.forEach { preset ->
+                val color = preset.first
+                Box(
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .then(
+                            if (color == null) {
+                                Modifier.background(MaterialTheme.colorScheme.surfaceVariant)
+                            } else {
+                                Modifier.background(color)
+                            }
+                        )
+                        .border(
+                            width = if (selectedColor == color) 3.dp else 0.dp,
+                            color = if (selectedColor == color) 
+                                MaterialTheme.colorScheme.primary 
+                            else 
+                                Color.Transparent,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .clickable { onColorSelected(color) }
+                ) {
+                    if (color == null) {
+                        Text(
+                            text = "A",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+                }
+            }
+        }
+    }
 }

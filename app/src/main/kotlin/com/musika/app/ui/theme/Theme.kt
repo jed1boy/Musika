@@ -106,15 +106,25 @@ fun MusikaTheme(
     pureBlack: Boolean = false,
     themeColor: Color = DefaultThemeColor,
     isDynamicColor: Boolean = false,
+    componentAccentColor: Color? = null,
     content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current
-    val colorScheme = when {
+    val baseColorScheme = when {
         isDynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
         else -> if (darkTheme) DarkColorScheme else LightColorScheme
     }
+
+    val colorScheme = componentAccentColor?.let { accent ->
+        baseColorScheme.copy(
+            primary = accent,
+            onPrimary = if (accent.luminance() > 0.5f) Color.Black else Color.White,
+            primaryContainer = accent.copy(alpha = 0.15f),
+            onPrimaryContainer = accent
+        )
+    } ?: baseColorScheme
 
     MaterialTheme(
         colorScheme = colorScheme.pureBlack(pureBlack),

@@ -45,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.asComposeRenderEffect
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
@@ -78,6 +79,10 @@ import com.musika.app.constants.PlayerButtonsStyle
 import com.musika.app.constants.PlayerButtonsStyleKey
 import com.musika.app.constants.SliderStyle
 import com.musika.app.constants.SliderStyleKey
+import com.musika.app.constants.ComponentAccentModeKey
+import com.musika.app.constants.ComponentAccentColorKey
+import com.musika.app.constants.ComponentAccentMode
+import com.musika.app.ui.component.ColorPickerPreference
 import com.musika.app.constants.SlimNavBarKey
 import com.musika.app.constants.ShowLikedPlaylistKey
 import com.musika.app.constants.ShowDownloadedPlaylistKey
@@ -109,9 +114,9 @@ fun AppearanceSettings(
     scrollBehavior: TopAppBarScrollBehavior,
 ) {
     // Dark mode preference
-    val (darkMode, onDarkModeChange) = rememberEnumPreference(
+val (darkMode, onDarkModeChange) = rememberEnumPreference(
         DarkModeKey,
-        defaultValue = DarkMode.ON
+        defaultValue = DarkMode.AUTO
     )
     
     val (materialYou, onMaterialYouChange) = rememberPreference(
@@ -132,6 +137,18 @@ fun AppearanceSettings(
     // Pure black removed - handled by theme
     
     val (pureBlack, onPureBlackChange) = rememberPreference(PureBlackKey, defaultValue = false)
+
+    val (componentAccentMode, onComponentAccentModeChange) = rememberEnumPreference(
+        ComponentAccentModeKey,
+        defaultValue = ComponentAccentMode.DEFAULT
+    )
+    val (componentAccentColorInt, onComponentAccentColorChange) = rememberPreference(
+        ComponentAccentColorKey,
+        defaultValue = 0xFFFFFFFF.toInt()
+    )
+    val componentAccentColor = if (componentAccentMode == ComponentAccentMode.CUSTOM) {
+        Color(componentAccentColorInt)
+    } else null
 
     val (defaultOpenTab, onDefaultOpenTabChange) = rememberEnumPreference(
         DefaultOpenTabKey,
@@ -388,12 +405,42 @@ fun AppearanceSettings(
             onCheckedChange = onMaterialYouChange,
         )
 
-        AnimatedVisibility(visible = materialYou) {
+AnimatedVisibility(visible = materialYou) {
             SwitchPreference(
                 title = { Text(stringResource(R.string.pure_black)) },
                 icon = { Icon(painterResource(R.drawable.contrast), null) },
                 checked = pureBlack,
                 onCheckedChange = onPureBlackChange,
+            )
+        }
+
+        EnumListPreference(
+            title = { Text(stringResource(R.string.component_accent_mode)) },
+            icon = { Icon(painterResource(R.drawable.palette), null) },
+            selectedValue = componentAccentMode,
+            onValueSelected = onComponentAccentModeChange,
+            valueText = {
+                when (it) {
+                    ComponentAccentMode.DEFAULT -> stringResource(R.string.accent_default)
+                    ComponentAccentMode.CUSTOM -> stringResource(R.string.accent_custom)
+                }
+            },
+        )
+
+        AnimatedVisibility(visible = componentAccentMode == ComponentAccentMode.CUSTOM) {
+            ColorPickerPreference(
+                title = { Text(stringResource(R.string.custom_accent_color)) },
+                icon = {
+                    Icon(
+                        painter = painterResource(R.drawable.palette),
+                        contentDescription = null,
+                        tint = componentAccentColor ?: MaterialTheme.colorScheme.primary
+                    )
+                },
+                selectedColor = componentAccentColor,
+                onColorSelected = { color ->
+                    onComponentAccentColorChange(color?.toArgb() ?: 0xFFFFFFFF.toInt())
+                },
             )
         }
 
