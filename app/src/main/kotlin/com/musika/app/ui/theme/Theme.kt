@@ -118,11 +118,22 @@ fun MusikaTheme(
     }
 
     val colorScheme = componentAccentColor?.let { accent ->
+        val onAccent = if (accent.luminance() > 0.5f) Color.Black else Color.White
         baseColorScheme.copy(
             primary = accent,
-            onPrimary = if (accent.luminance() > 0.5f) Color.Black else Color.White,
+            onPrimary = onAccent,
             primaryContainer = accent.copy(alpha = 0.15f),
-            onPrimaryContainer = accent
+            onPrimaryContainer = accent,
+            secondary = accent,
+            onSecondary = onAccent,
+            secondaryContainer = accent.copy(alpha = 0.15f),
+            onSecondaryContainer = accent,
+            tertiary = accent,
+            onTertiary = onAccent,
+            tertiaryContainer = accent.copy(alpha = 0.15f),
+            onTertiaryContainer = accent,
+            surfaceTint = accent,
+            inversePrimary = accent
         )
     } ?: baseColorScheme
 

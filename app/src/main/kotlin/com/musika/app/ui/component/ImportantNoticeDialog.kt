@@ -27,7 +27,7 @@ fun ImportantNoticeDialog(
     onDismiss: () -> Unit
 ) {
     val context = LocalContext.current
-    AlertDialog(
+AlertDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
@@ -40,11 +40,7 @@ fun ImportantNoticeDialog(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "It's hard to maintain this kind of app, and due to uncertain reasons, the Discord server has been deleted.",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Text(
-                    text = "Here is the new Discord server:",
+                    text = "Thank you for using Musika! Your support helps keep this app alive and improving.",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -57,17 +53,7 @@ fun ImportantNoticeDialog(
             ) {
                 Button(
                     onClick = {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://discord.gg/EcfV3AxH5c"))
-                        context.startActivity(intent)
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Join Discord")
-                }
-                
-                Button(
-                    onClick = {
-                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://support.maskk.me/"))
+                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://buymeacoffee.com/jzee"))
                          context.startActivity(intent)
                     },
                     modifier = Modifier.fillMaxWidth()

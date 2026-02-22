@@ -298,8 +298,8 @@ SocialLinkItem(
             shape = RoundedCornerShape(20.dp)
         ) {
             Column(modifier = Modifier.padding(4.dp)) {
-                BuyMeCoffeeItem(
-                    onClick = { uriHandler.openUri("https://www.buymeacoffee.com/jed1boy") }
+BuyMeCoffeeItem(
+                    onClick = { uriHandler.openUri("https://buymeacoffee.com/jzee") }
                 )
                 
                 HorizontalDivider(
