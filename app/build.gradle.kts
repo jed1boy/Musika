@@ -6,20 +6,18 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.compose.compiler)
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
 }
 
 android {
-    namespace = "iad1tya.echo.music"
+    namespace = "com.musika.app"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "iad1tya.echo.music"
+        applicationId = "com.musika.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 336
-        versionName = "3.3.6"
+        versionCode = 1
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
