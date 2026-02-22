@@ -80,6 +80,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.CompositionLocalProvider
@@ -1338,12 +1339,13 @@ MusikaTheme(
                                                     }
                                                     .background(if (pureBlack) Color.Black else MaterialTheme.colorScheme.surfaceContainer)
                                             ) {
-                                                NavigationBar(
+NavigationBar(
                                                     modifier = Modifier
                                                         .align(Alignment.BottomCenter)
                                                         .height(bottomInset + getNavPadding()),
                                                     containerColor = Color.Transparent,
-                                                    contentColor = if (pureBlack) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
+                                                    contentColor = if (pureBlack) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
+                                                    tonalElevation = 0.dp
                                                 ) {
                                                     navigationItems.fastForEach { screen ->
                                                         val isSelected = when (screen) {
@@ -1366,7 +1368,7 @@ MusikaTheme(
                                                             else -> navBackStackEntry?.destination?.hierarchy?.any { it.route == screen.route } == true
                                                         }
 
-                                                        NavigationBarItem(
+NavigationBarItem(
                                                             selected = isSelected,
                                                             icon = {
                                                                 if (screen.route == Screens.Settings.route) {
@@ -1400,6 +1402,11 @@ MusikaTheme(
                                                                     )
                                                                 }
                                                             },
+                                                            colors = NavigationBarItemDefaults.colors(
+                                                                selectedIconColor = MaterialTheme.colorScheme.primary,
+                                                                selectedTextColor = MaterialTheme.colorScheme.primary,
+                                                                indicatorColor = MaterialTheme.colorScheme.primaryContainer
+                                                            ),
                                                             onClick = {
                                                                 if (isSelected) {
                                                                     // If already on the start destination of the tab, scroll to top
