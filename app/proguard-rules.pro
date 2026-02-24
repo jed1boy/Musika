@@ -281,3 +281,6 @@
 -keep class com.musika.kugou.** { *; }
 -keep interface com.musika.kugou.** { *; }
 -dontwarn com.musika.kugou.**
+
+## Jsoup optional re2j dependency
+-dontwarn com.google.re2j.**
