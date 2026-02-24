@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlin.coroutines.coroutineContext
+import timber.log.Timber
 import kotlin.math.max
 
 class AudioRecorder(private val scope: CoroutineScope) {
@@ -81,7 +82,7 @@ class AudioRecorder(private val scope: CoroutineScope) {
                          val shorts = ShortArray(read / 2)
                          java.nio.ByteBuffer.wrap(buffer, 0, read).order(java.nio.ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(shorts)
                          val maxAmp = shorts.maxOrNull() ?: 0
-                         android.util.Log.d("Musika", "AudioRecorder: Read $read bytes, Max Amp: $maxAmp")
+                         Timber.d("AudioRecorder: Read $read bytes, Max Amp: $maxAmp")
                     }
 
                     val actualRead = buffer.take(read)

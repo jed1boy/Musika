@@ -1,4 +1,4 @@
-﻿package com.musika.app.utils
+package com.musika.app.utils
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -127,7 +127,11 @@ class WiFiConnectivityObserver(private val context: Context) {
             return
         }
         
-        val scanResults = wifiManager.scanResults ?: emptyList()
+        val scanResults = try {
+            wifiManager.scanResults ?: emptyList()
+        } catch (_: SecurityException) {
+            emptyList()
+        }
         _availableNetworks.value = scanResults
     }
 }

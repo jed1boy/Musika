@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.screens.settings
+package com.musika.app.ui.screens.settings
 
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -79,6 +79,7 @@ fun BackupAndRestore(
         mutableIntStateOf(0)
     }
     val context = LocalContext.current
+    val appName = stringResource(R.string.app_name)
     val backupLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")) { uri ->
             if (uri != null) {
@@ -133,7 +134,7 @@ fun BackupAndRestore(
             onClick = {
                 val formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
                 backupLauncher.launch(
-                    "${context.getString(R.string.app_name)}_${
+                    "${appName}_${
                         LocalDateTime.now().format(formatter)
                     }.backup"
                 )

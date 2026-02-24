@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.component
+package com.musika.app.ui.component
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -48,6 +48,8 @@ fun CreatePlaylistDialog(
 
     val innerTubeCookie by rememberPreference(InnerTubeCookieKey, "")
     val isSignedIn = innerTubeCookie.isNotEmpty()
+    val notLoggedInText = stringResource(R.string.not_logged_in_youtube)
+    val syncDisabledText = stringResource(R.string.sync_disabled)
 
     TextFieldDialog(
         icon = { Icon(painter = painterResource(R.drawable.add), contentDescription = null) },
@@ -102,13 +104,13 @@ fun CreatePlaylistDialog(
                                 if (!isSignedIn && !syncedPlaylist) {
                                     Toast.makeText(
                                         context,
-                                        context.getString(R.string.not_logged_in_youtube),
+                                        notLoggedInText,
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 } else if (!isYtmSyncEnabled) {
                                     Toast.makeText(
                                         context,
-                                        context.getString(R.string.sync_disabled),
+                                        syncDisabledText,
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 } else {

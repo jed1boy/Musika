@@ -720,7 +720,7 @@ val defaultGradientColors = listOf(MaterialTheme.colorScheme.surfaceContainer, M
                                 null
                             }
                             val devices = try {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && audioManager != null) {
+                                if (audioManager != null) {
                                     audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS).toList()
                                 } else {
                                     emptyList()
@@ -795,7 +795,7 @@ val defaultGradientColors = listOf(MaterialTheme.colorScheme.surfaceContainer, M
                             null
                         }
                         val devices = try {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && audioManager != null) {
+                            if (audioManager != null) {
                                 audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS).toList()
                             } else {
                                 emptyList()
@@ -1467,7 +1467,7 @@ val defaultGradientColors = listOf(MaterialTheme.colorScheme.surfaceContainer, M
             
             // Get available audio devices
             val devices = try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && audioManager != null) {
+                if (audioManager != null) {
                     audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS).toList()
                 } else {
                     emptyList()
@@ -1478,7 +1478,7 @@ val defaultGradientColors = listOf(MaterialTheme.colorScheme.surfaceContainer, M
             
             // Get currently active audio device
             val activeDevices = try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && audioManager != null) {
+                if (audioManager != null) {
                     audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS).filter { device ->
                         // Check if this device is currently being used for music playback
                         try {
@@ -1676,8 +1676,7 @@ val defaultGradientColors = listOf(MaterialTheme.colorScheme.surfaceContainer, M
                                     .background(if (isPlayingOnWiredHeadset) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f) else Color.Transparent)
                                     .clickable {
                                         try {
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && audioManager != null) {
-                                                // Disable speaker and bluetooth
+                                            if (audioManager != null) {
                                                 audioManager.isSpeakerphoneOn = false
                                                 if (audioManager.isBluetoothScoOn) {
                                                     audioManager.stopBluetoothSco()
@@ -1740,8 +1739,7 @@ val defaultGradientColors = listOf(MaterialTheme.colorScheme.surfaceContainer, M
                                     .background(if (isPlayingOnUsb) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f) else Color.Transparent)
                                     .clickable {
                                         try {
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && audioManager != null) {
-                                                // Disable speaker and bluetooth
+                                            if (audioManager != null) {
                                                 audioManager.isSpeakerphoneOn = false
                                                 if (audioManager.isBluetoothScoOn) {
                                                     audioManager.stopBluetoothSco()
@@ -1803,11 +1801,7 @@ val defaultGradientColors = listOf(MaterialTheme.colorScheme.surfaceContainer, M
                             }
                             
                             val btDeviceName = try {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                    btDevice?.productName?.toString() ?: "Bluetooth Device"
-                                } else {
-                                    "Bluetooth Device"
-                                }
+                                btDevice?.productName?.toString() ?: "Bluetooth Device"
                             } catch (e: Exception) {
                                 "Bluetooth Device"
                             }
@@ -2055,7 +2049,7 @@ val defaultGradientColors = listOf(MaterialTheme.colorScheme.surfaceContainer, M
                                 override fun onRouteAdded(router: MediaRouter, route: MediaRouter.RouteInfo) {
                                     discoveredRoutes = router.routes.filter { r ->
                                         (selector?.let { r.matchesSelector(it) } == true && 
-                                        !r.isDefaultOrBluetooth &&
+                                        !r.isDefault &&
                                         r.isEnabled) || 
                                         r.description?.contains("Cast", ignoreCase = true) == true ||
                                         r.name.contains("Cast", ignoreCase = true)
@@ -2066,7 +2060,7 @@ val defaultGradientColors = listOf(MaterialTheme.colorScheme.surfaceContainer, M
                                 override fun onRouteRemoved(router: MediaRouter, route: MediaRouter.RouteInfo) {
                                     discoveredRoutes = router.routes.filter { r ->
                                         (selector?.let { r.matchesSelector(it) } == true && 
-                                        !r.isDefaultOrBluetooth &&
+                                        !r.isDefault &&
                                         r.isEnabled) || 
                                         r.description?.contains("Cast", ignoreCase = true) == true ||
                                         r.name.contains("Cast", ignoreCase = true)
@@ -2076,7 +2070,7 @@ val defaultGradientColors = listOf(MaterialTheme.colorScheme.surfaceContainer, M
                                 override fun onRouteChanged(router: MediaRouter, route: MediaRouter.RouteInfo) {
                                     discoveredRoutes = router.routes.filter { r ->
                                         (selector?.let { r.matchesSelector(it) } == true && 
-                                        !r.isDefaultOrBluetooth &&
+                                        !r.isDefault &&
                                         r.isEnabled) || 
                                         r.description?.contains("Cast", ignoreCase = true) == true ||
                                         r.name.contains("Cast", ignoreCase = true)
@@ -2090,7 +2084,7 @@ val defaultGradientColors = listOf(MaterialTheme.colorScheme.surfaceContainer, M
                                     // Initial update
                                     discoveredRoutes = mediaRouter.routes.filter { r ->
                                         (r.matchesSelector(selector) && 
-                                        !r.isDefaultOrBluetooth &&
+                                        !r.isDefault &&
                                         r.isEnabled) || 
                                         r.description?.contains("Cast", ignoreCase = true) == true ||
                                         r.name.contains("Cast", ignoreCase = true)

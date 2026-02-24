@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center">
@@ -21,7 +22,7 @@
             android:layout_centerVertical="true"
             android:src="@drawable/musika_logo"
             android:scaleType="centerCrop"
-            android:contentDescription="Album Art"
+            android:contentDescription="@string/album_cover_desc"
             android:clipToOutline="true"
             android:background="@drawable/widget_album_art_background"/>
 
@@ -42,7 +43,7 @@
                 android:id="@+id/widget_song_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="No song playing"
+                android:text="@string/no_song_playing"
                 android:textColor="@android:color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -55,7 +56,7 @@
                 android:id="@+id/widget_artist_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Unknown artist"
+                android:text="@string/unknown_artist"
                 android:textColor="#B3FFFFFF"
                 android:textSize="14sp"
                 android:maxLines="1"
@@ -80,10 +81,10 @@
                 android:layout_height="40dp"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/skip_previous"
-                android:contentDescription="Previous"
+                android:contentDescription="@string/previous"
                 android:scaleType="centerInside"
                 android:padding="8dp"
-                android:tint="@android:color/white" />
+                app:tint="@android:color/white" />
 
             <ImageButton
                 android:id="@+id/widget_play_pause"
@@ -91,10 +92,10 @@
                 android:layout_height="48dp"
                 android:background="@drawable/widget_play_button_bg"
                 android:src="@drawable/play"
-                android:contentDescription="Play/Pause"
+                android:contentDescription="@string/play_pause"
                 android:scaleType="centerInside"
                 android:padding="12dp"
-                android:tint="@android:color/black"
+                app:tint="@android:color/black"
                 android:layout_marginHorizontal="4dp" />
 
             <ImageButton
@@ -103,10 +104,10 @@
                 android:layout_height="40dp"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/skip_next"
-                android:contentDescription="Next"
+                android:contentDescription="@string/next"
                 android:scaleType="centerInside"
                 android:padding="8dp"
-                android:tint="@android:color/white" />
+                app:tint="@android:color/white" />
         </LinearLayout>
 
     </RelativeLayout>

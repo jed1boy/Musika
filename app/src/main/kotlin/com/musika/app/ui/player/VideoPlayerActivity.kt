@@ -1,5 +1,6 @@
-﻿package com.musika.app.ui.player
+package com.musika.app.ui.player
 
+import java.util.Locale
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.ScaleGestureDetector
@@ -61,9 +62,9 @@ class VideoPlayerActivity : ComponentActivity() {
         val seconds = totalSeconds % 60
         
         return if (hours > 0) {
-            String.format("%d:%02d:%02d", hours, minutes, seconds)
+            String.format(Locale.ROOT, "%d:%02d:%02d", hours, minutes, seconds)
         } else {
-            String.format("%d:%02d", minutes, seconds)
+            String.format(Locale.ROOT, "%d:%02d", minutes, seconds)
         }
     }
     

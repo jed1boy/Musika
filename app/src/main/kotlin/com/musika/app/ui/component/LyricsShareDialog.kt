@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,9 +47,9 @@ fun LyricsShareDialog(
 ) {
     var backgroundColor by remember { mutableStateOf(Color(0xFF121212)) }
     var useGradient by remember { mutableStateOf(false) }
-    var cornerRadiusPercent by remember { mutableStateOf(50f) } // 0 to 100, maps to 0f to ~50f (Squaricle)
+    var cornerRadiusPercent by remember { mutableFloatStateOf(50f) } // 0 to 100, maps to 0f to ~50f (Squaricle)
     var textAlign by remember { mutableStateOf(Layout.Alignment.ALIGN_CENTER) }
-    var fontScale by remember { mutableStateOf(1f) }
+    var fontScale by remember { mutableFloatStateOf(1f) }
     
     // Derived state for actual parameters
     val gradientColors = remember(backgroundColor, useGradient) {
@@ -66,6 +67,9 @@ fun LyricsShareDialog(
 
     val context = androidx.compose.ui.platform.LocalContext.current
     val density = androidx.compose.ui.platform.LocalDensity.current
+    val configuration = androidx.compose.ui.platform.LocalConfiguration.current
+    val screenWidthPx = with(density) { configuration.screenWidthDp.dp.roundToPx() }
+    val screenHeightPx = with(density) { configuration.screenHeightDp.dp.roundToPx() }
     val scope = rememberCoroutineScope()
     var isGenerating by remember { mutableStateOf(false) }
 
@@ -225,9 +229,7 @@ fun LyricsShareDialog(
                             
                             scope.launch {
                                 try {
-                                    val screenWidth = context.resources.displayMetrics.widthPixels
-                                    val screenHeight = context.resources.displayMetrics.heightPixels
-                                    val size = minOf(screenWidth, screenHeight)
+                                    val size = minOf(screenWidthPx, screenHeightPx)
 
                                     val bitmap = ComposeToImage.createLyricsImage(
                                         context = context,

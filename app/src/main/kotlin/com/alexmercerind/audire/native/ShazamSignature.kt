@@ -1,6 +1,6 @@
 package com.alexmercerind.audire.native
 
-import android.util.Log
+import timber.log.Timber
 
 // This class provides JNI binding to Shazam's signature algorithm.
 //
@@ -19,9 +19,9 @@ class ShazamSignature {
             System.loadLibrary("shazam_signature_jni")
             isLoaded = true
         } catch (e: UnsatisfiedLinkError) {
-            Log.e("ShazamSignature", "Failed to load native library", e)
+            Timber.e(e, "Failed to load native library")
         } catch (e: SecurityException) {
-            Log.e("ShazamSignature", "Security exception loading native library", e)
+            Timber.e(e, "Security exception loading native library")
         }
     }
 

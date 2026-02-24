@@ -1,9 +1,10 @@
-﻿package com.musika.app.ui.component
+package com.musika.app.ui.component
 
 import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
+import androidx.core.net.toUri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -307,7 +308,7 @@ fun downloadFile(context: Context, url: String, fileName: String, destinationUri
     }
 
     try {
-        val request = DownloadManager.Request(Uri.parse(url))
+        val request = DownloadManager.Request(url.toUri())
             .setTitle(fileName)
             .setDescription("Downloading $fileName")
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)

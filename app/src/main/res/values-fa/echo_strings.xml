@@ -118,7 +118,7 @@
     <string name="views">بازدید‌ها</string>
     <string name="charts">چارت‌ها</string>
     <string name="unknown_item_type">آیتم نامشخص</string>
-    <string name="loading_charts">بارگذاری چارت‌ها...</string>
+    <string name="loading_charts">بارگذاری چارت‌ها…</string>
     <string name="cached_playlist">کش شده</string>
     <string name="now_playing">در حال پخش</string>
 </resources>

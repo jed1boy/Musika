@@ -8,6 +8,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.Calendar
+import timber.log.Timber
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -32,10 +33,10 @@ class ShazamRepository @Inject constructor() {
         val name = Random(timestamp).nextInt(1 shl 48).toString()
         val signature = try {
             val sig = ShazamSignature().safeCreate(data.toShortArray())
-            android.util.Log.d("Musika", "Signature generated successfully: ${sig.take(20)}...")
+            Timber.d("Signature generated successfully: %s...", sig.take(20))
             sig
         } catch (e: Throwable) {
-            android.util.Log.e("Musika", "Error creating signature: ${e.message}")
+            Timber.e(e, "Error creating signature: %s", e.message)
             e.printStackTrace()
             return null
         }
@@ -62,17 +63,17 @@ class ShazamRepository @Inject constructor() {
                 USER_AGENTS.random(),
             )
             if (!response.isSuccessful) {
-                 android.util.Log.e("Musika", "API call failed: ${response.code()} ${response.message()}")
+                 Timber.e("API call failed: %s %s", response.code(), response.message())
             }
             val track = response.body()?.track
             if (track != null) {
-                android.util.Log.d("Musika", "Track found: ${track.title} by ${track.subtitle}")
+                Timber.d("Track found: %s by %s", track.title, track.subtitle)
             } else {
-                android.util.Log.w("Musika", "API returned 200 but no track found (No Match)")
+                Timber.w("API returned 200 but no track found (No Match)")
             }
             return track
         } catch (e: Exception) {
-            android.util.Log.e("Musika", "API network error: ${e.message}")
+            Timber.e(e, "API network error: %s", e.message)
             e.printStackTrace()
             return null
         }

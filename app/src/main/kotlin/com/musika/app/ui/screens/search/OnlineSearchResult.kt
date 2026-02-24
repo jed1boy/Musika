@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.screens.search
+package com.musika.app.ui.screens.search
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -105,10 +105,11 @@ fun OnlineSearchResult(
     }
 
     LaunchedEffect(searchSummary, viewModel.autoplay) {
-        if (viewModel.autoplay && searchSummary != null) {
-            val item = searchSummary!!.summaries.flatMap { it.items }
+        val summary = searchSummary
+        if (viewModel.autoplay && summary != null) {
+            val item = summary.summaries.flatMap { it.items }
                 .firstOrNull { it is SongItem } // Prioritize SongItem
-                ?: searchSummary!!.summaries.flatMap { it.items }.firstOrNull() // Fallback to any
+                ?: summary.summaries.flatMap { it.items }.firstOrNull() // Fallback to any
 
             if (item != null) {
                 if (item is SongItem) {

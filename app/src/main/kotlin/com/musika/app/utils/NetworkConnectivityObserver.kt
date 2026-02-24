@@ -1,4 +1,4 @@
-﻿package com.musika.app.utils
+package com.musika.app.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -62,12 +62,7 @@ class NetworkConnectivityObserver(context: Context) {
             // Check if we have internet capability
             val hasInternet = networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
             
-            // For API 23+, also check if connection is validated
-            val isValidated = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) == true
-            } else {
-                true // For older versions, assume validated if we have internet capability
-            }
+            val isValidated = networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) == true
             
             hasInternet && isValidated
         } catch (e: Exception) {

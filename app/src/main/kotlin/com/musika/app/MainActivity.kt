@@ -1,4 +1,4 @@
-﻿package com.musika.app
+package com.musika.app
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -15,7 +15,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.speech.RecognizerIntent
-import android.util.Log
+import timber.log.Timber
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
@@ -111,6 +111,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -293,9 +294,9 @@ class MainActivity : ComponentActivity() {
             startService(Intent(this, MusicService::class.java))
         } catch (e: Exception) {
              if (Build.VERSION.SDK_INT >= 31 && e.javaClass.name.contains("BackgroundServiceStartNotAllowedException")) {
-                Log.e("MainActivity", "BackgroundServiceStartNotAllowedException caught", e)
+                Timber.e(e, "BackgroundServiceStartNotAllowedException caught")
              } else if (e is IllegalStateException) {
-                 Log.e("MainActivity", "IllegalStateException caught in startService", e)
+                 Timber.e(e, "IllegalStateException caught in startService")
              } else {
                  throw e
              }
@@ -546,6 +547,7 @@ MusikaTheme(
                     val focusManager = LocalFocusManager.current
                     val density = LocalDensity.current
                     val configuration = LocalConfiguration.current
+                    val windowInfo = LocalWindowInfo.current
                     val cutoutInsets = WindowInsets.displayCutout
                     val windowsInsets = WindowInsets.systemBars
                     val bottomInset = with(density) { windowsInsets.getBottom(density).toDp() }
@@ -717,9 +719,7 @@ MusikaTheme(
                         !isAmbientMode && !isFindScreen && !isWrappedScreen
                     }
 
-                    val isLandscape = remember(configuration) {
-                        configuration.screenWidthDp > configuration.screenHeightDp
-                    }
+                    val isLandscape = windowInfo.containerSize.width > windowInfo.containerSize.height
                     val showRail = isLandscape && !inSearchScreen && !isAmbientMode && !isFindScreen
 
                     val getNavPadding: () -> Dp = remember(shouldShowNavigationBar, showRail, slimNav) {
@@ -1889,19 +1889,16 @@ NavigationBarItem(
     private fun showUpdateNotification(context: Context, version: String) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         
-        // Create notification channel for Android O and above
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                "updates",
-                "App Updates",
-                NotificationManager.IMPORTANCE_HIGH
-            ).apply {
-                description = "Notifications for app updates"
-                enableLights(true)
-                enableVibration(true)
-            }
-            notificationManager.createNotificationChannel(channel)
+        val channel = NotificationChannel(
+            "updates",
+            "App Updates",
+            NotificationManager.IMPORTANCE_HIGH
+        ).apply {
+            description = "Notifications for app updates"
+            enableLights(true)
+            enableVibration(true)
         }
+        notificationManager.createNotificationChannel(channel)
         
         // Create intent to open MainActivity with settings
         val intent = Intent(context, MainActivity::class.java).apply {

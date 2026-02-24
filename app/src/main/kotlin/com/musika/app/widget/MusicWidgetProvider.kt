@@ -16,6 +16,8 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.drawable.GradientDrawable
 import android.widget.RemoteViews
+import androidx.core.graphics.createBitmap
+import androidx.core.graphics.scale
 import androidx.palette.graphics.Palette
 import com.musika.app.R
 import com.musika.app.playback.MusicService
@@ -24,6 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.net.URL
 
 class MusicWidgetProvider : AppWidgetProvider() {
@@ -33,7 +36,7 @@ class MusicWidgetProvider : AppWidgetProvider() {
 
     private fun getCircularBitmap(bitmap: Bitmap): Bitmap {
         val size = minOf(bitmap.width, bitmap.height)
-        val output = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        val output = createBitmap(size, size, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(output)
         
         val color = 0xff424242.toInt()
@@ -156,21 +159,12 @@ class MusicWidgetProvider : AppWidgetProvider() {
             val playPauseIntent = Intent(context, MusicService::class.java).apply {
                 action = MusicService.ACTION_PLAY_PAUSE
             }
-            val playPausePendingIntent = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                PendingIntent.getForegroundService(
-                    context,
-                    2,
-                    playPauseIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
-            } else {
-                PendingIntent.getService(
-                    context,
-                    2,
-                    playPauseIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
-            }
+            val playPausePendingIntent = PendingIntent.getForegroundService(
+                context,
+                2,
+                playPauseIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
             views.setOnClickPendingIntent(R.id.widget_play_pause, playPausePendingIntent)
             
             // Set up widget click to open app
@@ -187,42 +181,24 @@ class MusicWidgetProvider : AppWidgetProvider() {
             val previousIntent = Intent(context, MusicService::class.java).apply {
                 action = MusicService.ACTION_PREVIOUS
             }
-            val previousPendingIntent = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                PendingIntent.getForegroundService(
-                    context,
-                    3,
-                    previousIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
-            } else {
-                PendingIntent.getService(
-                    context,
-                    3,
-                    previousIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
-            }
+            val previousPendingIntent = PendingIntent.getForegroundService(
+                context,
+                3,
+                previousIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
             views.setOnClickPendingIntent(R.id.widget_previous, previousPendingIntent)
 
             // Set up next button click
             val nextIntent = Intent(context, MusicService::class.java).apply {
                 action = MusicService.ACTION_NEXT
             }
-            val nextPendingIntent = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                PendingIntent.getForegroundService(
-                    context,
-                    5,
-                    nextIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
-            } else {
-                PendingIntent.getService(
-                    context,
-                    5,
-                    nextIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
-            }
+            val nextPendingIntent = PendingIntent.getForegroundService(
+                context,
+                5,
+                nextIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
             views.setOnClickPendingIntent(R.id.widget_next, nextPendingIntent)
             
             // First update widget with default logo
@@ -233,7 +209,7 @@ class MusicWidgetProvider : AppWidgetProvider() {
             if (!albumArtUrl.isNullOrEmpty()) {
                 CoroutineScope(Dispatchers.IO + SupervisorJob()).launch {
                     try {
-                        android.util.Log.d("MusicWidget", "Loading album art from: $albumArtUrl")
+                        Timber.d("Loading album art from: %s", albumArtUrl)
                         
                         // Download image from URL
                         val url = URL(albumArtUrl)
@@ -247,11 +223,11 @@ class MusicWidgetProvider : AppWidgetProvider() {
                         inputStream.close()
                         
                         if (bitmap != null) {
-                            android.util.Log.d("MusicWidget", "Bitmap loaded successfully: ${bitmap.width}x${bitmap.height}")
+                            Timber.d("Bitmap loaded successfully: %dx%d", bitmap.width, bitmap.height)
                             
                             // Scale bitmap if too large
                             val scaledBitmap = if (bitmap.width > 512 || bitmap.height > 512) {
-                                Bitmap.createScaledBitmap(bitmap, 512, 512, true)
+                                bitmap.scale(512, 512, true)
                             } else {
                                 bitmap
                             }
@@ -261,17 +237,17 @@ class MusicWidgetProvider : AppWidgetProvider() {
                             withContext(Dispatchers.Main) {
                                 views.setImageViewBitmap(R.id.widget_album_art, circularBitmap)
                                 appWidgetManager.updateAppWidget(appWidgetId, views)
-                                android.util.Log.d("MusicWidget", "Widget updated with album art")
+                                Timber.d("Widget updated with album art")
                             }
                             
                             if (scaledBitmap != bitmap) {
                                 bitmap.recycle()
                             }
                         } else {
-                            android.util.Log.e("MusicWidget", "Failed to decode bitmap")
+                            Timber.e("Failed to decode bitmap")
                         }
                     } catch (e: Exception) {
-                        android.util.Log.e("MusicWidget", "Failed to load album art: ${e.message}", e)
+                        Timber.e(e, "Failed to load album art: %s", e.message)
                     }
                 }
             }

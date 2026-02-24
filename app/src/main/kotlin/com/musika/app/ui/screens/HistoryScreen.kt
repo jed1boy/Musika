@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.screens
+package com.musika.app.ui.screens
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -132,12 +132,18 @@ fun HistoryScreen(
         "SAPISID" in parseCookieString(innerTubeCookie)
     }
 
+    val todayText = stringResource(R.string.today)
+    val yesterdayText = stringResource(R.string.yesterday)
+    val thisWeekText = stringResource(R.string.this_week)
+    val lastWeekText = stringResource(R.string.last_week)
+    val historyTitle = stringResource(R.string.history)
+
     fun dateAgoToString(dateAgo: DateAgo): String {
         return when (dateAgo) {
-            DateAgo.Today -> context.getString(R.string.today)
-            DateAgo.Yesterday -> context.getString(R.string.yesterday)
-            DateAgo.ThisWeek -> context.getString(R.string.this_week)
-            DateAgo.LastWeek -> context.getString(R.string.last_week)
+            DateAgo.Today -> todayText
+            DateAgo.Yesterday -> yesterdayText
+            DateAgo.ThisWeek -> thisWeekText
+            DateAgo.LastWeek -> lastWeekText
             is DateAgo.Other -> dateAgo.date.format(DateTimeFormatter.ofPattern("yyyy/MM"))
         }
     }
@@ -385,7 +391,7 @@ fun HistoryScreen(
                     if (songs.isNotEmpty()) {
                         playerConnection.playQueue(
                             ListQueue(
-                                title = context.getString(R.string.history),
+                                title = historyTitle,
                                 items = songs.map { it.toMediaItem() }.shuffled()
                             )
                         )
@@ -393,7 +399,7 @@ fun HistoryScreen(
                 } else {
                     playerConnection.playQueue(
                         ListQueue(
-                            title = context.getString(R.string.history),
+                            title = historyTitle,
                             items = allWrappedItems.map { it.item.song.toMediaItem() }.shuffled()
                         )
                     )

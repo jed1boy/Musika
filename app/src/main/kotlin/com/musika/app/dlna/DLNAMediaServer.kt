@@ -1,18 +1,17 @@
-﻿package com.musika.app.dlna
+package com.musika.app.dlna
 
-import android.util.Log
+import timber.log.Timber
 import fi.iki.elonen.NanoHTTPD
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.InputStream
 
 class DLNAMediaServer(private val port: Int = 8080) : NanoHTTPD(port) {
-    private val TAG = "DLNAMediaServer"
     private val httpClient = OkHttpClient()
     
     override fun serve(session: IHTTPSession): Response {
         val uri = session.uri
-        Log.d(TAG, "Serving request: $uri")
+        Timber.d("Serving request: $uri")
         
         return try {
             // Extract the original URL from the path
@@ -52,14 +51,14 @@ class DLNAMediaServer(private val port: Int = 8080) : NanoHTTPD(port) {
             // Handle range requests for seeking
             val rangeHeader = session.headers["range"]
             if (rangeHeader != null) {
-                Log.d(TAG, "Range request: $rangeHeader")
+                Timber.d("Range request: $rangeHeader")
                 return handleRangeRequest(body.byteStream(), contentLength, rangeHeader, contentType)
             }
             
             // Return full content
             newChunkedResponse(Response.Status.OK, contentType, body.byteStream())
         } catch (e: Exception) {
-            Log.e(TAG, "Error serving media", e)
+            Timber.e(e, "Error serving media")
             newFixedLengthResponse(
                 Response.Status.INTERNAL_ERROR,
                 MIME_PLAINTEXT,
@@ -124,7 +123,7 @@ class DLNAMediaServer(private val port: Int = 8080) : NanoHTTPD(port) {
                 }
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error getting local IP", e)
+            Timber.e(e, "Error getting local IP")
         }
         return "127.0.0.1"
     }

@@ -265,19 +265,16 @@ fun UpdaterScreen(
 private fun showUpdateNotification(context: Context, version: String) {
     val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     
-    // Create notification channel for Android O and above
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        val channel = NotificationChannel(
-            "updates",
-            "App Updates",
-            NotificationManager.IMPORTANCE_HIGH
-        ).apply {
-            description = "Notifications for app updates"
-            enableLights(true)
-            enableVibration(true)
-        }
-        notificationManager.createNotificationChannel(channel)
+    val channel = NotificationChannel(
+        "updates",
+        "App Updates",
+        NotificationManager.IMPORTANCE_HIGH
+    ).apply {
+        description = "Notifications for app updates"
+        enableLights(true)
+        enableVibration(true)
     }
+    notificationManager.createNotificationChannel(channel)
     
     // Create intent to open MainActivity with settings
     val intent = Intent(context, MainActivity::class.java).apply {

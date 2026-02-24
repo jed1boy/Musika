@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.screens.playlist
+package com.musika.app.ui.screens.playlist
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -249,7 +249,7 @@ fun LocalPlaylistScreen(
 
     val downloadUtil = LocalDownloadUtil.current
     var downloadState by remember {
-        mutableStateOf(Download.STATE_STOPPED)
+        mutableIntStateOf(Download.STATE_STOPPED)
     }
 
     val editable: Boolean = playlist?.playlist?.isEditable == true
@@ -544,10 +544,10 @@ fun LocalPlaylistScreen(
                             database.transaction {
                                 coroutineScope.launch {
                                     playlist?.playlist?.browseId?.let { it1 ->
-                                        var setVideoId = getSetVideoId(currentItem.map.songId)
-                                        if (setVideoId?.setVideoId != null) {
+                                        val setVideoId = getSetVideoId(currentItem.map.songId)
+                                        setVideoId?.setVideoId?.let { playlistSetVideoId ->
                                             YouTube.removeFromPlaylist(
-                                                it1, currentItem.map.songId, setVideoId.setVideoId!!
+                                                it1, currentItem.map.songId, playlistSetVideoId
                                             )
                                         }
                                     }
@@ -991,6 +991,8 @@ fun LocalPlaylistHeader(
 
     val cropColor = MaterialTheme.colorScheme
     val darkTheme = darkMode == DarkMode.ON || (darkMode == DarkMode.AUTO && isSystemInDarkTheme())
+    val editPlaylistCoverTitle = stringResource(R.string.edit_playlist_cover)
+    val playlistSyncedText = stringResource(R.string.playlist_synced)
 
     val pickLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.PickVisualMedia()
@@ -1004,7 +1006,7 @@ fun LocalPlaylistHeader(
                 setCompressionFormat(Bitmap.CompressFormat.JPEG)
                 setCompressionQuality(90)
                 setHideBottomControls(true)
-                setToolbarTitle(context.getString(R.string.edit_playlist_cover))
+                setToolbarTitle(editPlaylistCoverTitle)
                 
                 setStatusBarLight(!darkTheme)
 
@@ -1343,7 +1345,7 @@ fun LocalPlaylistHeader(
                                     }
                                 }
                                 scope.launch(Dispatchers.Main) {
-                                    snackbarHostState.showSnackbar(context.getString(R.string.playlist_synced))
+                                    snackbarHostState.showSnackbar(playlistSyncedText)
                                 }
                             },
                             modifier = Modifier.size(40.dp)

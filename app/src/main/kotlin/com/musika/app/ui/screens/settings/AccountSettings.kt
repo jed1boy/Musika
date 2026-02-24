@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.screens.settings
+package com.musika.app.ui.screens.settings
 
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -48,6 +48,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -201,7 +202,7 @@ fun AccountSettings(
                 // Show account count if multiple accounts
                 if (isLoggedIn && allAccounts.size > 1) {
                     Text(
-                        text = stringResource(R.string.accounts_count, allAccounts.size),
+                        text = pluralStringResource(R.plurals.accounts_count, allAccounts.size, allAccounts.size),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(start = 5.dp)

@@ -1,5 +1,8 @@
-﻿package com.musika.app.ui.components
+package com.musika.app.ui.components
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -29,9 +32,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.musika.app.utils.BluetoothConnectivityObserver
 import com.musika.app.utils.WiFiConnectivityObserver
 import com.musika.app.viewmodels.ConnectivityViewModel
+import androidx.compose.ui.platform.LocalContext
 
 /**
  * A component that displays the current Bluetooth and WiFi connectivity status
@@ -42,6 +47,7 @@ fun ConnectivityStatusBar(
     modifier: Modifier = Modifier,
     showWhenConnected: Boolean = false
 ) {
+    val context = LocalContext.current
     val isBluetoothEnabled by viewModel.bluetoothStatus.collectAsState()
     val isWifiEnabled by viewModel.wifiStatus.collectAsState()
     val connectedDevices by viewModel.connectedBluetoothDevices.collectAsState()
@@ -49,6 +55,11 @@ fun ConnectivityStatusBar(
     
     val showBluetoothStatus = !isBluetoothEnabled || (showWhenConnected && connectedDevices.isNotEmpty())
     val showWifiStatus = !isWifiEnabled || (showWhenConnected && currentWifiConnection != null)
+    val canReadBluetoothName = Build.VERSION.SDK_INT < Build.VERSION_CODES.S ||
+        ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.BLUETOOTH_CONNECT
+        ) == PackageManager.PERMISSION_GRANTED
     
     AnimatedVisibility(
         visible = showBluetoothStatus || showWifiStatus,
@@ -78,8 +89,9 @@ fun ConnectivityStatusBar(
                     Spacer(modifier = Modifier.width(8.dp))
                     if (isBluetoothEnabled && connectedDevices.isNotEmpty()) {
                         val device = connectedDevices.first()
+                        val deviceName = if (canReadBluetoothName) device.name else null
                         Text(
-                            text = "Connected to ${device.name ?: "Unknown Device"}",
+                            text = "Connected to ${deviceName ?: "Unknown Device"}",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onErrorContainer,
                             fontWeight = FontWeight.Medium,

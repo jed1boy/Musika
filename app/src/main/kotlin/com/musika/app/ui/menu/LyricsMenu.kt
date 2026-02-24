@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.menu
+package com.musika.app.ui.menu
 
 import android.app.SearchManager
 import android.content.Intent
@@ -38,6 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -178,6 +179,7 @@ fun LyricsMenu(
 
                 Spacer(Modifier.width(8.dp))
 
+                val errorNoInternetText = stringResource(R.string.error_no_internet)
                 TextButton(
                     onClick = {
                         // Try search regardless of network status indicator
@@ -192,7 +194,7 @@ fun LyricsMenu(
                         
                         // Show warning only if network is definitely unavailable
                         if (!isNetworkAvailable) {
-                            Toast.makeText(context, context.getString(R.string.error_no_internet), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, errorNoInternetText, Toast.LENGTH_SHORT).show()
                         }
                     },
                 ) {
@@ -223,7 +225,7 @@ fun LyricsMenu(
         val isLoading by viewModel.isLoading.collectAsState()
 
         var expandedItemIndex by rememberSaveable {
-            mutableStateOf(-1)
+            mutableIntStateOf(-1)
         }
 
         ListDialog(
@@ -310,7 +312,7 @@ fun LyricsMenu(
             if (!isLoading && results.isEmpty()) {
                 item {
                     Text(
-                        text = context.getString(R.string.lyrics_not_found),
+                        text = stringResource(R.string.lyrics_not_found),
                         textAlign = TextAlign.Center,
                         modifier =
                         Modifier

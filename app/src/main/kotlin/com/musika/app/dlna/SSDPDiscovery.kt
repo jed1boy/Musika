@@ -1,6 +1,6 @@
-﻿package com.musika.app.dlna
+package com.musika.app.dlna
 
-import android.util.Log
+import timber.log.Timber
 import kotlinx.coroutines.*
 import org.w3c.dom.Element
 import java.io.BufferedReader
@@ -9,7 +9,6 @@ import java.net.*
 import javax.xml.parsers.DocumentBuilderFactory
 
 class SSDPDiscovery {
-    private val TAG = "SSDPDiscovery"
     private val SSDP_MULTICAST_ADDRESS = "239.255.255.250"
     private val SSDP_PORT = 1900
     private val SEARCH_TARGET = "urn:schemas-upnp-org:device:MediaRenderer:1"
@@ -28,7 +27,7 @@ class SSDPDiscovery {
             try {
                 discoverDevices(onDeviceFound)
             } catch (e: Exception) {
-                Log.e(TAG, "Error during discovery", e)
+                Timber.e(e, "Error during discovery")
             }
         }
     }
@@ -56,7 +55,7 @@ class SSDPDiscovery {
             )
             
             socket.send(packet)
-            Log.d(TAG, "Sent SSDP M-SEARCH request")
+            Timber.d("Sent SSDP M-SEARCH request")
             
             // Listen for responses
             socket.soTimeout = 5000
@@ -68,7 +67,7 @@ class SSDPDiscovery {
                     socket.receive(responsePacket)
                     
                     val response = String(responsePacket.data, 0, responsePacket.length)
-                    Log.d(TAG, "Received SSDP response from ${responsePacket.address}")
+                    Timber.d("Received SSDP response from %s", responsePacket.address)
                     
                     parseResponse(response)?.let { location ->
                         fetchDeviceDescription(location)?.let { device ->
@@ -82,7 +81,7 @@ class SSDPDiscovery {
                     socket.send(packet)
                 } catch (e: Exception) {
                     if (isSearching) {
-                        Log.e(TAG, "Error receiving response", e)
+                        Timber.e(e, "Error receiving response")
                     }
                 }
             }
@@ -120,7 +119,7 @@ class SSDPDiscovery {
             val xml = BufferedReader(InputStreamReader(connection.inputStream)).use { it.readText() }
             parseDeviceDescription(xml, location)
         } catch (e: Exception) {
-            Log.e(TAG, "Error fetching device description from $location", e)
+            Timber.e(e, "Error fetching device description from %s", location)
             null
         }
     }
@@ -177,7 +176,7 @@ class SSDPDiscovery {
                 modelName = modelName
             )
         } catch (e: Exception) {
-            Log.e(TAG, "Error parsing device description", e)
+            Timber.e(e, "Error parsing device description")
             return null
         }
     }

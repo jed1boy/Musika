@@ -162,7 +162,7 @@
     <string name="seek_forward_dynamic">+%1$d segundos para a frente</string>
     <string name="seek_backward_dynamic">-%1$d segundos para trás</string>
     <string name="disable_load_more_when_repeat_all_desc">Não carregar automaticamente mais músicas e conteúdo semelhante quando o modo repetir tudo está ativado</string>
-    <string name="loading_charts">A carregar as tabelas...</string>
+    <string name="loading_charts">A carregar as tabelas…</string>
     <string name="now_playing">Agora a Tocar</string>
     <string name="hide_player_thumbnail">Ocultar Miniatura do Reprodutor</string>
     <string name="hide_player_thumbnail_desc">Substituir a capa do álbum pelo logótipo da aplicação no reprodutor</string>

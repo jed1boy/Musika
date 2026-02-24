@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.screens
+package com.musika.app.ui.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -90,6 +90,8 @@ fun StatsScreen(
     val lazyListState = rememberLazyListState()
     val selectedOption by viewModel.selectedOption.collectAsState()
 
+    val todayText = stringResource(R.string.today)
+    val yesterdayText = stringResource(R.string.yesterday)
     val dailyDates =
         if (currentDate != null && firstEvent != null) {
             generateSequence(currentDate) { it.minusDays(1) }
@@ -99,8 +101,8 @@ fun StatsScreen(
                     val formatter = DateTimeFormatter.ofPattern("dd MMM")
                     val formattedDate = formatter.format(date)
                     val text = when {
-                        index == 0 -> context.getString(R.string.today)
-                        index == 1 -> context.getString(R.string.yesterday)
+                        index == 0 -> todayText
+                        index == 1 -> yesterdayText
                         date.year != currentDate.year -> "$formattedDate, ${date.year}"
                         else -> formattedDate
                     }
@@ -417,6 +419,7 @@ fun StatsScreen(
 
         // FAB to shuffle most played songs
         if (mostPlayedSongs.isNotEmpty()) {
+            val mostPlayedSongsTitle = stringResource(R.string.most_played_songs)
             HideOnScrollFAB(
                 visible = true,
                 lazyListState = lazyListState,
@@ -424,7 +427,7 @@ fun StatsScreen(
                 onClick = {
                     playerConnection.playQueue(
                         ListQueue(
-                            title = context.getString(R.string.most_played_songs),
+                            title = mostPlayedSongsTitle,
                             items = mostPlayedSongs.map { it.toMediaMetadata().toMediaItem() }.shuffled()
                         )
                     )
