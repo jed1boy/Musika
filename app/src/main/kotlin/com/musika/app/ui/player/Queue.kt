@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.player
+package com.musika.app.ui.player
 
 import androidx.activity.compose.BackHandler
 import android.annotation.SuppressLint
@@ -695,6 +695,11 @@ fun Queue(
                             )
 
                         var processedDismiss by remember { mutableStateOf(false) }
+                        val removedSongMessage = stringResource(
+                            R.string.removed_song_from_playlist,
+                            currentItem.mediaItem.metadata?.title ?: "",
+                        )
+                        val undoLabel = stringResource(R.string.undo)
                         LaunchedEffect(dismissBoxState.currentValue) {
                             val dv = dismissBoxState.currentValue
                             if (!processedDismiss && (
@@ -707,11 +712,8 @@ fun Queue(
                                 dismissJob?.cancel()
                                 dismissJob = coroutineScope.launch {
                                     val snackbarResult = snackbarHostState.showSnackbar(
-                                        message = context.getString(
-                                            R.string.removed_song_from_playlist,
-                                            currentItem.mediaItem.metadata?.title,
-                                        ),
-                                        actionLabel = context.getString(R.string.undo),
+                                        message = removedSongMessage,
+                                        actionLabel = undoLabel,
                                         duration = SnackbarDuration.Short,
                                     )
                                     if (snackbarResult == SnackbarResult.ActionPerformed) {
@@ -1001,7 +1003,7 @@ fun Queue(
                         )
                     }
                     Text(
-                        text = stringResource(R.string.elements_selected, count),
+                        text = pluralStringResource(R.plurals.elements_selected, count, count),
                         modifier = Modifier.weight(1f)
                     )
                     IconButton(

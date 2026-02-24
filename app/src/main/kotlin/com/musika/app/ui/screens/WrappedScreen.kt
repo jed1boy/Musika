@@ -13,6 +13,7 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.media.MediaPlayer
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.createBitmap
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.content.FileProvider
 import androidx.compose.animation.AnimatedVisibility
@@ -561,7 +562,7 @@ fun Context.findActivity(): Activity? = when (this) {
 suspend fun shareWrapped(context: Context, data: WrappedData) {
     val width = 1080
     val height = 1920
-    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    val bitmap = createBitmap(width, height, Bitmap.Config.ARGB_8888)
     val canvas = Canvas(bitmap)
 
     val paint = Paint()
@@ -623,7 +624,7 @@ suspend fun shareWrapped(context: Context, data: WrappedData) {
                 val rect = RectF(imageX, currentY, imageX + imageSize, currentY + imageSize)
                 
                 // Draw rounded bitmap manually
-                val roundedBitmap = Bitmap.createBitmap(imageSize, imageSize, Bitmap.Config.ARGB_8888)
+                val roundedBitmap = createBitmap(imageSize, imageSize, Bitmap.Config.ARGB_8888)
                 val roundedCanvas = Canvas(roundedBitmap)
                 val clipPaint = Paint().apply { isAntiAlias = true }
                 val clipRect = RectF(0f, 0f, imageSize.toFloat(), imageSize.toFloat())

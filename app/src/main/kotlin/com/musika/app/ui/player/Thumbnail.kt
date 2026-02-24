@@ -57,7 +57,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -286,6 +285,7 @@ fun Thumbnail(
                             val incrementalSeekSkipEnabled by rememberPreference(SeekExtraSeconds, defaultValue = false)
                             var skipMultiplier by remember { mutableIntStateOf(1) }
                             var lastTapTime by remember { mutableLongStateOf(0L) }
+                            val resources = context.resources
 
                             Box(
                                 modifier = Modifier
@@ -324,13 +324,15 @@ fun Thumbnail(
                                                     playerConnection.player.seekTo(
                                                         (currentPosition - skipAmount).coerceAtLeast(0)
                                                     )
+                                                    val seconds = skipAmount / 1000
                                                     seekDirection =
-                                                        context.getString(R.string.seek_backward_dynamic, skipAmount / 1000)
+                                                        resources.getQuantityString(R.plurals.seek_backward_dynamic, seconds, seconds)
                                                 } else {
                                                     playerConnection.player.seekTo(
                                                         (currentPosition + skipAmount).coerceAtMost(duration)
                                                     )
-                                                    seekDirection = context.getString(R.string.seek_forward_dynamic, skipAmount / 1000)
+                                                    val seconds = skipAmount / 1000
+                                                    seekDirection = resources.getQuantityString(R.plurals.seek_forward_dynamic, seconds, seconds)
                                                 }
 
                                                 showSeekEffect = true

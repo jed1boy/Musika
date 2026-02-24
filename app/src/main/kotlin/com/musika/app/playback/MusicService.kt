@@ -1,4 +1,4 @@
-﻿@file:Suppress("DEPRECATION")
+@file:Suppress("DEPRECATION")
 
 package com.musika.app.playback
 
@@ -16,7 +16,7 @@ import android.media.audiofx.LoudnessEnhancer
 import android.net.ConnectivityManager
 import android.os.Binder
 import android.os.Build
-import android.util.Log
+import timber.log.Timber
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
@@ -257,7 +257,7 @@ class MusicService :
         } catch (e: Exception) {
             // Check if it's the specific foreground service exception (available in API 31+)
             if (Build.VERSION.SDK_INT >= 31 && e.javaClass.name.contains("ForegroundServiceStartNotAllowedException")) {
-                Log.e("MusicService", "ForegroundServiceStartNotAllowedException caught", e)
+                Timber.e(e, "ForegroundServiceStartNotAllowedException caught")
                 // Stop the service to prevent ANR/Crash loop if possible, though system might have already killed it
                 stopSelf()
                 return START_NOT_STICKY
@@ -269,7 +269,7 @@ class MusicService :
     override fun onCreate() {
         // Fix for NPE: Initialize connectivityManager early (Issue 6, 7)
         connectivityManager = getSystemService() ?: run {
-             Log.e("MusicService", "ConnectivityManager not available")
+             Timber.e("ConnectivityManager not available")
              stopSelf()
              return
         }
@@ -337,25 +337,25 @@ class MusicService :
             
             if (hasRequiredPermissions) {
                 castConnectionHandler.initialize()
-                Log.d("MusicService", "CastConnectionHandler initialized")
+                Timber.d("CastConnectionHandler initialized")
             } else {
-                Log.d("MusicService", "Skipping Cast initialization - required permissions not granted")
+                Timber.d("Skipping Cast initialization - required permissions not granted")
             }
         } catch (e: Exception) {
-            Log.e("MusicService", "Failed to initialize Cast: ${e.message}", e)
+            Timber.e(e, "Failed to initialize Cast: ${e.message}")
         }
         
         // Initialize DLNA
         try {
             if (::dlnaManager.isInitialized) {
                 dlnaManager.start()
-                Log.d("MusicService", "DLNA service initialized")
+                Timber.d("DLNA service initialized")
                 
                 // Monitor DLNA device selection changes
                 scope.launch {
                     dlnaManager.selectedDevice.collect { device ->
                         if (device != null) {
-                            Log.d("MusicService", "DLNA device selected: ${device.name}")
+                            Timber.d("DLNA device selected: ${device.name}")
                             // If currently playing, stream to DLNA device
                             if (player.playbackState == Player.STATE_READY && player.currentMediaItem != null) {
                                 val metadata = currentMediaMetadata.value
@@ -375,7 +375,7 @@ class MusicService :
                                 }
                             }
                         } else {
-                            Log.d("MusicService", "DLNA device deselected, resuming local playback")
+                            Timber.d("DLNA device deselected, resuming local playback")
                             // Resume local playback if it was paused for DLNA
                             if (player.playbackState == Player.STATE_READY && !player.playWhenReady) {
                                 player.play()
@@ -384,10 +384,10 @@ class MusicService :
                     }
                 }
             } else {
-                Log.w("MusicService", "DLNA manager not initialized by Hilt")
+                Timber.w("DLNA manager not initialized by Hilt")
             }
         } catch (e: Exception) {
-            Log.e("MusicService", "Failed to initialize DLNA: ${e.message}", e)
+            Timber.e(e, "Failed to initialize DLNA: ${e.message}")
             reportException(e)
         }
 
@@ -588,7 +588,7 @@ class MusicService :
             }
         }
         } catch (e: Exception) {
-            Log.e("MusicService", "Critical error during service initialization", e)
+            Timber.e(e, "Critical error during service initialization")
             reportException(e)
             // Try to cleanup partially initialized components
             try {
@@ -599,7 +599,7 @@ class MusicService :
                     mediaSession.release()
                 }
             } catch (cleanupError: Exception) {
-                Log.e("MusicService", "Error during cleanup", cleanupError)
+                Timber.e(cleanupError, "Error during cleanup")
             }
             stopSelf()
             throw e // Re-throw to let system know service failed to start
@@ -1099,7 +1099,7 @@ class MusicService :
         val audioSessionId = player.audioSessionId
 
         if (audioSessionId == C.AUDIO_SESSION_ID_UNSET || audioSessionId <= 0) {
-            Log.w(TAG, "setupLoudnessEnhancer: invalid audioSessionId ($audioSessionId), cannot create effect yet")
+            Timber.w("setupLoudnessEnhancer: invalid audioSessionId ($audioSessionId), cannot create effect yet")
             return
         }
 
@@ -1107,7 +1107,7 @@ class MusicService :
         if (loudnessEnhancer == null) {
             try {
                 loudnessEnhancer = LoudnessEnhancer(audioSessionId)
-                Log.d(TAG, "LoudnessEnhancer created for sessionId=$audioSessionId")
+                Timber.d("LoudnessEnhancer created for sessionId=$audioSessionId")
             } catch (e: Exception) {
                 reportException(e)
                 loudnessEnhancer = null
@@ -1139,20 +1139,20 @@ class MusicService :
                             try {
                                 loudnessEnhancer?.setTargetGain(clampedGain)
                                 loudnessEnhancer?.enabled = true
-                                Log.d(TAG, "LoudnessEnhancer gain applied: $clampedGain mB")
+                                Timber.d("LoudnessEnhancer gain applied: $clampedGain mB")
                             } catch (e: Exception) {
                                 reportException(e)
                                 releaseLoudnessEnhancer()
                             }
                         } else {
                             loudnessEnhancer?.enabled = false
-                            Log.w(TAG, "setupLoudnessEnhancer: loudnessDb is null, enhancer disabled")
+                            Timber.w("setupLoudnessEnhancer: loudnessDb is null, enhancer disabled")
                         }
                     }
                 } else {
                     withContext(Dispatchers.Main) {
                         loudnessEnhancer?.enabled = false
-                        Log.d(TAG, "setupLoudnessEnhancer: normalization disabled or mediaId unavailable")
+                        Timber.d("setupLoudnessEnhancer: normalization disabled or mediaId unavailable")
                     }
                 }
             } catch (e: Exception) {
@@ -1166,10 +1166,10 @@ class MusicService :
     private fun releaseLoudnessEnhancer() {
         try {
             loudnessEnhancer?.release()
-            Log.d(TAG, "LoudnessEnhancer released")
+            Timber.d("LoudnessEnhancer released")
         } catch (e: Exception) {
             reportException(e)
-            Log.e(TAG, "Error releasing LoudnessEnhancer: ${e.message}")
+            Timber.e(e, "Error releasing LoudnessEnhancer: ${e.message}")
         } finally {
             loudnessEnhancer = null
         }
@@ -1221,7 +1221,7 @@ class MusicService :
                     val mediaUrl = mediaItem.localConfiguration?.uri?.toString() ?: ""
                     
                     if (mediaUrl.isNotEmpty()) {
-                        Log.d("MusicService", "Streaming to DLNA device: ${selectedDevice.name}")
+                        Timber.d("Streaming to DLNA device: ${selectedDevice.name}")
                         val success = dlnaManager.playMedia(
                             mediaUrl = mediaUrl,
                             title = metadata?.title ?: "",
@@ -1231,14 +1231,14 @@ class MusicService :
                         if (success) {
                             // Pause local player when streaming to DLNA
                             player.pause()
-                            Log.d("MusicService", "Successfully started DLNA playback")
+                            Timber.d("Successfully started DLNA playback")
                         } else {
-                            Log.e("MusicService", "Failed to start DLNA playback")
+                            Timber.e("Failed to start DLNA playback")
                         }
                     }
                 }
             } catch (e: Exception) {
-                Log.e("MusicService", "Error streaming to DLNA: ${e.message}", e)
+                Timber.e(e, "Error streaming to DLNA: ${e.message}")
             }
         }
         
@@ -1365,7 +1365,7 @@ class MusicService :
 
     override fun onPlayerError(error: PlaybackException) {
         super.onPlayerError(error)
-        Log.e("MusicService", "Playback error: ${error.message}", error)
+        Timber.e(error, "Playback error: ${error.message}")
         
         try {
         // Attempt to recover from cache corruption by clearing cache and retrying
@@ -1378,12 +1378,12 @@ class MusicService :
              if (isCached && consecutivePlaybackErr < 5) { // Limit retries to avoid loops
                  scope.launch(Dispatchers.IO) {
                      try {
-                         Log.w("MusicService", "Potential cache corruption for $mediaId, clearing cache...")
+                         Timber.w("Potential cache corruption for $mediaId, clearing cache...")
                          songUrlCache.remove(mediaId)
                          playerCache.removeResource(mediaId)
                          downloadCache.removeResource(mediaId)
                      } catch (e: Exception) {
-                         Log.e("MusicService", "Failed to clear cache for $mediaId", e)
+                         Timber.e(e, "Failed to clear cache for $mediaId")
                      }
                      withContext(Dispatchers.Main) {
                          // Retry playback
@@ -1456,13 +1456,13 @@ class MusicService :
             stopOnError()
         }
         } catch (e: Exception) {
-            Log.e("MusicService", "Exception in error handler", e)
+            Timber.e(e, "Exception in error handler")
             reportException(e)
             // Fallback: just stop the player
             try {
                 player.pause()
             } catch (fallbackError: Exception) {
-                Log.e("MusicService", "Failed to pause player in fallback", fallbackError)
+                Timber.e(fallbackError, "Failed to pause player in fallback")
             }
         }
     }
@@ -1506,7 +1506,7 @@ class MusicService :
                 return@Factory dataSpec
             }
             val mediaId = dataSpec.key ?: run {
-                Log.e("MusicService", "DataSpec has no media id key")
+                Timber.e("DataSpec has no media id key")
                 throw PlaybackException(
                     "No media ID available for playback",
                     null,
@@ -1733,10 +1733,10 @@ class MusicService :
         } catch (e: Exception) {
             // Check if it's the specific foreground service exception (available in API 31+)
             if (Build.VERSION.SDK_INT >= 31 && e.javaClass.name.contains("ForegroundServiceStartNotAllowedException")) {
-                Log.e("MusicService", "ForegroundServiceStartNotAllowedException caught in startForegroundService", e)
+                Timber.e(e, "ForegroundServiceStartNotAllowedException caught in startForegroundService")
                 null
             } else if (e is IllegalStateException) {
-                 Log.e("MusicService", "IllegalStateException caught in startForegroundService", e)
+                 Timber.e(e, "IllegalStateException caught in startForegroundService")
                  null
             } else {
                 throw e
@@ -1787,7 +1787,7 @@ class MusicService :
                 null
             }
         } catch (e: Exception) {
-            Log.e("MusicService", "Failed to resolve URL for Cast: ${e.message}")
+            Timber.e(e, "Failed to resolve URL for Cast: ${e.message}")
             null
         }
     }
@@ -1845,7 +1845,5 @@ class MusicService :
         // Constants for audio normalization
         private const val MAX_GAIN_MB = 800 // Maximum gain in millibels (8 dB)
         private const val MIN_GAIN_MB = -800 // Minimum gain in millibels (-8 dB)
-
-        private const val TAG = "MusicService"
     }
 }

@@ -8,7 +8,7 @@
     <string name="no_title">Sense títol</string>
     <string name="unknown_artist">Artista desconegut</string>
     <string name="unknown_item_type">Tipus d\'arxiu desconegut</string>
-    <string name="loading_charts">Carregant llistes...</string>
+    <string name="loading_charts">Carregant llistes…</string>
     <string name="retry_button">Reintentar</string>
     <string name="album_cover_desc">Portada de l\'àlbum</string>
     <string name="top_music_videos">Top vídeos musicals</string>

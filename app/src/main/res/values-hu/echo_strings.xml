@@ -8,7 +8,7 @@
     <string name="no_title">Nincs cím</string>
     <string name="unknown_artist">Ismeretlen előadó</string>
     <string name="unknown_item_type">Ismeretlen elem típus</string>
-    <string name="loading_charts">Slágerlisták betöltése...</string>
+    <string name="loading_charts">Slágerlisták betöltése…</string>
     <string name="retry_button">Újra</string>
     <string name="album_cover_desc">Album borító</string>
     <string name="top_music_videos">Top zene klippek</string>

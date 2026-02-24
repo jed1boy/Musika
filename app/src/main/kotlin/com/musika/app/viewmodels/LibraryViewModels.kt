@@ -1,4 +1,4 @@
-﻿@file:OptIn(ExperimentalCoroutinesApi::class)
+@file:OptIn(ExperimentalCoroutinesApi::class)
 
 package com.musika.app.viewmodels
 
@@ -59,6 +59,7 @@ import java.text.Collator
 import java.time.Duration
 import java.time.LocalDateTime
 import java.util.Locale
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -91,10 +92,10 @@ constructor(
                     SongFilter.UPLOADED -> database.uploadedSongs(sortType, descending).map { it.filterExplicit(hideExplicit) }
                     SongFilter.LOCAL -> database.localSongs(sortType, descending).map { it.filterExplicit(hideExplicit) }
                 }.map { list ->
-                    android.util.Log.d("LibrarySongsVM", "Filter: $filter, Songs found: ${list.size}")
+                    Timber.d("Filter: $filter, Songs found: ${list.size}")
                     if (filter == SongFilter.LOCAL) {
                         list.take(5).forEach { song ->
-                            android.util.Log.d("LibrarySongsVM", "Local Song: ${song.song.title}, Path: ${song.song.localPath}")
+                            Timber.d("Local Song: ${song.song.title}, Path: ${song.song.localPath}")
                         }
                     }
                     list

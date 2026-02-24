@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.player
+package com.musika.app.ui.player
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
@@ -33,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -198,7 +199,7 @@ fun AmbientModeScreen(
         navController.popBackStack()
     }
 
-    var totalDrag by remember { mutableStateOf(0f) }
+    var totalDrag by remember { mutableFloatStateOf(0f) }
 
     Box(
         modifier = Modifier

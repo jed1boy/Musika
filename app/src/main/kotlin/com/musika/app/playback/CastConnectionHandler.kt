@@ -1,7 +1,8 @@
-﻿package com.musika.app.playback
+package com.musika.app.playback
 
 import android.content.Context
 import android.net.Uri
+import androidx.core.net.toUri
 import androidx.media3.common.Player
 import androidx.mediarouter.media.MediaRouteSelector
 import androidx.mediarouter.media.MediaRouter
@@ -479,7 +480,7 @@ class CastConnectionHandler(
             metadata.thumbnailUrl?.let { thumbUrl ->
                 // Use high quality thumbnail (1080x1080) for Cast display
                 val highQualityUrl = thumbUrl.resize(1080, 1080)
-                addImage(WebImage(Uri.parse(highQualityUrl)))
+                addImage(WebImage(highQualityUrl.toUri()))
             }
         }
         

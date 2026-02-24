@@ -11,7 +11,7 @@
     <string name="no_title">タイトルなし</string>
     <string name="unknown_artist">不明なアーティスト</string>
     <string name="unknown_item_type">不明な項目の種類</string>
-    <string name="loading_charts">チャートを読み込み中...</string>
+    <string name="loading_charts">チャートを読み込み中…</string>
     <string name="retry_button">再試行</string>
     <string name="album_cover_desc">アルバムカバー</string>
     <string name="trending">急上昇</string>

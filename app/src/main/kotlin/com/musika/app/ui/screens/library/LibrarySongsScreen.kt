@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.screens.library
+package com.musika.app.ui.screens.library
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -112,6 +112,7 @@ fun LibrarySongsScreen(
     }
 
     val lazyListState = rememberLazyListState()
+    val queueAllSongsTitle = stringResource(R.string.queue_all_songs)
 
     val backStackEntry by navController.currentBackStackEntryAsState()
     val scrollToTop =
@@ -304,7 +305,7 @@ fun LibrarySongsScreen(
                                     } else {
                                         playerConnection.playQueue(
                                             ListQueue(
-                                                title = context.getString(R.string.queue_all_songs),
+                                                title = queueAllSongsTitle,
                                                 items = songs.map { it.toMediaItem() },
                                                 startIndex = index,
                                             ),
@@ -338,7 +339,7 @@ fun LibrarySongsScreen(
             onClick = {
                 playerConnection.playQueue(
                     ListQueue(
-                        title = context.getString(R.string.queue_all_songs),
+                        title = queueAllSongsTitle,
                         items = songs.shuffled().map { it.toMediaItem() },
                     ),
                 )

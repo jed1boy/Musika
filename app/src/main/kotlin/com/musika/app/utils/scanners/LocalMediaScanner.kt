@@ -1,10 +1,10 @@
-﻿package com.musika.app.utils.scanners
+package com.musika.app.utils.scanners
 
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
-import android.util.Log
+import timber.log.Timber
 import com.musika.app.db.MusicDatabase
 import com.musika.app.db.entities.AlbumEntity
 import com.musika.app.db.entities.ArtistEntity
@@ -23,8 +23,6 @@ data class SongTempData(
 )
 
 class LocalMediaScanner(val context: Context, val database: MusicDatabase) {
-    private val TAG = "LocalMediaScanner"
-
     val scannerProgress = MutableStateFlow(0f)
     val isScanning = MutableStateFlow(false)
 
@@ -43,7 +41,7 @@ class LocalMediaScanner(val context: Context, val database: MusicDatabase) {
         isScanning.value = true
         scannerProgress.value = 0f
 
-        Log.i(TAG, "Starting Local Media Scan. Paths: $scanPaths, Excluded: $excludedPaths, Sensitivity: $sensitivity, StrictExt: $strictExt, UseFilename: $useFilenameAsTitle")
+        Timber.i("Starting Local Media Scan. Paths: $scanPaths, Excluded: $excludedPaths, Sensitivity: $sensitivity, StrictExt: $strictExt, UseFilename: $useFilenameAsTitle")
 
         val projection = arrayOf(
             MediaStore.Audio.Media._ID,
@@ -89,12 +87,12 @@ class LocalMediaScanner(val context: Context, val database: MusicDatabase) {
                 // Filter paths
                 if (scanPaths.isNotEmpty()) {
                     if (scanPaths.none { path.startsWith(it) }) {
-                        Log.v(TAG, "Skipping $path - does not start with any of $scanPaths")
+                        Timber.v("Skipping $path - does not start with any of $scanPaths")
                         continue
                     }
                 }
                 if (excludedPaths.any { path.startsWith(it) }) {
-                    Log.v(TAG, "Skipping $path - excluded")
+                    Timber.v("Skipping $path - excluded")
                     continue
                 }
                 
@@ -152,12 +150,12 @@ class LocalMediaScanner(val context: Context, val database: MusicDatabase) {
             }
         }
         
-        Log.i(TAG, "Found ${tempSongs.size} songs in MediaStore after filtering")
+        Timber.i("Found ${tempSongs.size} songs in MediaStore after filtering")
 
         syncDB(tempSongs)
 
         isScanning.value = false
-        Log.i(TAG, "Finished Local Media Scan")
+        Timber.i("Finished Local Media Scan")
     }
 
     private suspend fun syncDB(newSongs: List<SongTempData>) {

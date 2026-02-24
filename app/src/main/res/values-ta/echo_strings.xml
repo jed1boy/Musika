@@ -6,7 +6,7 @@
     <string name="no_title">தலைப்பு இல்லை</string>
     <string name="unknown_artist">தெரியாத கலைஞர்</string>
     <string name="unknown_item_type">தெரியாத பாடல் வகை</string>
-    <string name="loading_charts">பட்டியல்கள் பெறுகிறது...</string>
+    <string name="loading_charts">பட்டியல்கள் பெறுகிறது…</string>
     <string name="retry_button">மீண்டும் முயற்சி செய்</string>
     <string name="album_cover_desc">ஆல்பம் கவர்</string>
     <string name="top_music_videos">சிறந்த இசை வீடியோக்கள்</string>

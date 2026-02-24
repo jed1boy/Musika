@@ -1,6 +1,5 @@
 package com.musika.app.ui.player
 
-import android.content.res.Configuration
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
@@ -59,7 +58,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -115,16 +115,15 @@ fun MiniPlayer(
     } else {
         // NEW: Wrap LegacyMiniPlayer in a Box to allow alignment on tablet landscape.
         // The outer Box fills the width, providing a container for the inner player to be aligned within.
+        val windowInfo = LocalWindowInfo.current
+        val density = LocalDensity.current
+        val isTabletLandscapeOuter = with(density) { windowInfo.containerSize.width.toDp() } >= 600.dp &&
+            windowInfo.containerSize.width > windowInfo.containerSize.height
         Box(modifier = modifier.fillMaxWidth()) {
             LegacyMiniPlayer(
                 position = position,
                 duration = duration,
-                // NEW: Align the player to the end if it's a tablet in landscape.
-                // This modifier is passed to LegacyMiniPlayer and applied to its root Box.
-                modifier = if (
-                    LocalConfiguration.current.screenWidthDp >= 600 &&
-                    LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
-                ) {
+                modifier = if (isTabletLandscapeOuter) {
                     Modifier.align(Alignment.CenterEnd)
                 } else {
                     Modifier.align(Alignment.Center)
@@ -157,9 +156,10 @@ private fun NewMiniPlayer(
     val swipeSensitivity by rememberPreference(SwipeSensitivityKey, 0.73f)
     val swipeThumbnail by rememberPreference(com.musika.app.constants.SwipeThumbnailKey, true)
 
-    val configuration = LocalConfiguration.current
-    val isTabletLandscape = configuration.screenWidthDp >= 600 &&
-        configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val windowInfo = LocalWindowInfo.current
+    val density = LocalDensity.current
+    val isTabletLandscape = with(density) { windowInfo.containerSize.width.toDp() } >= 600.dp &&
+        windowInfo.containerSize.width > windowInfo.containerSize.height
 
     // Extract gradient colors from album art
     val context = LocalContext.current
@@ -581,10 +581,10 @@ private fun LegacyMiniPlayer(
     val swipeSensitivity by rememberPreference(SwipeSensitivityKey, 0.73f)
     val swipeThumbnail by rememberPreference(com.musika.app.constants.SwipeThumbnailKey, true)
 
-    // NEW: Get screen configuration to determine if it's a tablet in landscape mode.
-    val configuration = LocalConfiguration.current
-    val isTabletLandscape = configuration.screenWidthDp >= 600 &&
-        configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val windowInfo = LocalWindowInfo.current
+    val density = LocalDensity.current
+    val isTabletLandscape = with(density) { windowInfo.containerSize.width.toDp() } >= 600.dp &&
+        windowInfo.containerSize.width > windowInfo.containerSize.height
 
     // Extract gradient colors from album art
     val context = LocalContext.current
@@ -833,8 +833,8 @@ private fun LegacyMiniMediaInfo(
     mediaMetadata: MediaMetadata,
     error: PlaybackException?,
     pureBlack: Boolean,
-    hasGradient: Boolean = false,
     modifier: Modifier = Modifier,
+    hasGradient: Boolean = false,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,

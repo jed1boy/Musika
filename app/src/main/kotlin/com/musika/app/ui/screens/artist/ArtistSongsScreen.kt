@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.screens.artist
+package com.musika.app.ui.screens.artist
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -28,6 +28,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.unit.dp
@@ -81,6 +82,7 @@ fun ArtistSongsScreen(
     val artist by viewModel.artist.collectAsState()
     val songs by viewModel.songs.collectAsState()
     val lazyListState = rememberLazyListState()
+    val queueAllSongsTitle = stringResource(R.string.queue_all_songs)
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -158,7 +160,7 @@ fun ArtistSongsScreen(
                                 } else {
                                     playerConnection.playQueue(
                                         ListQueue(
-                                            title = context.getString(R.string.queue_all_songs),
+                                            title = queueAllSongsTitle,
                                             items = songs.map { it.toMediaItem() },
                                             startIndex = index,
                                         ),

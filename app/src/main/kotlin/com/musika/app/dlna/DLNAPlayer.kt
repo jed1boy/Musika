@@ -1,6 +1,6 @@
-﻿package com.musika.app.dlna
+package com.musika.app.dlna
 
-import android.util.Log
+import timber.log.Timber
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.BufferedReader
@@ -10,8 +10,6 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 class DLNAPlayer(private val device: DLNADevice) {
-    private val TAG = "DLNAPlayer"
-    
     suspend fun setAVTransportURI(mediaUrl: String, title: String, artist: String): Boolean = withContext(Dispatchers.IO) {
         try {
             val soapAction = "urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI"
@@ -41,7 +39,7 @@ class DLNAPlayer(private val device: DLNADevice) {
             
             sendSOAPRequest(soapAction, soapBody)
         } catch (e: Exception) {
-            Log.e(TAG, "Error setting AV transport URI", e)
+            Timber.e(e, "Error setting AV transport URI")
             false
         }
     }
@@ -63,7 +61,7 @@ class DLNAPlayer(private val device: DLNADevice) {
             
             sendSOAPRequest(soapAction, soapBody)
         } catch (e: Exception) {
-            Log.e(TAG, "Error playing", e)
+            Timber.e(e, "Error playing")
             false
         }
     }
@@ -84,7 +82,7 @@ class DLNAPlayer(private val device: DLNADevice) {
             
             sendSOAPRequest(soapAction, soapBody)
         } catch (e: Exception) {
-            Log.e(TAG, "Error pausing", e)
+            Timber.e(e, "Error pausing")
             false
         }
     }
@@ -105,7 +103,7 @@ class DLNAPlayer(private val device: DLNADevice) {
             
             sendSOAPRequest(soapAction, soapBody)
         } catch (e: Exception) {
-            Log.e(TAG, "Error stopping", e)
+            Timber.e(e, "Error stopping")
             false
         }
     }
@@ -128,7 +126,7 @@ class DLNAPlayer(private val device: DLNADevice) {
             
             sendSOAPRequest(soapAction, soapBody)
         } catch (e: Exception) {
-            Log.e(TAG, "Error seeking", e)
+            Timber.e(e, "Error seeking")
             false
         }
     }
@@ -152,7 +150,7 @@ class DLNAPlayer(private val device: DLNADevice) {
             // Note: Volume control might use a different URL, but we'll try the control URL first
             sendSOAPRequest(soapAction, soapBody)
         } catch (e: Exception) {
-            Log.e(TAG, "Error setting volume", e)
+            Timber.e(e, "Error setting volume")
             false
         }
     }
@@ -187,14 +185,14 @@ class DLNAPlayer(private val device: DLNADevice) {
             connection.disconnect()
             
             if (responseCode == HttpURLConnection.HTTP_OK) {
-                Log.d(TAG, "SOAP request successful: $soapAction")
+                Timber.d("SOAP request successful: $soapAction")
                 true
             } else {
-                Log.e(TAG, "SOAP request failed with code $responseCode: $response")
+                Timber.e("SOAP request failed with code $responseCode: $response")
                 false
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error sending SOAP request: $soapAction", e)
+            Timber.e(e, "Error sending SOAP request: $soapAction")
             false
         }
     }

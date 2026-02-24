@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.screens.settings
+package com.musika.app.ui.screens.settings
 
 import com.musika.app.LocalPlayerAwareWindowInsets
 
@@ -8,7 +8,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
-import android.util.Log
+import timber.log.Timber
 import android.widget.Toast
 import android.os.Environment
 import android.os.storage.StorageManager
@@ -36,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
+import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.musika.app.R
 import com.musika.app.constants.ExcludedScanPathsKey
@@ -58,7 +59,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 fun uriListFromString(str: String): List<Uri> {
     if (str.isBlank()) return emptyList()
     return str.split("\n").mapNotNull {
-        try { Uri.parse(it) } catch (e: Exception) { null }
+        try { it.toUri() } catch (e: Exception) { null }
     }
 }
 
@@ -376,7 +377,7 @@ fun LocalMediaSettings(
                  try {
                      contentResolver.takePersistableUriPermission(uri, takeFlags)
                  } catch (e: Exception) {
-                     Log.e("LocalMediaSettings", "Failed to take permission", e)
+                     Timber.e(e, "Failed to take permission")
                  }
                  if (!tempScanPaths.contains(uri)) {
                      tempScanPaths.add(uri)

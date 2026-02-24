@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <!-- Upstream InnerTune strings -->
 <!-- Do not add new features here -->
@@ -170,7 +170,10 @@
     <string name="skip_duplicates">Skip duplicates</string>
     <string name="add_anyway">Add anyway</string>
     <string name="duplicates_description_single">The song is already in your playlist</string>
-    <string name="duplicates_description_multiple">%d songs are already in your playlist</string>
+    <plurals name="duplicates_description_multiple">
+        <item quantity="one">%d song is already in your playlist</item>
+        <item quantity="other">%d songs are already in your playlist</item>
+    </plurals>
     <string name="change_cover">Change cover</string>
     <string name="rename_playlist">Rename playlist</string>
 
@@ -287,7 +290,10 @@
     <string name="add_account">Add Account</string>
     <string name="manage">Manage</string>
     <string name="active_account">Active Account</string>
-    <string name="accounts_count">%d accounts</string>
+    <plurals name="accounts_count">
+        <item quantity="one">%d account</item>
+        <item quantity="other">%d accounts</item>
+    </plurals>
 
     <string name="content_language">Default content language</string>
     <string name="content_country">Default content country</string>
@@ -374,4 +380,8 @@
 
     <!-- Widget -->
     <string name="widget_description">Music player widget</string>
+    <string name="no_song_playing">No song playing</string>
+    <string name="previous">Previous</string>
+    <string name="play_pause">Play/Pause</string>
+    <string name="next">Next</string>
 </resources>

@@ -30,7 +30,10 @@
     <string name="filter_uploaded">Uploaded</string>
     <string name="sync_playlist">Sync playlist</string>
     <string name="sync_disabled">Sync disabled</string>
-    <string name="elements_selected">%1$d elements selected</string>
+    <plurals name="elements_selected">
+        <item quantity="one">%1$d element selected</item>
+        <item quantity="other">%1$d elements selected</item>
+    </plurals>
     <string name="allows_for_sync_witch_youtube">Note: This allows for syncing with YouTube Music. This is NOT changeable later.</string>
     <string name="generating_image">Generating image</string>
     <string name="please_wait">Please wait</string>
@@ -78,8 +81,14 @@
 
     <string name="seek_backward">5 seconds backward</string>
     <string name="seek_forward">5 seconds forward</string>
-    <string name="seek_forward_dynamic">+%1$d seconds forwards</string>
-    <string name="seek_backward_dynamic">-%1$d seconds backwards</string>
+    <plurals name="seek_forward_dynamic">
+        <item quantity="one">+%1$d second forward</item>
+        <item quantity="other">+%1$d seconds forwards</item>
+    </plurals>
+    <plurals name="seek_backward_dynamic">
+        <item quantity="one">-%1$d second backward</item>
+        <item quantity="other">-%1$d seconds backwards</item>
+    </plurals>
     <string name="seek_seconds_addup">Progressive seek</string>
     <string name="seek_seconds_addup_description">If enabled,  Adds up 5 extra seconds incrementally on each seek skip</string>
 

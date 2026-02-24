@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.menu
+package com.musika.app.ui.menu
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.musika.innertube.utils.parseCookieString
@@ -185,7 +186,7 @@ fun AddToPlaylistDialog(
                     text = if (duplicates.size == 1) {
                         stringResource(R.string.duplicates_description_single)
                     } else {
-                        stringResource(R.string.duplicates_description_multiple, duplicates.size)
+                        pluralStringResource(R.plurals.duplicates_description_multiple, duplicates.size, duplicates.size)
                     },
                     textAlign = TextAlign.Start,
                     modifier = Modifier.align(Alignment.Start)

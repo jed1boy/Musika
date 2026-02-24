@@ -1,7 +1,7 @@
-﻿package com.musika.app.dlna
+package com.musika.app.dlna
 
 import android.content.Context
-import android.util.Log
+import timber.log.Timber
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,7 +18,6 @@ import javax.inject.Singleton
 class DLNAManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
-    private val TAG = "DLNAManager"
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     
     private val ssdpDiscovery = SSDPDiscovery()
@@ -40,15 +40,15 @@ class DLNAManager @Inject constructor(
         try {
             // Start media server
             mediaServer.start()
-            Log.d(TAG, "DLNA media server started on port 8080")
+            Timber.d("DLNA media server started on port 8080")
             
             // Start device discovery
             startDiscovery()
             
             _isEnabled.value = true
-            Log.d(TAG, "DLNA service started")
+            Timber.d("DLNA service started")
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to start DLNA service", e)
+            Timber.e(e, "Failed to start DLNA service")
         }
     }
     
@@ -62,9 +62,9 @@ class DLNAManager @Inject constructor(
             _selectedDevice.value = null
             currentPlayer = null
             _isEnabled.value = false
-            Log.d(TAG, "DLNA service stopped")
+            Timber.d("DLNA service stopped")
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to stop DLNA service", e)
+            Timber.e(e, "Failed to stop DLNA service")
         }
     }
     
@@ -74,7 +74,7 @@ class DLNAManager @Inject constructor(
             if (!currentDevices.any { it.id == device.id }) {
                 currentDevices.add(device)
                 _devices.value = currentDevices
-                Log.d(TAG, "DLNA device found: ${device.name}")
+                Timber.d("DLNA device found: ${device.name}")
             }
         }
     }
@@ -86,12 +86,12 @@ class DLNAManager @Inject constructor(
     fun selectDevice(device: DLNADevice?) {
         _selectedDevice.value = device
         currentPlayer = device?.let { DLNAPlayer(it) }
-        Log.d(TAG, if (device != null) "Device selected: ${device.name}" else "Device deselected")
+        Timber.d(if (device != null) "Device selected: ${device.name}" else "Device deselected")
     }
     
     fun playMedia(mediaUrl: String, title: String = "", artist: String = ""): Boolean {
         val player = currentPlayer ?: run {
-            Log.w(TAG, "No DLNA device selected")
+            Timber.w("No DLNA device selected")
             return false
         }
         
@@ -105,20 +105,20 @@ class DLNAManager @Inject constructor(
                     if (setUriSuccess) {
                         val playSuccess = player.play()
                         if (playSuccess) {
-                            Log.d(TAG, "Successfully started playback on DLNA device")
+                            Timber.d("Successfully started playback on DLNA device")
                         } else {
-                            Log.e(TAG, "Failed to start playback on DLNA device")
+                            Timber.e("Failed to start playback on DLNA device")
                         }
                     } else {
-                        Log.e(TAG, "Failed to set media URI on DLNA device")
+                        Timber.e("Failed to set media URI on DLNA device")
                     }
                 } catch (e: Exception) {
-                    Log.e(TAG, "Error playing media on DLNA device", e)
+                    Timber.e(e, "Error playing media on DLNA device")
                 }
             }
             true
         } catch (e: Exception) {
-            Log.e(TAG, "Error preparing media for DLNA playback", e)
+            Timber.e(e, "Error preparing media for DLNA playback")
             false
         }
     }
@@ -128,9 +128,9 @@ class DLNAManager @Inject constructor(
         scope.launch {
             try {
                 player.pause()
-                Log.d(TAG, "DLNA playback paused")
+                Timber.d("DLNA playback paused")
             } catch (e: Exception) {
-                Log.e(TAG, "Error pausing DLNA playback", e)
+                Timber.e(e, "Error pausing DLNA playback")
             }
         }
     }
@@ -140,9 +140,9 @@ class DLNAManager @Inject constructor(
         scope.launch {
             try {
                 player.play()
-                Log.d(TAG, "DLNA playback resumed")
+                Timber.d("DLNA playback resumed")
             } catch (e: Exception) {
-                Log.e(TAG, "Error resuming DLNA playback", e)
+                Timber.e(e, "Error resuming DLNA playback")
             }
         }
     }
@@ -152,9 +152,9 @@ class DLNAManager @Inject constructor(
         scope.launch {
             try {
                 player.stop()
-                Log.d(TAG, "DLNA playback stopped")
+                Timber.d("DLNA playback stopped")
             } catch (e: Exception) {
-                Log.e(TAG, "Error stopping DLNA playback", e)
+                Timber.e(e, "Error stopping DLNA playback")
             }
         }
     }
@@ -166,14 +166,14 @@ class DLNAManager @Inject constructor(
         val hours = positionMs / 3600000
         val minutes = (positionMs % 3600000) / 60000
         val seconds = (positionMs % 60000) / 1000
-        val target = String.format("%02d:%02d:%02d", hours, minutes, seconds)
+        val target = String.format(Locale.ROOT, "%02d:%02d:%02d", hours, minutes, seconds)
         
         scope.launch {
             try {
                 player.seek(target)
-                Log.d(TAG, "DLNA seek to $target")
+                Timber.d("DLNA seek to $target")
             } catch (e: Exception) {
-                Log.e(TAG, "Error seeking DLNA playback", e)
+                Timber.e(e, "Error seeking DLNA playback")
             }
         }
     }
@@ -185,9 +185,9 @@ class DLNAManager @Inject constructor(
                 // Convert 0-1 float to 0-100 int
                 val volumePercent = (volume * 100).coerceIn(0, 100)
                 player.setVolume(volumePercent)
-                Log.d(TAG, "DLNA volume set to $volumePercent")
+                Timber.d("DLNA volume set to $volumePercent")
             } catch (e: Exception) {
-                Log.e(TAG, "Error setting DLNA volume", e)
+                Timber.e(e, "Error setting DLNA volume")
             }
         }
     }

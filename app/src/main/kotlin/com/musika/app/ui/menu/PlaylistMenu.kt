@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.menu
+package com.musika.app.ui.menu
 
 import android.content.Intent
 import android.content.res.Configuration
@@ -140,7 +140,7 @@ fun PlaylistMenu(
 
     if (showEditDialog) {
         var selectedImageUri by remember {
-            mutableStateOf<android.net.Uri?>(playlist.playlist.thumbnailUrl?.let { android.net.Uri.parse(it) })
+            mutableStateOf<android.net.Uri?>(playlist.playlist.thumbnailUrl?.let { it.toUri() })
         }
 
         val launcher = rememberLauncherForActivityResult(

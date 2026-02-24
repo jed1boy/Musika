@@ -1,5 +1,6 @@
-﻿package com.musika.app.ui.utils
+package com.musika.app.ui.utils
 
+import java.util.Locale
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.text.format.Formatter
@@ -373,7 +374,7 @@ fun StatItem(
 fun compactNumberFormatter(count: Int): String {
     return when {
         count < 1000 -> count.toString()
-        count < 1000000 -> String.format("%.1fK", count / 1000.0)
-        else -> String.format("%.1fM", count / 1000000.0)
+        count < 1000000 -> String.format(Locale.ROOT, "%.1fK", count / 1000.0)
+        else -> String.format(Locale.ROOT, "%.1fM", count / 1000000.0)
     }
 }

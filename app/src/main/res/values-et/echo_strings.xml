@@ -27,7 +27,7 @@
     </plurals>
     <string name="unknown_artist">Tundmatu esitaja</string>
     <string name="unknown_item_type">Tundmatu objekti tüüp</string>
-    <string name="loading_charts">Laadin edetabeleid...</string>
+    <string name="loading_charts">Laadin edetabeleid…</string>
     <string name="retry_button">Proovi uuesti</string>
     <string name="album_cover_desc">Albumi kaanepilt</string>
     <string name="explore">Uuri ja tutvu</string>

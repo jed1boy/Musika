@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.screens.search
+package com.musika.app.ui.screens.search
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -15,7 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -75,8 +75,8 @@ fun LocalSearchScreen(
         viewModel.query.value = query
     }
 
-    val configuration = LocalConfiguration.current
-    val isLandscape = configuration.screenWidthDp > configuration.screenHeightDp
+    val windowInfo = LocalWindowInfo.current
+    val isLandscape = windowInfo.containerSize.width > windowInfo.containerSize.height
 
     Column(
         modifier = Modifier
@@ -148,6 +148,7 @@ fun LocalSearchScreen(
                     key = { it.id },
                     contentType = { CONTENT_TYPE_LIST },
                 ) { item ->
+                    val queueSearchedSongsTitle = stringResource(R.string.queue_searched_songs)
                     when (item) {
                         is Song -> SongListItem(
                             song = item,
@@ -188,7 +189,7 @@ fun LocalSearchScreen(
                                                 .map { it.toMediaItem() }
                                             playerConnection.playQueue(
                                                 ListQueue(
-                                                    title = context.getString(R.string.queue_searched_songs),
+                                                    title = queueSearchedSongsTitle,
                                                     items = songs,
                                                     startIndex = songs.indexOfFirst { it.mediaId == item.id },
                                                 )

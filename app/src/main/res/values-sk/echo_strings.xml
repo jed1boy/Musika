@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="explore">Preskúmať</string>
     <string name="local_history">Miestny</string>
@@ -8,7 +8,7 @@
     <string name="no_title">Bez názvu</string>
     <string name="unknown_artist">Neznámy skladateľ</string>
     <string name="unknown_item_type">Neznámy typ položky</string>
-    <string name="loading_charts">Načítavajú sa grafy...</string>
+    <string name="loading_charts">Načítavajú sa grafy…</string>
     <string name="retry_button">Skúsiť znova</string>
     <string name="album_cover_desc">Obal albumu</string>
     <string name="top_music_videos">Najlepšie videá s hudbou</string>

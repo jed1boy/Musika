@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.component
+package com.musika.app.ui.component
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -6,7 +6,6 @@ import android.content.res.Configuration
 import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -164,7 +163,6 @@ import com.musika.app.constants.TranslateLanguageKey
 import com.musika.app.lyrics.LanguageDetectionHelper
 import java.util.Locale
 
-@RequiresApi(Build.VERSION_CODES.M)
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedBoxWithConstraintsScope", "StringFormatInvalid")
 @Composable
@@ -591,13 +589,14 @@ var showColorPickerDialog by remember { mutableStateOf(false) }
 
     // Define max selection limit
     val maxSelectionLimit = 5
+    val maxSelectionLimitText = stringResource(R.string.max_selection_limit, maxSelectionLimit)
 
     // Show toast when max selection is reached
     LaunchedEffect(showMaxSelectionToast) {
         if (showMaxSelectionToast) {
             Toast.makeText(
                 context,
-                context.getString(R.string.max_selection_limit, maxSelectionLimit),
+                maxSelectionLimitText,
                 Toast.LENGTH_SHORT
             ).show()
             showMaxSelectionToast = false
@@ -1158,6 +1157,7 @@ var showColorPickerDialog by remember { mutableStateOf(false) }
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.height(16.dp))
+                    val shareLyricsChooserTitle = stringResource(R.string.share_lyrics)
                     // Share as Text Row
                     Row(
                         modifier = Modifier
@@ -1177,7 +1177,7 @@ var showColorPickerDialog by remember { mutableStateOf(false) }
                                 context.startActivity(
                                     Intent.createChooser(
                                         shareIntent,
-                                        context.getString(R.string.share_lyrics)
+                                        shareLyricsChooserTitle
                                     )
                                 )
                                 showShareDialog = false

@@ -1,7 +1,8 @@
-﻿package com.musika.app.ui.component
+package com.musika.app.ui.component
 
 import android.content.Intent
 import android.net.Uri
+import androidx.core.net.toUri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -53,7 +54,7 @@ AlertDialog(
             ) {
                 Button(
                     onClick = {
-                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://buymeacoffee.com/jzee"))
+                         val intent = Intent(Intent.ACTION_VIEW, "https://buymeacoffee.com/jzee".toUri())
                          context.startActivity(intent)
                     },
                     modifier = Modifier.fillMaxWidth()

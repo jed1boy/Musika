@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.screens.settings
+package com.musika.app.ui.screens.settings
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -35,6 +35,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.core.graphics.createBitmap
+import androidx.core.graphics.set
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 import com.musika.app.R
@@ -291,11 +293,11 @@ fun generateQRCode(text: String): androidx.compose.ui.graphics.ImageBitmap? {
         val size = 512
         val qrCodeWriter = QRCodeWriter()
         val bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, size, size)
-        val bitmap = android.graphics.Bitmap.createBitmap(size, size, android.graphics.Bitmap.Config.RGB_565)
+        val bitmap = createBitmap(size, size, android.graphics.Bitmap.Config.RGB_565)
         
         for (x in 0 until size) {
             for (y in 0 until size) {
-                bitmap.setPixel(x, y, if (bitMatrix[x, y]) android.graphics.Color.BLACK else android.graphics.Color.WHITE)
+                bitmap[x, y] = if (bitMatrix[x, y]) android.graphics.Color.BLACK else android.graphics.Color.WHITE
             }
         }
         

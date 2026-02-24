@@ -114,6 +114,12 @@ flavorDimensions += "abi"
         generateLocaleConfig = true
     }
 
+    bundle {
+        language {
+            enableSplit = false
+        }
+    }
+
     packaging {
         jniLibs {
             useLegacyPackaging = false
@@ -162,7 +168,7 @@ dependencies {
     implementation(libs.compose.animation)
     implementation(libs.compose.animation)
     implementation(libs.compose.reorderable)
-    implementation("androidx.compose.material:material-icons-extended:1.7.6")
+    implementation(libs.compose.material.icons.extended)
 
     implementation(libs.viewmodel)
     implementation(libs.viewmodel.compose)
@@ -215,7 +221,7 @@ dependencies {
     implementation(libs.timber)
     
     // QR Code generation
-    implementation("com.google.zxing:core:3.5.3")
+    implementation(libs.zxing.core)
     
     // Firebase
     implementation(platform(libs.firebase.bom))
@@ -223,11 +229,11 @@ dependencies {
     implementation(libs.firebase.crashlytics)
     
     // Music Recognition
-    implementation("com.github.f4b6a3:uuid-creator:6.1.1")
-    implementation("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
-    implementation("com.google.code.gson:gson:2.11.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    implementation(libs.uuid.creator)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.gson)
+    implementation(libs.okhttp.logging.interceptor)
 
     implementation(libs.mlkit.language.id)
 }

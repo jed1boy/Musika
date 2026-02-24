@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.menu
+package com.musika.app.ui.menu
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -195,7 +196,7 @@ fun YouTubePlaylistMenu(
     HorizontalDivider()
 
     var downloadState by remember {
-        mutableStateOf(Download.STATE_STOPPED)
+        mutableIntStateOf(Download.STATE_STOPPED)
     }
     LaunchedEffect(songs) {
         if (songs.isEmpty()) return@LaunchedEffect
