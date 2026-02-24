@@ -73,6 +73,20 @@ jobs:
         if: env.KEYSTORE_PATH != ''
         run: ./gradlew assembleArm64Release assembleX86_64Release --no-daemon
 
+      - name: Create debug keystore
+        if: env.KEYSTORE_PATH == ''
+        run: |
+          mkdir -p ~/.android
+          keytool -genkeypair \
+            -alias androiddebugkey \
+            -keypass android \
+            -keystore ~/.android/debug.keystore \
+            -storepass android \
+            -dname "CN=Android Debug,O=Android,C=US" \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000
+
       - name: Build debug APKs (no signing keys)
         if: env.KEYSTORE_PATH == ''
         run: ./gradlew assembleArm64Debug assembleX86_64Debug --no-daemon
