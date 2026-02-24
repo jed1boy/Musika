@@ -102,12 +102,12 @@ jobs:
 
           find app/build/outputs/apk -name "*.apk" -exec cp {} artifacts/ \;
 
-          # Rename for clarity
+          TAG="${{ steps.tag.outputs.tag }}"
           cd artifacts
           for f in *.apk; do
             case "$f" in
-              *arm64*) mv "$f" "musika-${{ steps.version.outputs.name }}-arm64-${BUILD_TYPE}.apk" 2>/dev/null || true ;;
-              *x86_64*|*x86*) mv "$f" "musika-${{ steps.version.outputs.name }}-x86_64-${BUILD_TYPE}.apk" 2>/dev/null || true ;;
+              *arm64*) mv "$f" "Musika-${TAG}-arm64-${BUILD_TYPE}.apk" 2>/dev/null || true ;;
+              *x86_64*|*x86*) mv "$f" "Musika-${TAG}-x64-${BUILD_TYPE}.apk" 2>/dev/null || true ;;
             esac
           done
 
@@ -118,19 +118,16 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.tag.outputs.tag }}
-          name: Musika ${{ steps.tag.outputs.tag }}
+          name: ${{ steps.tag.outputs.tag }}
           body: |
-            ## Musika ${{ steps.tag.outputs.tag }}
+            ## ${{ steps.tag.outputs.tag }}
 
-            **Build type:** ${{ steps.apks.outputs.build_type }}
-            **Version code:** ${{ steps.version.outputs.code }}
+            ### Assets
+            - `Musika-${{ steps.tag.outputs.tag }}-arm64-${{ steps.apks.outputs.build_type }}.apk` - For most Android phones
+            - `Musika-${{ steps.tag.outputs.tag }}-x64-${{ steps.apks.outputs.build_type }}.apk` - For emulators and Chromebooks
 
-            ### Downloads
-            - **arm64** — For most modern Android devices
-            - **x86_64** — For emulators and Intel/AMD devices
-
-            ---
-            _Built from commit ${{ github.sha }}_
+            ### Full Changelog
+            https://github.com/${{ github.repository }}/compare/v${{ steps.version.outputs.name }}...${{ steps.tag.outputs.tag }}
           files: artifacts/*.apk
           fail_on_unmatched_files: true
           generate_release_notes: true
