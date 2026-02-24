@@ -119,15 +119,6 @@ jobs:
         with:
           tag_name: ${{ steps.tag.outputs.tag }}
           name: ${{ steps.tag.outputs.tag }}
-          body: |
-            ## ${{ steps.tag.outputs.tag }}
-
-            ### Assets
-            - `Musika-${{ steps.tag.outputs.tag }}-arm64-${{ steps.apks.outputs.build_type }}.apk` - For most Android phones
-            - `Musika-${{ steps.tag.outputs.tag }}-x64-${{ steps.apks.outputs.build_type }}.apk` - For emulators and Chromebooks
-
-            ### Full Changelog
-            https://github.com/${{ github.repository }}/compare/v${{ steps.version.outputs.name }}...${{ steps.tag.outputs.tag }}
           files: artifacts/*.apk
           fail_on_unmatched_files: true
           generate_release_notes: true
