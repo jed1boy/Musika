@@ -18,7 +18,7 @@ fun Song.toMediaItem() =
         .setMediaId(song.id)
         .apply {
             if (song.isLocal && song.localPath != null) {
-                setUri(android.net.Uri.fromFile(java.io.File(song.localPath!!)))
+                setUri(android.net.Uri.fromFile(java.io.File(song.localPath)))
             } else {
                 setUri(song.id)
                 setCustomCacheKey(song.id)

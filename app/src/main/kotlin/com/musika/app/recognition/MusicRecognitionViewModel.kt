@@ -3,6 +3,7 @@
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -21,6 +22,7 @@ import com.musika.app.models.toMediaMetadata
 import com.musika.app.playback.PlayerConnection
 
 @HiltViewModel
+@OptIn(FlowPreview::class)
 class MusicRecognitionViewModel @Inject constructor(
     private val repository: ShazamRepository
 ) : ViewModel() {

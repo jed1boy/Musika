@@ -109,11 +109,10 @@ fun LyricsShareDialog(
                        backgroundColor = backgroundColor,
                        useGradient = useGradient,
                        imageCornerRadius = actualCornerRadius.dp,
-                       textAlign = when(textAlign) {
+                       textAlign = when (textAlign) {
                            Layout.Alignment.ALIGN_NORMAL -> TextAlign.Start
                            Layout.Alignment.ALIGN_CENTER -> TextAlign.Center
                            Layout.Alignment.ALIGN_OPPOSITE -> TextAlign.End
-                           else -> TextAlign.Center
                        },
                        fontScale = fontScale
                    )

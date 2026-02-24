@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.musika.app.LocalPlayerAwareWindowInsets
@@ -48,6 +49,7 @@ import com.musika.app.ui.component.InfoLabel
 import com.musika.app.utils.rememberPreference
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withLink
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -124,31 +126,32 @@ fun AiSettings(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     
+                    val uriHandler = androidx.compose.ui.platform.LocalUriHandler.current
                     val annotatedString = androidx.compose.ui.text.buildAnnotatedString {
                         append("1. Select your Provider (e.g., OpenRouter, ChatGPT) or 'Custom'.\n")
                         append("2. Enter your API Key.\n")
                         append("3. If 'Custom', enter the Base URL provided by your service.\n\n")
-                        
+
                         append("Need an API Key? Try ")
-                        pushStringAnnotation(tag = "URL", annotation = "https://openrouter.ai")
-                        withStyle(style = androidx.compose.ui.text.SpanStyle(color = MaterialTheme.colorScheme.primary, textDecoration = androidx.compose.ui.text.style.TextDecoration.Underline)) {
-                            append("OpenRouter.ai")
+                        val link = LinkAnnotation.Clickable("https://openrouter.ai") {
+                            uriHandler.openUri("https://openrouter.ai")
                         }
-                        pop()
+                        withStyle(
+                            style = androidx.compose.ui.text.SpanStyle(
+                                color = MaterialTheme.colorScheme.primary,
+                                textDecoration = androidx.compose.ui.text.style.TextDecoration.Underline
+                            )
+                        ) {
+                            withLink(link) {
+                                append("OpenRouter.ai")
+                            }
+                        }
                         append(" for access to many models.")
                     }
-                    
-                    val uriHandler = androidx.compose.ui.platform.LocalUriHandler.current
-                    
-                    androidx.compose.foundation.text.ClickableText(
+
+                    Text(
                         text = annotatedString,
-                        style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurface),
-                        onClick = { offset ->
-                            annotatedString.getStringAnnotations(tag = "URL", start = offset, end = offset)
-                                .firstOrNull()?.let { annotation ->
-                                    uriHandler.openUri(annotation.item)
-                                }
-                        }
+                        style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurface)
                     )
                 }
             }

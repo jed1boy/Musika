@@ -378,9 +378,9 @@ constructor(
                                 localSong.id == onlineSong.id ||
                                 (localSong.song.title.equals(onlineSong.title, ignoreCase = true) &&
                                  localSong.artists.any { artist ->
-                                     onlineSong.artists?.any { 
-                                         it.name.equals(artist.name, ignoreCase = true) 
-                                     } == true
+                                     onlineSong.artists.any {
+                                         it.name.equals(artist.name, ignoreCase = true)
+                                     }
                                  })
                             }
                         } ?: emptyList()
@@ -397,8 +397,8 @@ constructor(
                                 .setMediaMetadata(
                                     MediaMetadata.Builder()
                                         .setTitle(songItem.title)
-                                        .setSubtitle(songItem.artists?.joinToString(", ") { it.name } ?: "")
-                                        .setArtist(songItem.artists?.joinToString(", ") { it.name } ?: "")
+                                        .setSubtitle(songItem.artists.joinToString(", ") { it.name })
+                                        .setArtist(songItem.artists.joinToString(", ") { it.name })
                                         .setArtworkUri(songItem.thumbnail?.toUri())
                                         .setIsPlayable(true)
                                         .setIsBrowsable(true)

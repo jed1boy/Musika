@@ -1,0 +1,28 @@
+name: Upload Release Assets
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify release assets exist
+        run: |
+          ls -la releases
+          ls releases/*.apk
+
+      - name: Upload APKs to release
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b
+        with:
+          files: |
+            releases/*.apk
+          fail_on_unmatched_files: true
+          token: ${{ secrets.GH_RELEASE_TOKEN || github.token }}
