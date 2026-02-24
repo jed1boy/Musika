@@ -43,7 +43,7 @@ fun CastButton(
     tintColor: Color = MaterialTheme.colorScheme.onSurface,
 ) {
     val context = LocalContext.current
-    val playerConnection = LocalPlayerConnection.current
+    val playerConnection = LocalPlayerConnection.current ?: return
     val menuState = LocalMenuState.current
     
     var castAvailable by remember { mutableStateOf(false) }
@@ -57,20 +57,20 @@ fun CastButton(
     )
     
     // Get cast state from service
-    val castHandler = playerConnection?.service?.castConnectionHandler
+    val castHandler = playerConnection.service?.castConnectionHandler
     // Safely collect flows, defaulting to false/null if handler is not yet initialized
     val isCasting = castHandler?.isCasting?.collectAsState()?.value ?: false
     val isConnecting = castHandler?.isConnecting?.collectAsState()?.value ?: false
     
     // Get current media metadata
-    val currentMetadata by playerConnection?.mediaMetadata?.collectAsState() ?: remember { mutableStateOf(null) }
+    val currentMetadata by playerConnection.mediaMetadata.collectAsState()
 
     // Check if Cast is available and disconnect if disabled while casting
     LaunchedEffect(enableGoogleCast) {
         if (!enableGoogleCast) {
             // Disconnect from Cast if currently casting
             if (isCasting) {
-                playerConnection?.service?.castConnectionHandler?.disconnect()
+                playerConnection.service?.castConnectionHandler?.disconnect()
             }
             castAvailable = false
             mediaRouter = null
@@ -85,7 +85,7 @@ fun CastButton(
                 .addControlCategory(CastMediaControlIntent.categoryForCast(CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID))
                 .build()
             // Reinitialize the Cast handler to ensure it's ready
-            playerConnection?.service?.castConnectionHandler?.initialize()
+            playerConnection.service?.castConnectionHandler?.initialize()
             castAvailable = true
         } catch (e: Exception) {
             Timber.d("Cast not available: ${e.message}")
@@ -136,7 +136,7 @@ fun CastButton(
                     // Get current connected route if casting
                     val currentRoute = if (isCasting) {
                         mediaRouter?.routes?.find { route ->
-                            routeSelector?.let { selector -> 
+                            routeSelector?.let { selector ->
                                 route.matchesSelector(selector) && route.isSelected
                             } == true
                         }

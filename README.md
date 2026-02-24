@@ -62,8 +62,17 @@ Download the latest APK from the [Releases Page](https://github.com/jed1boy/Musi
 
 4. **Build**
    ```bash
-   ./gradlew assembleFossDebug
+   ./gradlew :app:assembleArm64Debug
+   # or
+   ./gradlew :app:assembleX86_64Debug
    ```
+
+---
+
+## Release process
+
+1. Place release APKs in `releases/` at the repo root.
+2. Create a GitHub Release. The workflow uploads `releases/*.apk` as assets.
 
 ---
 

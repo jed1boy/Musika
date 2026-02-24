@@ -65,6 +65,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.toLowerCase
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -83,8 +84,9 @@ import com.musika.app.utils.setAppLocale
 import java.net.Proxy
 import java.util.Locale
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.text.withLink
 
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.musika.app.viewmodels.SettingsViewModel
 import androidx.compose.runtime.collectAsState
 
@@ -458,11 +460,19 @@ fun ContentSettings(
         PreferenceGroupTitle(title = stringResource(R.string.sponsor_block))
         val creditText = androidx.compose.ui.text.buildAnnotatedString {
             append("Built and maintained by ")
-            pushStringAnnotation(tag = "URL", annotation = "https://ajay.app/")
-            withStyle(style = androidx.compose.ui.text.SpanStyle(color = MaterialTheme.colorScheme.primary, textDecoration = androidx.compose.ui.text.style.TextDecoration.Underline)) {
-                append("Ajay Ramachandran")
+            val link = LinkAnnotation.Clickable("https://ajay.app/") {
+                uriHandler.openUri("https://ajay.app/")
             }
-            pop()
+            withStyle(
+                style = androidx.compose.ui.text.SpanStyle(
+                    color = MaterialTheme.colorScheme.primary,
+                    textDecoration = androidx.compose.ui.text.style.TextDecoration.Underline
+                )
+            ) {
+                withLink(link) {
+                    append("Ajay Ramachandran")
+                }
+            }
         }
 
         PreferenceEntry(
@@ -485,15 +495,9 @@ fun ContentSettings(
                 )
             },
             content = {
-                androidx.compose.foundation.text.ClickableText(
+                Text(
                     text = creditText,
                     style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
-                    onClick = { offset ->
-                        creditText.getStringAnnotations(tag = "URL", start = offset, end = offset)
-                            .firstOrNull()?.let { annotation ->
-                                uriHandler.openUri(annotation.item)
-                            }
-                    },
                     modifier = Modifier.padding(top = 2.dp)
                 )
             }

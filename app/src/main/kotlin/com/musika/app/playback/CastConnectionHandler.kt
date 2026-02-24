@@ -678,15 +678,13 @@ class CastConnectionHandler(
             // Check if there's a next item in Cast queue
             val currentItemId = mediaStatus.currentItemId
             val queueItems = mediaStatus.queueItems
-            if (queueItems != null) {
-                val currentIndex = queueItems.indexOfFirst { it.itemId == currentItemId }
-                if (currentIndex >= 0 && currentIndex < queueItems.size - 1) {
-                    // There's a next item in Cast queue, use it
-                    client.queueNext(org.json.JSONObject())
-                    // Ensure local player stays paused
-                    musicService.player.pause()
-                    return
-                }
+            val currentIndex = queueItems.indexOfFirst { it.itemId == currentItemId }
+            if (currentIndex >= 0 && currentIndex < queueItems.size - 1) {
+                // There's a next item in Cast queue, use it
+                client.queueNext(org.json.JSONObject())
+                // Ensure local player stays paused
+                musicService.player.pause()
+                return
             }
         }
         
@@ -708,15 +706,13 @@ class CastConnectionHandler(
             // Check if there's a previous item in Cast queue
             val currentItemId = mediaStatus.currentItemId
             val queueItems = mediaStatus.queueItems
-            if (queueItems != null) {
-                val currentIndex = queueItems.indexOfFirst { it.itemId == currentItemId }
-                if (currentIndex > 0) {
-                    // There's a previous item in Cast queue, use it
-                    client.queuePrev(org.json.JSONObject())
-                    // Ensure local player stays paused
-                    musicService.player.pause()
-                    return
-                }
+            val currentIndex = queueItems.indexOfFirst { it.itemId == currentItemId }
+            if (currentIndex > 0) {
+                // There's a previous item in Cast queue, use it
+                client.queuePrev(org.json.JSONObject())
+                // Ensure local player stays paused
+                musicService.player.pause()
+                return
             }
         }
         
