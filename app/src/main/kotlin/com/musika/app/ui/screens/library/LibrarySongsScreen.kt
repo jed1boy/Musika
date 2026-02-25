@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.asPaddingValues
@@ -47,6 +48,8 @@ import com.musika.app.R
 import com.musika.app.constants.CONTENT_TYPE_HEADER
 import com.musika.app.constants.CONTENT_TYPE_SONG
 import com.musika.app.constants.HideExplicitKey
+import com.musika.app.constants.LibrarySourceFilter
+import com.musika.app.constants.LibrarySourceFilterKey
 import com.musika.app.constants.SongFilter
 import com.musika.app.constants.SongFilterKey
 import com.musika.app.constants.SongSortDescendingKey
@@ -94,6 +97,7 @@ fun LibrarySongsScreen(
     val songs by viewModel.allSongs.collectAsState()
 
     var filter by rememberEnumPreference(SongFilterKey, SongFilter.LIKED)
+    var sourceFilter by rememberEnumPreference(LibrarySourceFilterKey, LibrarySourceFilter.ALL)
 
     LaunchedEffect(Unit) {
         if (ytmSync) {
@@ -136,37 +140,49 @@ fun LibrarySongsScreen(
                 key = "filter",
                 contentType = CONTENT_TYPE_HEADER,
             ) {
-                Row {
-                    Spacer(Modifier.width(12.dp))
-                    FilterChip(
-                        label = { Text(stringResource(R.string.songs)) },
-                        selected = true,
-                        colors = FilterChipDefaults.filterChipColors(containerColor = MaterialTheme.colorScheme.surface),
-                        onClick = onDeselect,
-                        shape = RoundedCornerShape(16.dp),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-                        leadingIcon = {
-                            Icon(
-                                painter = painterResource(R.drawable.close),
-                                contentDescription = ""
-                            )
-                        },
-                    )
-                    ChipsRow(
-                        chips =
-                        listOf(
-                            SongFilter.LIKED to stringResource(R.string.filter_liked),
-                            SongFilter.LIBRARY to stringResource(R.string.filter_library),
-                            SongFilter.UPLOADED to stringResource(R.string.filter_uploaded),
-                            SongFilter.DOWNLOADED to stringResource(R.string.filter_downloaded),
-                            SongFilter.LOCAL to "Local",
-                        ),
-                        currentValue = filter,
-                        onValueUpdate = {
-                            filter = it
-                        },
-                        modifier = Modifier.weight(1f),
-                    )
+                Column {
+                    Row {
+                        Spacer(Modifier.width(12.dp))
+                        FilterChip(
+                            label = { Text(stringResource(R.string.songs)) },
+                            selected = true,
+                            colors = FilterChipDefaults.filterChipColors(containerColor = MaterialTheme.colorScheme.surface),
+                            onClick = onDeselect,
+                            shape = RoundedCornerShape(16.dp),
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(R.drawable.close),
+                                    contentDescription = ""
+                                )
+                            },
+                        )
+                        ChipsRow(
+                            chips =
+                            listOf(
+                                SongFilter.LIKED to stringResource(R.string.filter_liked),
+                                SongFilter.LIBRARY to stringResource(R.string.filter_library),
+                                SongFilter.UPLOADED to stringResource(R.string.filter_uploaded),
+                                SongFilter.DOWNLOADED to stringResource(R.string.filter_downloaded),
+                                SongFilter.LOCAL to stringResource(R.string.filter_source_local),
+                            ),
+                            currentValue = filter,
+                            onValueUpdate = { filter = it },
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
+                    if (filter == SongFilter.LIBRARY || filter == SongFilter.LIKED) {
+                        ChipsRow(
+                            chips = listOf(
+                                LibrarySourceFilter.ALL to stringResource(R.string.filter_all),
+                                LibrarySourceFilter.YOUTUBE to stringResource(R.string.filter_source_youtube),
+                                LibrarySourceFilter.LOCAL to stringResource(R.string.filter_source_local),
+                            ),
+                            currentValue = sourceFilter,
+                            onValueUpdate = { sourceFilter = it },
+                            modifier = Modifier.padding(top = 8.dp),
+                        )
+                    }
                 }
             }
 

@@ -17,6 +17,8 @@ import com.musika.app.constants.AlbumSortType
 import com.musika.app.constants.AlbumSortTypeKey
 import com.musika.app.constants.ArtistFilter
 import com.musika.app.constants.ArtistFilterKey
+import com.musika.app.constants.LibrarySourceFilter
+import com.musika.app.constants.LibrarySourceFilterKey
 import com.musika.app.constants.ArtistSongSortDescendingKey
 import com.musika.app.constants.ArtistSongSortType
 import com.musika.app.constants.ArtistSongSortTypeKey
@@ -74,23 +76,35 @@ constructor(
     val allSongs =
         context.dataStore.data
             .map {
-                Pair(
+                Triple(
                     Triple(
                         it[SongFilterKey].toEnum(SongFilter.LIKED),
                         it[SongSortTypeKey].toEnum(SongSortType.CREATE_DATE),
                         (it[SongSortDescendingKey] ?: true),
                     ),
-                    it[HideExplicitKey] ?: false
+                    it[HideExplicitKey] ?: false,
+                    it[LibrarySourceFilterKey].toEnum(LibrarySourceFilter.ALL),
                 )
             }.distinctUntilChanged()
-            .flatMapLatest { (filterSort, hideExplicit) ->
+            .flatMapLatest { (filterSort, hideExplicit, sourceFilter) ->
                 val (filter, sortType, descending) = filterSort
-                when (filter) {
-                    SongFilter.LIBRARY -> database.songs(sortType, descending).map { it.filterExplicit(hideExplicit) }
-                    SongFilter.LIKED -> database.likedSongs(sortType, descending).map { it.filterExplicit(hideExplicit) }
-                    SongFilter.DOWNLOADED -> database.downloadedSongs(sortType, descending).map { it.filterExplicit(hideExplicit) }
-                    SongFilter.UPLOADED -> database.uploadedSongs(sortType, descending).map { it.filterExplicit(hideExplicit) }
-                    SongFilter.LOCAL -> database.localSongs(sortType, descending).map { it.filterExplicit(hideExplicit) }
+                val songsFlow = when (filter) {
+                    SongFilter.LIBRARY -> database.songs(sortType, descending)
+                    SongFilter.LIKED -> database.likedSongs(sortType, descending)
+                    SongFilter.DOWNLOADED -> database.downloadedSongs(sortType, descending)
+                    SongFilter.UPLOADED -> database.uploadedSongs(sortType, descending)
+                    SongFilter.LOCAL -> database.localSongs(sortType, descending)
+                }
+                songsFlow.map { list ->
+                    val sourceFiltered = when (filter) {
+                        SongFilter.LIBRARY, SongFilter.LIKED -> when (sourceFilter) {
+                            LibrarySourceFilter.ALL -> list
+                            LibrarySourceFilter.YOUTUBE -> list.filter { !it.song.isLocal }
+                            LibrarySourceFilter.LOCAL -> list.filter { it.song.isLocal }
+                        }
+                        else -> list
+                    }
+                    sourceFiltered.filterExplicit(hideExplicit)
                 }.map { list ->
                     Timber.d("Filter: $filter, Songs found: ${list.size}")
                     if (filter == SongFilter.LOCAL) {
@@ -126,16 +140,20 @@ constructor(
     val allArtists =
         context.dataStore.data
             .map {
-                Triple(
-                    it[ArtistFilterKey].toEnum(ArtistFilter.LIKED),
-                    it[ArtistSortTypeKey].toEnum(ArtistSortType.CREATE_DATE),
-                    it[ArtistSortDescendingKey] ?: true,
+                Pair(
+                    Triple(
+                        it[ArtistFilterKey].toEnum(ArtistFilter.LIKED),
+                        it[ArtistSortTypeKey].toEnum(ArtistSortType.CREATE_DATE),
+                        it[ArtistSortDescendingKey] ?: true,
+                    ),
+                    it[LibrarySourceFilterKey].toEnum(LibrarySourceFilter.ALL),
                 )
             }.distinctUntilChanged()
-            .flatMapLatest { (filter, sortType, descending) ->
+            .flatMapLatest { (filterSort, sourceFilter) ->
+                val (filter, sortType, descending) = filterSort
                 when (filter) {
-                    ArtistFilter.LIBRARY -> database.artists(sortType, descending)
-                    ArtistFilter.LIKED -> database.artistsBookmarked(sortType, descending)
+                    ArtistFilter.LIBRARY -> database.artists(sortType, descending, sourceFilter)
+                    ArtistFilter.LIKED -> database.artistsBookmarked(sortType, descending, sourceFilter)
                 }
             }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
@@ -182,15 +200,27 @@ constructor(
                         it[AlbumSortTypeKey].toEnum(AlbumSortType.CREATE_DATE),
                         it[AlbumSortDescendingKey] ?: true,
                     ),
-                    it[HideExplicitKey] ?: false
+                    Pair(it[HideExplicitKey] ?: false, it[LibrarySourceFilterKey].toEnum(LibrarySourceFilter.ALL)),
                 )
             }.distinctUntilChanged()
-            .flatMapLatest { (filterSort, hideExplicit) ->
+            .flatMapLatest { (filterSort, hideExplicitSource) ->
+                val (hideExplicit, sourceFilter) = hideExplicitSource
                 val (filter, sortType, descending) = filterSort
-                when (filter) {
-                    AlbumFilter.LIBRARY -> database.albums(sortType, descending).map { it.filterExplicitAlbums(hideExplicit) }
-                    AlbumFilter.LIKED -> database.albumsLiked(sortType, descending).map { it.filterExplicitAlbums(hideExplicit) }
-                    AlbumFilter.UPLOADED -> database.albumsUploaded(sortType, descending).map { it.filterExplicitAlbums(hideExplicit) }
+                val albumsFlow = when (filter) {
+                    AlbumFilter.LIBRARY -> database.albums(sortType, descending)
+                    AlbumFilter.LIKED -> database.albumsLiked(sortType, descending)
+                    AlbumFilter.UPLOADED -> database.albumsUploaded(sortType, descending)
+                }
+                albumsFlow.map { list ->
+                    val sourceFiltered = when (filter) {
+                        AlbumFilter.LIBRARY, AlbumFilter.LIKED -> when (sourceFilter) {
+                            LibrarySourceFilter.ALL -> list
+                            LibrarySourceFilter.YOUTUBE -> list.filter { !it.album.isLocal }
+                            LibrarySourceFilter.LOCAL -> list.filter { it.album.isLocal }
+                        }
+                        else -> list
+                    }
+                    sourceFiltered.filterExplicitAlbums(hideExplicit)
                 }
             }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
@@ -304,11 +334,12 @@ constructor(
             .map { it[TopSize] ?: "50" }
             .distinctUntilChanged()
     var artists =
-        database
-            .artistsBookmarked(
-                ArtistSortType.CREATE_DATE,
-                true,
-            ).stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+        context.dataStore.data
+            .map { it[LibrarySourceFilterKey].toEnum(LibrarySourceFilter.ALL) }
+            .distinctUntilChanged()
+            .flatMapLatest { sourceFilter ->
+                database.artistsBookmarked(ArtistSortType.CREATE_DATE, true, sourceFilter)
+            }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
     var albums = context.dataStore.data
         .map { it[HideExplicitKey] ?: false }
         .distinctUntilChanged()

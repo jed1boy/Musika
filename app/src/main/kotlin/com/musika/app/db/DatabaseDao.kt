@@ -1,4 +1,4 @@
-﻿package com.musika.app.db
+package com.musika.app.db
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -681,7 +681,7 @@ interface DatabaseDao {
     )
     fun artistsBookmarkedByPlayTimeAsc(): Flow<List<Artist>>
 
-    fun artists(sortType: ArtistSortType, descending: Boolean) =
+    fun artists(sortType: ArtistSortType, descending: Boolean, sourceFilter: com.musika.app.constants.LibrarySourceFilter) =
         when (sortType) {
             ArtistSortType.CREATE_DATE -> artistsByCreateDateAsc()
             ArtistSortType.NAME -> artistsByNameAsc()
@@ -689,11 +689,20 @@ interface DatabaseDao {
             ArtistSortType.PLAY_TIME -> artistsByPlayTimeAsc()
         }.map { artists ->
             artists
-                .filter { it.artist.isYouTubeArtist || it.artist.isLocal } // TODO: add ui to filter by local or remote or something idk
+                .filter { artistWithSongs ->
+                    when (sourceFilter) {
+                        com.musika.app.constants.LibrarySourceFilter.ALL ->
+                            artistWithSongs.artist.isYouTubeArtist || artistWithSongs.artist.isLocal
+                        com.musika.app.constants.LibrarySourceFilter.YOUTUBE ->
+                            artistWithSongs.artist.isYouTubeArtist
+                        com.musika.app.constants.LibrarySourceFilter.LOCAL ->
+                            artistWithSongs.artist.isLocal
+                    }
+                }
                 .reversed(descending)
         }
 
-    fun artistsBookmarked(sortType: ArtistSortType, descending: Boolean) =
+    fun artistsBookmarked(sortType: ArtistSortType, descending: Boolean, sourceFilter: com.musika.app.constants.LibrarySourceFilter) =
         when (sortType) {
             ArtistSortType.CREATE_DATE -> artistsBookmarkedByCreateDateAsc()
             ArtistSortType.NAME -> artistsBookmarkedByNameAsc()
@@ -701,7 +710,16 @@ interface DatabaseDao {
             ArtistSortType.PLAY_TIME -> artistsBookmarkedByPlayTimeAsc()
         }.map { artists ->
             artists
-                .filter { it.artist.isYouTubeArtist || it.artist.isLocal } // TODO: add ui to filter by local or remote or something idk
+                .filter { artistWithSongs ->
+                    when (sourceFilter) {
+                        com.musika.app.constants.LibrarySourceFilter.ALL ->
+                            artistWithSongs.artist.isYouTubeArtist || artistWithSongs.artist.isLocal
+                        com.musika.app.constants.LibrarySourceFilter.YOUTUBE ->
+                            artistWithSongs.artist.isYouTubeArtist
+                        com.musika.app.constants.LibrarySourceFilter.LOCAL ->
+                            artistWithSongs.artist.isLocal
+                    }
+                }
                 .reversed(descending)
         }
 

@@ -105,6 +105,14 @@ val SongFilterKey = stringPreferencesKey("songFilter")
 val ArtistFilterKey = stringPreferencesKey("artistFilter")
 val AlbumFilterKey = stringPreferencesKey("albumFilter")
 
+enum class LibrarySourceFilter {
+    ALL,
+    YOUTUBE,
+    LOCAL,
+}
+
+val LibrarySourceFilterKey = stringPreferencesKey("librarySourceFilter")
+
 val LastLikeSongSyncKey = longPreferencesKey("last_like_song_sync")
 val LastLibSongSyncKey = longPreferencesKey("last_library_song_sync")
 val LastAlbumSyncKey = longPreferencesKey("last_album_sync")
@@ -359,6 +367,13 @@ val UseLoginForBrowse = booleanPreferencesKey("useLoginForBrowse")
 val LastImportantNoticeVersionKey = stringPreferencesKey("lastImportantNoticeVersion")
 val ShowFindInNavbarKey = booleanPreferencesKey("show_find_in_navbar")
 
+// Last.fm Scrobbling
+val LastFmSessionKey = stringPreferencesKey("lastFmSessionKey")
+val EnableScrobblingKey = booleanPreferencesKey("enableScrobbling")
+val LastFmNowPlayingKey = booleanPreferencesKey("lastFmNowPlaying")
+val ScrobbleMinTrackDurationKey = intPreferencesKey("scrobbleMinTrackDuration")
+val ScrobbleDelayPercentKey = intPreferencesKey("scrobbleDelayPercent")
+val ScrobbleDelayMinutesKey = intPreferencesKey("scrobbleDelayMinutes")
 
 val LanguageCodeToName =
     mapOf(

@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.screens.settings
+package com.musika.app.ui.screens.settings
 
 import android.annotation.TargetApi
 import android.content.Context
@@ -68,6 +68,7 @@ fun RomanizationSettings(
     val (lyricsRomanizeKyrgyz, onLyricsRomanizeKyrgyzChange) = rememberPreference(LyricsRomanizeKyrgyzKey, defaultValue = true)
     val (lyricsRomanizeMacedonian, onLyricsRomanizeMacedonianChange) = rememberPreference(LyricsRomanizeMacedonianKey, defaultValue = true)
     val (lyricsRomanizeCyrillicByLine, onLyricsRomanizeCyrillicByLineChange) = rememberPreference(LyricsRomanizeCyrillicByLineKey, defaultValue = false)
+    val (translateLanguage, onTranslateLanguageChange) = rememberPreference(TranslateLanguageKey, "en")
     val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
 
     Column(
@@ -76,6 +77,15 @@ fun RomanizationSettings(
             .verticalScroll(rememberScrollState()),
     ) {
         PreferenceGroupTitle(title = stringResource(R.string.general))
+
+        ListPreference(
+            title = { Text(stringResource(R.string.lyrics_translation_language)) },
+            icon = { Icon(painterResource(R.drawable.language_japanese_latin), null) },
+            selectedValue = translateLanguage,
+            values = LanguageCodeToName.keys.sortedBy { LanguageCodeToName[it] ?: it },
+            valueText = { LanguageCodeToName[it] ?: it },
+            onValueSelected = onTranslateLanguageChange,
+        )
 
         SwitchPreference(
             title = { Text(stringResource(R.string.lyrics_romanize_japanese)) },

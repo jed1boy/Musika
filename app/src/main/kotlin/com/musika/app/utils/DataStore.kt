@@ -39,6 +39,7 @@ private val sensitivePreferenceNames = setOf(
     "visitorData",
     "dataSyncId",
     "innerTubeCookie",
+    "lastFmSessionKey",
 )
 
 private fun isSensitivePreferenceKey(keyName: String): Boolean =

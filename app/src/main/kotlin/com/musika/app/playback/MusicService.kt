@@ -243,6 +243,8 @@ class MusicService :
 
     private val songUrlCache = java.util.concurrent.ConcurrentHashMap<String, Pair<String, Long>>()
 
+    private lateinit var lastFmScrobbler: LastFmScrobbler
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.action?.let { action ->
             when (action) {
@@ -483,6 +485,17 @@ class MusicService :
                 currentSkipSegments.value = SponsorBlockService.getSkipSegments(media.id)
             } else {
                 currentSkipSegments.value = emptyList()
+            }
+        }
+
+        // Last.fm Scrobbler
+        lastFmScrobbler = LastFmScrobbler(this, scope)
+        scope.launch {
+            while (isActive) {
+                delay(2000L)
+                if (::lastFmScrobbler.isInitialized) {
+                    lastFmScrobbler.lastPositionMs = player.currentPosition
+                }
             }
         }
 
@@ -1206,6 +1219,14 @@ class MusicService :
     ) {
         lastPlaybackSpeed = -1.0f // force update song
 
+        // Last.fm: scrobble previous track before metadata updates
+        if (::lastFmScrobbler.isInitialized) {
+            val previousMetadata = currentMediaMetadata.value
+            if (previousMetadata != null && mediaItem != null) {
+                lastFmScrobbler.onTrackEnded(previousMetadata)
+            }
+        }
+
         setupLoudnessEnhancer()
 
         if (player.playWhenReady && player.playbackState == Player.STATE_READY) {
@@ -1317,7 +1338,11 @@ class MusicService :
             }
         }
         if (events.containsAny(EVENT_TIMELINE_CHANGED, EVENT_POSITION_DISCONTINUITY)) {
-            currentMediaMetadata.value = player.currentMetadata
+            val newMetadata = player.currentMetadata
+            currentMediaMetadata.value = newMetadata
+            if (::lastFmScrobbler.isInitialized && newMetadata != null) {
+                lastFmScrobbler.onTrackStarted(newMetadata)
+            }
         }
     }
 
