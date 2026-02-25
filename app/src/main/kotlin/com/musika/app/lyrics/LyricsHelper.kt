@@ -1,4 +1,4 @@
-﻿package com.musika.app.lyrics
+package com.musika.app.lyrics
 
 import com.musika.app.lyrics.simpmusic.SimpMusicLyricsProvider
 
@@ -68,6 +68,20 @@ constructor(
                         SimpMusicLyricsProvider,
                         YouTubeSubtitleLyricsProvider,
                         YouTubeLyricsProvider
+                    )
+                    PreferredLyricsProvider.YOUTUBE_SUBTITLE -> listOf(
+                        YouTubeSubtitleLyricsProvider,
+                        LrcLibLyricsProvider,
+                        SimpMusicLyricsProvider,
+                        KuGouLyricsProvider,
+                        YouTubeLyricsProvider
+                    )
+                    PreferredLyricsProvider.YOUTUBE_MUSIC -> listOf(
+                        YouTubeLyricsProvider,
+                        LrcLibLyricsProvider,
+                        SimpMusicLyricsProvider,
+                        KuGouLyricsProvider,
+                        YouTubeSubtitleLyricsProvider
                     )
                 }
             }

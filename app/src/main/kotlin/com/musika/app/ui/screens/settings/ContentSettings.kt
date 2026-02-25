@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.screens.settings
+package com.musika.app.ui.screens.settings
 
 import android.annotation.TargetApi
 import android.content.Context
@@ -118,6 +118,8 @@ fun ContentSettings(
     val (enableKugou, onEnableKugouChange) = rememberPreference(key = EnableKugouKey, defaultValue = true)
     val (enableLrclib, onEnableLrclibChange) = rememberPreference(key = EnableLrcLibKey, defaultValue = true)
     val (enableSimpMusic, onEnableSimpMusicChange) = rememberPreference(key = EnableSimpMusicKey, defaultValue = true)
+    val (enableYouTubeSubtitle, onEnableYouTubeSubtitleChange) = rememberPreference(key = EnableYouTubeSubtitleKey, defaultValue = true)
+    val (enableYouTubeLyrics, onEnableYouTubeLyricsChange) = rememberPreference(key = EnableYouTubeLyricsKey, defaultValue = true)
     val (preferredProvider, onPreferredProviderChange) =
         rememberEnumPreference(
             key = PreferredLyricsProviderKey,
@@ -524,17 +526,37 @@ fun ContentSettings(
             checked = enableKugou,
             onCheckedChange = onEnableKugouChange,
         )
+        SwitchPreference(
+            title = { Text(stringResource(R.string.enable_youtube_subtitle)) },
+            icon = { Icon(painterResource(R.drawable.lyrics), null) },
+            checked = enableYouTubeSubtitle,
+            onCheckedChange = onEnableYouTubeSubtitleChange,
+        )
+        SwitchPreference(
+            title = { Text(stringResource(R.string.enable_youtube_music)) },
+            icon = { Icon(painterResource(R.drawable.lyrics), null) },
+            checked = enableYouTubeLyrics,
+            onCheckedChange = onEnableYouTubeLyricsChange,
+        )
 
         ListPreference(
             title = { Text(stringResource(R.string.set_first_lyrics_provider)) },
             icon = { Icon(painterResource(R.drawable.lyrics), null) },
             selectedValue = preferredProvider,
-            values = listOf(PreferredLyricsProvider.LRCLIB, PreferredLyricsProvider.SIMPMUSIC, PreferredLyricsProvider.KUGOU),
+            values = listOf(
+                PreferredLyricsProvider.LRCLIB,
+                PreferredLyricsProvider.SIMPMUSIC,
+                PreferredLyricsProvider.KUGOU,
+                PreferredLyricsProvider.YOUTUBE_SUBTITLE,
+                PreferredLyricsProvider.YOUTUBE_MUSIC,
+            ),
             valueText = {
                 when (it) {
                     PreferredLyricsProvider.LRCLIB -> "LrcLib"
                     PreferredLyricsProvider.SIMPMUSIC -> "SimpMusic"
                     PreferredLyricsProvider.KUGOU -> "KuGou"
+                    PreferredLyricsProvider.YOUTUBE_SUBTITLE -> stringResource(R.string.lyrics_provider_youtube_subtitle)
+                    PreferredLyricsProvider.YOUTUBE_MUSIC -> stringResource(R.string.lyrics_provider_youtube_music)
                 }
             },
             onValueSelected = onPreferredProviderChange,

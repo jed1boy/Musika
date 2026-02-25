@@ -113,6 +113,9 @@ fun LyricsMenu(
     var showSearchResultDialog by rememberSaveable {
         mutableStateOf(false)
     }
+    var searchResultFromChangeSource by rememberSaveable {
+        mutableStateOf(false)
+    }
 
     val searchMediaMetadata =
         remember(showSearchDialog) {
@@ -180,7 +183,7 @@ fun LyricsMenu(
                 Spacer(Modifier.width(8.dp))
 
                 val errorNoInternetText = stringResource(R.string.error_no_internet)
-                TextButton(
+                    TextButton(
                     onClick = {
                         // Try search regardless of network status indicator
                         // as it might be a false negative
@@ -190,6 +193,7 @@ fun LyricsMenu(
                             artistField.text,
                             searchMediaMetadata.duration
                         )
+                        searchResultFromChangeSource = false
                         showSearchResultDialog = true
                         
                         // Show warning only if network is definitely unavailable
@@ -230,6 +234,15 @@ fun LyricsMenu(
 
         ListDialog(
             onDismiss = { showSearchResultDialog = false },
+            title = {
+                Text(
+                    text = stringResource(
+                        if (searchResultFromChangeSource) R.string.lyrics_change_source
+                        else R.string.search_lyrics
+                    ),
+                    style = MaterialTheme.typography.titleMedium,
+                )
+            },
         ) {
             itemsIndexed(results) { index, result ->
                 Row(
@@ -391,6 +404,28 @@ fun LyricsMenu(
                         text = stringResource(R.string.search),
                         onClick = {
                             showSearchDialog = true
+                        }
+                    ),
+                    NewAction(
+                        icon = {
+                            Icon(
+                                painter = painterResource(R.drawable.sync),
+                                contentDescription = null,
+                                modifier = Modifier.size(28.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        },
+                        text = stringResource(R.string.lyrics_change_source),
+                        onClick = {
+                            val metadata = mediaMetadataProvider()
+                            viewModel.search(
+                                metadata.id,
+                                metadata.title,
+                                metadata.artists.joinToString { it.name },
+                                metadata.duration
+                            )
+                            searchResultFromChangeSource = true
+                            showSearchResultDialog = true
                         }
                     )
                 ),

@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.screens
+package com.musika.app.ui.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -11,8 +11,9 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -238,10 +239,10 @@ fun ExploreScreen(
                                 .fillMaxWidth()
                                 .height(ListItemHeight * 4),
                         ) {
-                            items(
+                            itemsIndexed(
                                 items = section.items.filterIsInstance<SongItem>().distinctBy { it.id },
-                                key = { it.id },
-                            ) { song ->
+                                key = { index, song -> "${song.id}_$index" },
+                            ) { _, song ->
                                 YouTubeListItem(
                                     item = song,
                                     isActive = song.id == mediaMetadata?.id,
@@ -309,10 +310,10 @@ fun ExploreScreen(
                             .only(WindowInsetsSides.Horizontal)
                             .asPaddingValues(),
                     ) {
-                        items(
+                        itemsIndexed(
                             items = newReleaseAlbums.distinctBy { it.id },
-                            key = { it.id },
-                        ) { album ->
+                            key = { index, album -> "${album.id}_$index" },
+                        ) { _, album ->
                             YouTubeGridItem(
                                 item = album,
                                 isActive = mediaMetadata?.album?.id == album.id,
@@ -349,10 +350,10 @@ fun ExploreScreen(
                             .only(WindowInsetsSides.Horizontal)
                             .asPaddingValues(),
                     ) {
-                        items(
+                        itemsIndexed(
                             items = topVideosSection.items.filterIsInstance<SongItem>().distinctBy { it.id },
-                            key = { it.id },
-                        ) { video ->
+                            key = { index, video -> "${video.id}_$index" },
+                        ) { _, video ->
                             YouTubeGridItem(
                                 item = video,
                                 isActive = video.id == mediaMetadata?.id,
@@ -401,7 +402,7 @@ fun ExploreScreen(
                         contentPadding = PaddingValues(6.dp),
                         modifier = Modifier.height((MoodAndGenresButtonHeight + 12.dp) * 4 + 12.dp),
                     ) {
-                        items(moodAndGenres) {
+                        itemsIndexed(moodAndGenres, key = { index, it -> "${it.endpoint.browseId}_$index" }) { _, it ->
                             MoodAndGenresButton(
                                 title = it.title,
                                 onClick = {

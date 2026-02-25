@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.screens.artist
+package com.musika.app.ui.screens.artist
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -619,10 +619,10 @@ fun ArtistScreen(
                         }
 
                         if ((section.items.firstOrNull() as? SongItem)?.album != null) {
-                            items(
+                            itemsIndexed(
                                 items = section.items.distinctBy { it.id },
-                                key = { "youtube_song_${it.id}" },
-                            ) { song ->
+                                key = { index, song -> "youtube_song_${song.id}_$index" },
+                            ) { _, song ->
                                 YouTubeListItem(
                                     item = song as SongItem,
                                     isActive = mediaMetadata?.id == song.id,
@@ -678,10 +678,10 @@ fun ArtistScreen(
                                 LazyRow(
                                     contentPadding = WindowInsets.systemBars.only(WindowInsetsSides.Horizontal).asPaddingValues(),
                                 ) {
-                                    items(
+                                    itemsIndexed(
                                         items = section.items.distinctBy { it.id },
-                                        key = { "youtube_album_${it.id}" },
-                                    ) { item ->
+                                        key = { index, item -> "youtube_album_${item.id}_$index" },
+                                    ) { _, item ->
                                         YouTubeGridItem(
                                             item = item,
                                             isActive = when (item) {
