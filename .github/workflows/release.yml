@@ -45,8 +45,7 @@ jobs:
           if [ -n "${{ github.event.inputs.release_tag }}" ]; then
             TAG="${{ github.event.inputs.release_tag }}"
           else
-            # Unique tag per run so every push creates a new release (avoids "tag already exists" when version unchanged)
-            TAG="v${{ steps.version.outputs.name }}+build.${{ github.run_number }}"
+            TAG="v${{ steps.version.outputs.name }}"
           fi
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           echo "Release tag: $TAG"
