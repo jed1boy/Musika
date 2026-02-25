@@ -26,6 +26,9 @@ build/
 # Desktop (Tauri)
 desktop/src-tauri/target/
 
+# Release artifacts
+releases/
+
 # Local configuration file (sdk path, etc)
 local.properties
 # Keep template for setup
