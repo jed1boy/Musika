@@ -209,6 +209,7 @@ fun BottomSheetPlayer(
     val playbackState by playerConnection.playbackState.collectAsState()
     val isPlaying by playerConnection.isPlaying.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
+    val albumArtOverride by playerConnection.albumArtOverride.collectAsState()
     val currentSong by playerConnection.currentSong.collectAsState(initial = null)
     val automix by playerConnection.service.automixItems.collectAsState()
     val repeatMode by playerConnection.repeatMode.collectAsState()
@@ -245,10 +246,11 @@ fun BottomSheetPlayer(
 val defaultGradientColors = listOf(MaterialTheme.colorScheme.surfaceContainer, MaterialTheme.colorScheme.surfaceContainerHigh)
     val fallbackColor = MaterialTheme.colorScheme.surfaceContainer.toArgb()
 
-    LaunchedEffect(mediaMetadata?.id, playerBackground) {
+    val effectiveThumbnail = albumArtOverride ?: mediaMetadata?.thumbnailUrl
+    LaunchedEffect(mediaMetadata?.id, playerBackground, effectiveThumbnail) {
         if (playerBackground == PlayerBackgroundStyle.GRADIENT) {
             val currentMetadata = mediaMetadata
-            if (currentMetadata != null && currentMetadata.thumbnailUrl != null) {
+            if (currentMetadata != null && effectiveThumbnail != null) {
                 val cachedColors = gradientColorsCache[currentMetadata.id]
                 if (cachedColors != null) {
                     gradientColors = cachedColors
@@ -256,7 +258,7 @@ val defaultGradientColors = listOf(MaterialTheme.colorScheme.surfaceContainer, M
                 }
                 withContext(Dispatchers.IO) {
                     val request = ImageRequest.Builder(context)
-                        .data(currentMetadata.thumbnailUrl)
+                        .data(effectiveThumbnail)
                         .size(100, 100)
                         .allowHardware(false)
                         .memoryCacheKey("gradient_${currentMetadata.id}")
@@ -1260,9 +1262,10 @@ val defaultGradientColors = listOf(MaterialTheme.colorScheme.surfaceContainer, M
                 ) {
                     // 1. Blurred Background Layer
                     mediaMetadata?.let { metadata ->
+                        val bgThumbnail = albumArtOverride ?: metadata.thumbnailUrl
                         AsyncImage(
                             model = coil3.request.ImageRequest.Builder(LocalContext.current)
-                                .data(metadata.thumbnailUrl)
+                                .data(bgThumbnail)
                                 .memoryCachePolicy(coil3.request.CachePolicy.ENABLED)
                                 .diskCachePolicy(coil3.request.CachePolicy.ENABLED)
                                 .networkCachePolicy(coil3.request.CachePolicy.ENABLED)

@@ -93,6 +93,7 @@ fun AmbientModeScreen(
     val activity = context as? Activity
     val playerConnection = LocalPlayerConnection.current ?: return
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
+    val albumArtOverride by playerConnection.albumArtOverride.collectAsState()
     val currentLyrics by playerConnection.currentLyrics.collectAsState(initial = null)
     val database = LocalDatabase.current
     val scope = rememberCoroutineScope()
@@ -107,11 +108,12 @@ fun AmbientModeScreen(
     // Extract song accent colors
     var gradientColors by remember { mutableStateOf<List<Color>>(emptyList()) }
     
-    LaunchedEffect(mediaMetadata?.thumbnailUrl, isSongAccent) {
-        if (isSongAccent && mediaMetadata?.thumbnailUrl != null) {
+    val effectiveThumbnail = albumArtOverride ?: mediaMetadata?.thumbnailUrl
+    LaunchedEffect(effectiveThumbnail, isSongAccent) {
+        if (isSongAccent && effectiveThumbnail != null) {
             try {
                 val request = ImageRequest.Builder(context)
-                    .data(mediaMetadata?.thumbnailUrl)
+                    .data(effectiveThumbnail)
                     .allowHardware(false)
                     .build()
                 val result = context.imageLoader.execute(request)
@@ -253,7 +255,7 @@ fun AmbientModeScreen(
                 ) {
                     mediaMetadata?.let { metadata ->
                         AsyncImage(
-                            model = metadata.thumbnailUrl,
+                            model = albumArtOverride ?: metadata.thumbnailUrl,
                             contentDescription = "Album Art",
                             modifier = Modifier
                                 .size(300.dp)

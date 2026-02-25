@@ -67,6 +67,8 @@
     <string name="maximum_volume">Maximum Volume</string>
     <string name="hide_player_thumbnail">Hide Player Thumbnail</string>
     <string name="hide_player_thumbnail_desc">Replace album artwork with app logo in player</string>
+    <string name="force_music_track_art">Force music track art</string>
+    <string name="force_music_track_art_desc">Prefer album artwork over video thumbnails for a cleaner look</string>
 
     <string name="already_in_playlist">Already in playlist:</string>
 

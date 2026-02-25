@@ -470,16 +470,22 @@ class CastConnectionHandler(
     /**
      * Build MediaInfo for a single track
      */
-    private suspend fun buildMediaInfo(metadata: AppMediaMetadata): MediaInfo? {
+    private suspend fun buildMediaInfo(metadata: AppMediaMetadata, isCurrentItem: Boolean = false): MediaInfo? {
         val streamUrl = musicService.getStreamUrl(metadata.id) ?: return null
+        
+        val thumbUrl = if (isCurrentItem) {
+            musicService.albumArtOverride.value ?: metadata.thumbnailUrl
+        } else {
+            metadata.thumbnailUrl
+        }
         
         val castMetadata = MediaMetadata(MediaMetadata.MEDIA_TYPE_MUSIC_TRACK).apply {
             putString(MediaMetadata.KEY_TITLE, metadata.title)
             putString(MediaMetadata.KEY_ARTIST, metadata.artists.joinToString(", ") { it.name })
             metadata.album?.title?.let { putString(MediaMetadata.KEY_ALBUM_TITLE, it) }
-            metadata.thumbnailUrl?.let { thumbUrl ->
+            thumbUrl?.let { url ->
                 // Use high quality thumbnail (1080x1080) for Cast display
-                val highQualityUrl = thumbUrl.resize(1080, 1080)
+                val highQualityUrl = url.resize(1080, 1080)
                 addImage(WebImage(highQualityUrl.toUri()))
             }
         }
@@ -527,7 +533,7 @@ class CastConnectionHandler(
                 startIndex = queueItems.size // Current item index after previous items
                 
                 // Add current item
-                val currentMediaInfo = buildMediaInfo(metadata)
+                val currentMediaInfo = buildMediaInfo(metadata, isCurrentItem = true)
                 if (currentMediaInfo == null) {
                     Timber.e("Failed to get stream URL for Cast")
                     _castIsBuffering.value = false

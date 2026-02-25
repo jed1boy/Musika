@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.screens.settings
+package com.musika.app.ui.screens.settings
 
 import android.os.Build
 import androidx.compose.foundation.background
@@ -64,6 +64,7 @@ import com.musika.app.constants.SimilarContent
 import com.musika.app.constants.SkipSilenceKey
 import com.musika.app.constants.StopMusicOnTaskClearKey
 import com.musika.app.constants.TapAlbumArtForLyricsKey
+import com.musika.app.constants.ForceMusicTrackArtKey
 import com.musika.app.constants.HistoryDuration
 import com.musika.app.constants.SeekExtraSeconds
 import com.musika.app.ui.component.EnumListPreference
@@ -135,6 +136,10 @@ fun PlayerSettings(
     )
     val (tapAlbumArtForLyrics, onTapAlbumArtForLyricsChange) = rememberPreference(
         TapAlbumArtForLyricsKey,
+        defaultValue = false
+    )
+    val (forceMusicTrackArt, onForceMusicTrackArtChange) = rememberPreference(
+        ForceMusicTrackArtKey,
         defaultValue = false
     )
     val (doubleTapToLike, onDoubleTapToLikeChange) = rememberPreference(
@@ -284,6 +289,14 @@ fun PlayerSettings(
             icon = { Icon(painterResource(R.drawable.favorite), null) },
             checked = doubleTapToLike,
             onCheckedChange = onDoubleTapToLikeChange
+        )
+
+        SwitchPreference(
+            title = { Text(stringResource(R.string.force_music_track_art)) },
+            description = stringResource(R.string.force_music_track_art_desc),
+            icon = { Icon(painterResource(R.drawable.insert_photo), null) },
+            checked = forceMusicTrackArt,
+            onCheckedChange = onForceMusicTrackArtChange
         )
 
         SwitchPreference(
