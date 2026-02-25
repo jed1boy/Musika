@@ -158,6 +158,7 @@ import com.musika.innertube.YouTube
 import com.musika.innertube.models.SongItem
 import com.musika.innertube.models.WatchEndpoint
 import com.musika.app.constants.AppBarHeight
+import com.musika.app.constants.AutoClearHistoryOnCloseKey
 import com.musika.app.constants.AppLanguageKey
 import com.musika.app.constants.CheckForUpdatesKey
 import com.musika.app.constants.LastImportantNoticeVersionKey
@@ -310,6 +311,12 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onStop() {
+        if (dataStore.get(AutoClearHistoryOnCloseKey, false)) {
+            database.query {
+                clearListenHistory()
+                clearSearchHistory()
+            }
+        }
         if (isServiceBound) {
             try {
                 unbindService(serviceConnection)
@@ -412,13 +419,8 @@ class MainActivity : ComponentActivity() {
                     }
                 }
                 
-                // Location permissions for Cast device discovery (all Android versions)
-                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    permissionsToRequest.add(Manifest.permission.ACCESS_FINE_LOCATION)
-                }
-                if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    permissionsToRequest.add(Manifest.permission.ACCESS_COARSE_LOCATION)
-                }
+                // Location permissions are NOT requested at startup.
+                // They are requested on-demand when the user opens Cast device discovery.
                 
                 // Nearby WiFi devices (Android 13+)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

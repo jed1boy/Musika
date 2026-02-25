@@ -1,4 +1,4 @@
-﻿package com.musika.app.repositories
+package com.musika.app.repositories
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
@@ -8,6 +8,8 @@ import com.musika.app.constants.*
 import com.musika.app.db.AccountDao
 import com.musika.app.db.entities.AccountEntity
 import com.musika.app.utils.dataStore
+import com.musika.app.utils.putSensitivePreference
+import com.musika.app.utils.removeSensitivePreference
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -105,13 +107,13 @@ class AccountRepository @Inject constructor(
     }
 
     private suspend fun applyAccountToPreferences(account: AccountEntity) {
+        context.putSensitivePreference(InnerTubeCookieKey, account.innerTubeCookie)
+        context.putSensitivePreference(VisitorDataKey, account.visitorData)
+        context.putSensitivePreference(DataSyncIdKey, account.dataSyncId)
         context.dataStore.edit { settings ->
             settings[AccountNameKey] = account.name
             settings[AccountEmailKey] = account.email
             settings[AccountChannelHandleKey] = account.channelHandle
-            settings[InnerTubeCookieKey] = account.innerTubeCookie
-            settings[VisitorDataKey] = account.visitorData
-            settings[DataSyncIdKey] = account.dataSyncId
             settings[ActiveAccountIdKey] = account.id
         }
 
@@ -122,13 +124,13 @@ class AccountRepository @Inject constructor(
     }
 
     private suspend fun clearAccountPreferences() {
+        context.removeSensitivePreference(InnerTubeCookieKey)
+        context.removeSensitivePreference(VisitorDataKey)
+        context.removeSensitivePreference(DataSyncIdKey)
         context.dataStore.edit { settings ->
             settings.remove(AccountNameKey)
             settings.remove(AccountEmailKey)
             settings.remove(AccountChannelHandleKey)
-            settings.remove(InnerTubeCookieKey)
-            settings.remove(VisitorDataKey)
-            settings.remove(DataSyncIdKey)
             settings.remove(ActiveAccountIdKey)
         }
 

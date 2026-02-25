@@ -1,4 +1,4 @@
-﻿package com.musika.app.constants
+package com.musika.app.constants
 
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.floatPreferencesKey
@@ -79,6 +79,8 @@ val MaxSongCacheSizeKey = intPreferencesKey("maxSongCacheSize")
 
 val PauseListenHistoryKey = booleanPreferencesKey("pauseListenHistory")
 val PauseSearchHistoryKey = booleanPreferencesKey("pauseSearchHistory")
+val IncognitoModeKey = booleanPreferencesKey("incognitoMode")
+val AutoClearHistoryOnCloseKey = booleanPreferencesKey("autoClearHistoryOnClose")
 val DisableScreenshotKey = booleanPreferencesKey("disableScreenshot")
 
 val ChipSortTypeKey = stringPreferencesKey("chipSortType")

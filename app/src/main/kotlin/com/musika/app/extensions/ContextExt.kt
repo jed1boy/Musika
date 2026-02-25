@@ -1,4 +1,4 @@
-﻿package com.musika.app.extensions
+package com.musika.app.extensions
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -6,6 +6,7 @@ import android.net.NetworkCapabilities
 import com.musika.app.constants.InnerTubeCookieKey
 import com.musika.app.constants.YtmSyncKey
 import com.musika.app.utils.dataStore
+import com.musika.app.utils.getSensitivePreference
 import com.musika.app.utils.get
 import com.musika.innertube.utils.parseCookieString
 import kotlinx.coroutines.runBlocking
@@ -18,7 +19,7 @@ fun Context.isSyncEnabled(): Boolean {
 
 fun Context.isUserLoggedIn(): Boolean {
     return runBlocking {
-        val cookie = dataStore[InnerTubeCookieKey] ?: ""
+        val cookie = getSensitivePreference(InnerTubeCookieKey)
         "SAPISID" in parseCookieString(cookie) && isInternetConnected()
     }
 }

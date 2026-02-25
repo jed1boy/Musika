@@ -112,23 +112,6 @@
 -keep class com.yalantis.ucrop** { *; }
 -keep interface com.yalantis.ucrop** { *; }
 
-## Firebase Rules
-# Keep Firebase classes
--keep class com.google.firebase.** { *; }
--keep class com.google.android.gms.** { *; }
--dontwarn com.google.firebase.**
--dontwarn com.google.android.gms.**
-
-# Keep Crashlytics
--keepattributes SourceFile,LineNumberTable
--keep public class * extends java.lang.Exception
--keep class com.google.firebase.crashlytics.** { *; }
--dontwarn com.google.firebase.crashlytics.**
-
-# Keep Analytics
--keep class com.google.firebase.analytics.** { *; }
--dontwarn com.google.firebase.analytics.**
-
 ## Hilt/Dagger Rules
 -keepclasseswithmembers class * {
     @dagger.* <methods>;

@@ -1,4 +1,4 @@
-﻿package com.musika.app.viewmodels
+package com.musika.app.viewmodels
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -24,6 +24,7 @@ import com.musika.app.extensions.toEnum
 import com.musika.app.models.SimilarRecommendation
 import com.musika.app.utils.dataStore
 import com.musika.app.utils.get
+import com.musika.app.utils.observeSensitivePreference
 import com.musika.app.utils.reportException
 import com.musika.app.utils.SyncUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -223,8 +224,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            context.dataStore.data
-                .map { it[InnerTubeCookieKey] }
+            context.observeSensitivePreference(InnerTubeCookieKey)
                 .distinctUntilChanged()
                 .first()
             
@@ -238,8 +238,7 @@ class HomeViewModel @Inject constructor(
 
         // Listen for cookie changes and reload account data
         viewModelScope.launch(Dispatchers.IO) {
-            context.dataStore.data
-                .map { it[InnerTubeCookieKey] }
+            context.observeSensitivePreference(InnerTubeCookieKey)
                 .collect { cookie ->
                     // Avoid processing if already processing
                     if (isProcessingAccountData) return@collect

@@ -42,9 +42,9 @@ import com.google.zxing.qrcode.QRCodeWriter
 import com.musika.app.R
 
 enum class CryptoType(val displayName: String, val address: String, val icon: Int) {
-    BITCOIN("Bitcoin", "bc1qcvyr7eekha8uytmffcvgzf4h7xy7shqzke35fy", R.drawable.currency_bitcoin),
-    ETHEREUM("Ethereum", "0x51bc91022E2dCef9974D5db2A0e22d57B360e700", R.drawable.currency_ethereum),
-    SOLANA("Solana", "9wjca3EQnEiqzqgy7N5iqS1JGXJiknMQv6zHgL96t94S", R.drawable.currency_solana)
+    BITCOIN("Bitcoin", "1JdodTmf8X2qwqxVSoU34LCME2jcuAxoUq", R.drawable.currency_bitcoin),
+    ETHEREUM("Ethereum", "0x896ede0d9a718f0aa00288d0428252c34100e7fd", R.drawable.currency_ethereum),
+    SOLANA("Solana", "6qLM8XMnokSK23euiomRCVEsR2Ds6vvwUQfaNqeNieDM", R.drawable.currency_solana)
 }
 
 @Composable

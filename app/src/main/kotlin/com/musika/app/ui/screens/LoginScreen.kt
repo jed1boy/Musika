@@ -1,8 +1,10 @@
-﻿package com.musika.app.ui.screens
+package com.musika.app.ui.screens
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.webkit.CookieManager
 import android.webkit.JavascriptInterface
+import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
@@ -115,6 +117,14 @@ fun LoginScreen(
                     setSupportZoom(true)
                     builtInZoomControls = true
                     displayZoomControls = false
+                    allowFileAccess = false
+                    allowContentAccess = false
+                    allowFileAccessFromFileURLs = false
+                    allowUniversalAccessFromFileURLs = false
+                    mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        safeBrowsingEnabled = true
+                    }
                 }
                 addJavascriptInterface(object {
                     @JavascriptInterface

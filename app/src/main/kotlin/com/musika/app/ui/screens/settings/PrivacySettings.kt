@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.screens.settings
+package com.musika.app.ui.screens.settings
 
 import android.os.Build
 import androidx.compose.foundation.background
@@ -48,6 +48,8 @@ import androidx.compose.material.icons.rounded.Mic
 import androidx.compose.material.icons.rounded.Notifications
 import com.musika.app.R
 import com.musika.app.constants.DisableScreenshotKey
+import com.musika.app.constants.AutoClearHistoryOnCloseKey
+import com.musika.app.constants.IncognitoModeKey
 import com.musika.app.constants.PauseListenHistoryKey
 import com.musika.app.constants.PauseSearchHistoryKey
 import com.musika.app.ui.component.DefaultDialog
@@ -75,6 +77,14 @@ fun PrivacySettings(
     )
     val (disableScreenshot, onDisableScreenshotChange) = rememberPreference(
         key = DisableScreenshotKey,
+        defaultValue = false
+    )
+    val (incognitoMode, onIncognitoModeChange) = rememberPreference(
+        key = IncognitoModeKey,
+        defaultValue = false
+    )
+    val (autoClearHistoryOnClose, onAutoClearHistoryOnCloseChange) = rememberPreference(
+        key = AutoClearHistoryOnCloseKey,
         defaultValue = false
     )
 
@@ -194,6 +204,29 @@ fun PrivacySettings(
         )
 
         PreferenceGroupTitle(
+            title = stringResource(R.string.session_privacy)
+        )
+
+        SwitchPreference(
+            title = { Text(stringResource(R.string.incognito_mode)) },
+            description = stringResource(R.string.incognito_mode_desc),
+            icon = { Icon(painterResource(R.drawable.security), null) },
+            checked = incognitoMode,
+            onCheckedChange = {
+                onIncognitoModeChange(it)
+                onPauseListenHistoryChange(it)
+                onPauseSearchHistoryChange(it)
+            },
+        )
+        SwitchPreference(
+            title = { Text(stringResource(R.string.auto_clear_on_close)) },
+            description = stringResource(R.string.auto_clear_on_close_desc),
+            icon = { Icon(painterResource(R.drawable.clear_all), null) },
+            checked = autoClearHistoryOnClose,
+            onCheckedChange = onAutoClearHistoryOnCloseChange,
+        )
+
+        PreferenceGroupTitle(
             title = "Permissions"
         )
 
@@ -232,12 +265,14 @@ fun PrivacySettings(
                     androidx.compose.material.icons.Icons.Rounded.Bluetooth
                 ))
             }
-             list.add(PermissionInfo(
-                android.Manifest.permission.ACCESS_FINE_LOCATION,
-                "Location",
-                "Used to discover Cast devices on your network.",
-                androidx.compose.material.icons.Icons.Rounded.LocationOn
-            ))
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S) {
+                list.add(PermissionInfo(
+                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    "Location",
+                    "Used to discover Cast devices on your network (Android 12 and below only).",
+                    androidx.compose.material.icons.Icons.Rounded.LocationOn
+                ))
+            }
             
             list
         }

@@ -18,17 +18,17 @@ import coil3.request.crossfade
 import com.musika.innertube.YouTube
 import com.musika.innertube.models.YouTubeLocale
 import com.musika.kugou.KuGou
-import com.google.firebase.FirebaseApp
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.musika.app.BuildConfig
 import com.musika.app.constants.*
 import com.musika.app.di.ApplicationScope
 import com.musika.app.extensions.toEnum
 import com.musika.app.extensions.toInetSocketAddress
 import com.musika.app.utils.CrashHandler
 import com.musika.app.utils.dataStore
+import com.musika.app.utils.getSensitivePreference
 import com.musika.app.utils.get
+import com.musika.app.utils.observeSensitivePreference
+import com.musika.app.utils.putSensitivePreference
+import com.musika.app.utils.removeSensitivePreference
 import com.musika.app.utils.reportException
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
@@ -58,33 +58,6 @@ class App : Application(), SingletonImageLoader.Factory {
         Thread.setDefaultUncaughtExceptionHandler(CrashHandler(applicationContext))
         Timber.plant(Timber.DebugTree())
 
-        // Initialize Firebase with error handling
-        try {
-            val firebaseApp = FirebaseApp.initializeApp(this)
-            if (firebaseApp != null) {
-                // Enable Firebase Crashlytics collection
-                try {
-                    FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
-                } catch (e: Exception) {
-                    Timber.w(e, "Failed to enable Crashlytics")
-                }
-                
-                // Set user properties for Firebase Analytics
-                try {
-                    FirebaseAnalytics.getInstance(this).apply {
-                        setUserProperty("app_version", BuildConfig.VERSION_NAME)
-                        setUserProperty("architecture", BuildConfig.ARCHITECTURE)
-                    }
-                } catch (e: Exception) {
-                    Timber.w(e, "Failed to set Firebase Analytics properties")
-                }
-            } else {
-                Timber.w("Firebase initialization returned null - continuing without Firebase")
-            }
-        } catch (e: Exception) {
-            Timber.w(e, "Failed to initialize Firebase - app will continue without Firebase services")
-        }
-
         // تهيئة إعدادات التطبيق عند الإقلاع
         applicationScope.launch {
             initializeSettings()
@@ -112,8 +85,8 @@ class App : Application(), SingletonImageLoader.Factory {
         }
 
         if (settings[ProxyEnabledKey] == true) {
-            val username = settings[ProxyUsernameKey].orEmpty()
-            val password = settings[ProxyPasswordKey].orEmpty()
+            val username = getSensitivePreference(ProxyUsernameKey)
+            val password = getSensitivePreference(ProxyPasswordKey)
             val type = settings[ProxyTypeKey].toEnum(defaultValue = Proxy.Type.HTTP)
 
             if (username.isNotEmpty() || password.isNotEmpty()) {
@@ -153,22 +126,18 @@ class App : Application(), SingletonImageLoader.Factory {
 
     private fun observeSettingsChanges() {
         applicationScope.launch(Dispatchers.IO) {
-            dataStore.data
-                .map { it[VisitorDataKey] }
+            observeSensitivePreference(VisitorDataKey)
                 .distinctUntilChanged()
                 .collect { visitorData ->
                     YouTube.visitorData = visitorData?.takeIf { it != "null" }
                         ?: YouTube.visitorData().getOrNull()?.also { newVisitorData ->
-                            dataStore.edit { settings ->
-                                settings[VisitorDataKey] = newVisitorData
-                            }
+                            putSensitivePreference(VisitorDataKey, newVisitorData)
                         }
                 }
         }
 
         applicationScope.launch(Dispatchers.IO) {
-            dataStore.data
-                .map { it[DataSyncIdKey] }
+            observeSensitivePreference(DataSyncIdKey)
                 .distinctUntilChanged()
                 .collect { dataSyncId ->
                     YouTube.dataSyncId = dataSyncId?.let {
@@ -180,8 +149,7 @@ class App : Application(), SingletonImageLoader.Factory {
         }
 
         applicationScope.launch(Dispatchers.IO) {
-            dataStore.data
-                .map { it[InnerTubeCookieKey] }
+            observeSensitivePreference(InnerTubeCookieKey)
                 .distinctUntilChanged()
                 .collect { cookie ->
                     try {
@@ -216,10 +184,10 @@ class App : Application(), SingletonImageLoader.Factory {
 
     companion object {
         suspend fun forgetAccount(context: Context) {
+            context.removeSensitivePreference(InnerTubeCookieKey)
+            context.removeSensitivePreference(VisitorDataKey)
+            context.removeSensitivePreference(DataSyncIdKey)
             context.dataStore.edit { settings ->
-                settings.remove(InnerTubeCookieKey)
-                settings.remove(VisitorDataKey)
-                settings.remove(DataSyncIdKey)
                 settings.remove(AccountNameKey)
                 settings.remove(AccountEmailKey)
                 settings.remove(AccountChannelHandleKey)
