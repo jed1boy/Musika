@@ -44,10 +44,6 @@ Musika delivers a seamless, premium listening experience by leveraging YouTube M
 ### Android
 Download the latest APK from the [Releases Page](https://github.com/jed1boy/Musika/releases/latest).
 
-### Desktop (Windows)
-Desktop builds ship alongside Android releases. Download the installer from the
-[Releases Page](https://github.com/jed1boy/Musika/releases/latest).
-
 ### Build from Source
 
 1. **Clone the repository**
@@ -71,20 +67,12 @@ Desktop builds ship alongside Android releases. Download the installer from the
    ./gradlew :app:assembleX86_64Debug
    ```
 
-### Desktop (Windows) from Source
-```bash
-cd desktop
-npm install
-npm run dev
-```
-
 ---
 
 ## Release process
 
-- Push to `main` to trigger the Android release workflow.
-- Push to `desktop-release` to trigger the desktop release workflow.
-- Tags are created automatically as `android-vX.Y.Z` and `desktop-vX.Y.Z`.
+1. Place release APKs in `releases/` at the repo root.
+2. Create a GitHub Release. The workflow uploads `releases/*.apk` as assets.
 
 ---
 

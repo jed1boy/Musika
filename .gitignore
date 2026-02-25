@@ -23,9 +23,6 @@ out/
 .gradle/
 build/
 
-# Desktop (Tauri)
-desktop/src-tauri/target/
-
 # Local configuration file (sdk path, etc)
 local.properties
 # Keep template for setup

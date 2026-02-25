@@ -8,8 +8,6 @@ This document provides instructions for setting up the Musika project for develo
 - Android SDK (API level as specified in `build.gradle.kts`)
 - JDK 11 or higher
 - Git
-- Node.js 18+ (Desktop)
-- Rust stable toolchain (Desktop)
 
 ## Initial Setup
 
@@ -92,15 +90,7 @@ Open the project in Android Studio or build from the command line:
 ./gradlew assembleRelease
 ```
 
-### 6. Desktop App (Windows)
-
-```bash
-cd desktop
-npm install
-npm run dev
-```
-
-### 7. Configure AI Translation (Optional)
+### 6. Configure AI Translation (Optional)
 
 Musika supports AI-powered lyrics translation. You can configure this in **Settings -> AI Settings**.
 
