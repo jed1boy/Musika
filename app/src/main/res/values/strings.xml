@@ -342,6 +342,11 @@
     <string name="pause_search_history">Pause search history</string>
     <string name="clear_search_history">Clear search history</string>
     <string name="clear_search_history_confirm">Are you sure you want to clear all search history?</string>
+    <string name="session_privacy">Session privacy</string>
+    <string name="incognito_mode">Incognito mode</string>
+    <string name="incognito_mode_desc">Do not save listen history or search history while enabled.</string>
+    <string name="auto_clear_on_close">Auto-clear history on close</string>
+    <string name="auto_clear_on_close_desc">Automatically clear listen and search history when the app closes.</string>
     <string name="use_login_for_browse">Use login for browsing content</string>
     <string name="use_login_for_browse_desc">This can influence what content you see and for example shows premium-only albums if you are logged in with a Premium account</string>
     <string name="disable_screenshot">Disable screenshot</string>

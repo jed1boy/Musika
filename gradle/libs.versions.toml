@@ -37,9 +37,6 @@ timber = "5.0.1"
 materialKolor = "4.1.1"
 kuromojiIpadic = "0.9.0"
 extractor = "8773f0d"
-firebaseBom = "34.9.0"
-googleServices = "4.4.4"
-firebaseCrashlyticsGradle = "3.0.6"
 castFramework = "22.3.0"
 mlkitLanguageId = "17.0.6"
 zxing = "3.5.4"
@@ -48,6 +45,7 @@ retrofit = "2.11.0"
 gson = "2.13.2"
 okhttpLogging = "4.12.0"
 composeMaterialIcons = "1.7.8"
+securityCrypto = "1.1.0"
 
 [libraries]
 annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
@@ -135,12 +133,6 @@ extractor = { module = "com.github.mostafaalagamy:MetrolistExtractor", version.r
 
 kuromoji-ipadic = { module = "com.atilika.kuromoji:kuromoji-ipadic", version.ref = "kuromojiIpadic" }
 
-# Firebase
-firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
-firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
-firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
-google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
-firebase-crashlytics-gradle = { module = "com.google.firebase:firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsGradle" }
 mlkit-language-id = { module = "com.google.mlkit:language-id", version.ref = "mlkitLanguageId" }
 
 zxing-core = { module = "com.google.zxing:core", version.ref = "zxing" }
@@ -149,11 +141,10 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 retrofit-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 okhttp-logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttpLogging" }
+security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
 
 [plugins]
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsGradle" }

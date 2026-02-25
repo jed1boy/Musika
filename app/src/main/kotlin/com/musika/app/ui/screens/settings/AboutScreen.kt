@@ -195,7 +195,7 @@ fun AboutScreen(
             Spacer(Modifier.height(12.dp))
 
             Text(
-                text = "Developed by Aditya",
+                text = "Developed by jed1boy",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -232,46 +232,10 @@ fun AboutScreen(
         ) {
             Column(modifier = Modifier.padding(4.dp)) {
                 SocialLinkItem(
-                    icon = painterResource(R.drawable.language),
-                    title = "Website",
-                    subtitle = "Musika.fun",
-                    onClick = { uriHandler.openUri("https://Musika.fun") }
-                )
-                
-                HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-                )
-                
-SocialLinkItem(
                     icon = painterResource(R.drawable.github),
                     title = "GitHub",
                     subtitle = "jed1boy/Musika",
-                    onClick = { uriHandler.openUri("https://github.com/jed1boy/Musika") }
-                )
-                
-                HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-                )
-                
-                SocialLinkItem(
-                    icon = painterResource(R.drawable.discord),
-                    title = "Discord",
-                    subtitle = "Join our community",
-                    onClick = { uriHandler.openUri("https://discord.gg/EcfV3AxH5c") }
-                )
-                
-                HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-                )
-                
-                SocialLinkItem(
-                    icon = painterResource(R.drawable.telegram),
-                    title = "Telegram",
-                    subtitle = "Follow for updates",
-                    onClick = { uriHandler.openUri("https://t.me/MusikaApp") },
+                    onClick = { uriHandler.openUri("https://github.com/jed1boy/Musika") },
                     isLast = true
                 )
             }
@@ -298,34 +262,8 @@ SocialLinkItem(
             shape = RoundedCornerShape(20.dp)
         ) {
             Column(modifier = Modifier.padding(4.dp)) {
-BuyMeCoffeeItem(
+                BuyMeCoffeeItem(
                     onClick = { uriHandler.openUri("https://buymeacoffee.com/jzee") }
-                )
-                
-                HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-                )
-                
-                SocialLinkItem(
-                    icon = painterResource(R.drawable.patreon),
-                    title = "Patreon",
-                    subtitle = "Monthly support",
-                    iconSize = 24.dp,
-                    onClick = { uriHandler.openUri("https://patreon.com/jed1boy") }
-                )
-                
-                HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-                )
-                
-                SocialLinkItem(
-                    icon = painterResource(R.drawable.upi),
-                    title = "UPI Payment",
-                    subtitle = "Support via UPI (India)",
-                    iconSize = 30.dp,
-                    onClick = { uriHandler.openUri("https://github.com/sponsors/jed1boy") }
                 )
                 
                 HorizontalDivider(
@@ -346,7 +284,7 @@ BuyMeCoffeeItem(
 
         Spacer(Modifier.height(24.dp))
 
-        // Contact & Legal Section
+        // Legal Section
         Text(
             text = "Information",
             style = MaterialTheme.typography.titleMedium.copy(
@@ -366,22 +304,10 @@ BuyMeCoffeeItem(
         ) {
             Column(modifier = Modifier.padding(4.dp)) {
                 SocialLinkItem(
-                    icon = painterResource(R.drawable.mail_filled),
-                    title = "Contact",
-                    subtitle = "hello@Musika.fun",
-                    onClick = { uriHandler.openUri("mailto:hello@Musika.fun") }
-                )
-                
-                HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-                )
-                
-                SocialLinkItem(
                     icon = painterResource(R.drawable.lock),
                     title = "Privacy Policy",
                     subtitle = "How we handle your data",
-                    onClick = { uriHandler.openUri("https://Musika.fun/p/privacy-policy") }
+                    onClick = { uriHandler.openUri("https://github.com/jed1boy/Musika/blob/main/PRIVACY_POLICY.md") }
                 )
                 
                 HorizontalDivider(
@@ -393,7 +319,7 @@ BuyMeCoffeeItem(
                     icon = painterResource(R.drawable.info),
                     title = "Terms & Conditions",
                     subtitle = "Terms of service",
-                    onClick = { uriHandler.openUri("https://Musika.fun/p/toc") },
+                    onClick = { uriHandler.openUri("https://github.com/jed1boy/Musika/blob/main/LICENSE") },
                     isLast = true
                 )
             }

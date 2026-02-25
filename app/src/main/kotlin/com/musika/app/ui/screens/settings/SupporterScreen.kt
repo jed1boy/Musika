@@ -291,34 +291,8 @@ fun SupporterScreen(
             shape = RoundedCornerShape(20.dp)
         ) {
             Column(modifier = Modifier.padding(4.dp)) {
-BuyMeCoffeeItem(
+                BuyMeCoffeeItem(
                     onClick = { uriHandler.openUri("https://buymeacoffee.com/jzee") }
-                )
-                
-                HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-                )
-                
-                SupportOptionItem(
-                    icon = painterResource(R.drawable.favorite),
-                    title = "Patreon",
-                    subtitle = "Monthly support",
-                    onClick = { uriHandler.openUri("https://patreon.com/jed1boy") },
-                    isLast = false
-                )
-                
-                HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-                )
-                
-                SupportOptionItem(
-                    icon = painterResource(R.drawable.upi),
-                    title = "UPI Payment",
-                    subtitle = "Direct payment (India only)",
-                    onClick = { uriHandler.openUri("https://github.com/sponsors/jed1boy") },
-                    isLast = false
                 )
                 
                 HorizontalDivider(

@@ -15,8 +15,8 @@ android {
         applicationId = "com.musika.app"
         minSdk = 26
         targetSdk = 36
-versionCode = 4
-        versionName = "1.1.3"
+versionCode = 5
+        versionName = "1.1.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -159,6 +159,7 @@ dependencies {
     implementation(libs.hilt.navigation)
     implementation(libs.hilt.lifecycle.viewmodel.compose)
     implementation(libs.datastore)
+    implementation(libs.security.crypto)
 
     implementation(libs.compose.runtime)
     implementation(libs.compose.foundation)
@@ -222,11 +223,6 @@ dependencies {
     
     // QR Code generation
     implementation(libs.zxing.core)
-    
-    // Firebase
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics)
-    implementation(libs.firebase.crashlytics)
     
     // Music Recognition
     implementation(libs.uuid.creator)
