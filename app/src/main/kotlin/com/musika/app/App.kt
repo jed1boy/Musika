@@ -113,6 +113,16 @@ class App : Application(), SingletonImageLoader.Factory {
 
         YouTube.useLoginForBrowse = settings[UseLoginForBrowse] ?: true
 
+        // Ensure visitorData is available for anonymous playback (required when not logged in)
+        val cookie = getSensitivePreference(InnerTubeCookieKey)
+        val visitorData = getSensitivePreference(VisitorDataKey)
+        if (cookie.isEmpty() && visitorData.isEmpty()) {
+            YouTube.visitorData().getOrNull()?.let { newVisitorData ->
+                putSensitivePreference(VisitorDataKey, newVisitorData)
+                YouTube.visitorData = newVisitorData
+            }
+        }
+
         val channel = NotificationChannel(
             "updates",
             getString(R.string.update_channel_name),
@@ -129,7 +139,8 @@ class App : Application(), SingletonImageLoader.Factory {
             observeSensitivePreference(VisitorDataKey)
                 .distinctUntilChanged()
                 .collect { visitorData ->
-                    YouTube.visitorData = visitorData?.takeIf { it != "null" }
+                    val validVisitorData = visitorData?.takeIf { it != "null" && it.isNotEmpty() }
+                    YouTube.visitorData = validVisitorData
                         ?: YouTube.visitorData().getOrNull()?.also { newVisitorData ->
                             putSensitivePreference(VisitorDataKey, newVisitorData)
                         }
