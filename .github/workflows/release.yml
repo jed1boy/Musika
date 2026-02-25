@@ -1,13 +1,8 @@
-name: Build & Release APK
+name: Release Android APK
 
 on:
   push:
     branches: [main]
-  workflow_dispatch:
-    inputs:
-      release_tag:
-        description: "Release tag override (e.g. v1.2.0). Leave empty to auto-detect from build.gradle.kts."
-        required: false
 
 permissions:
   contents: write
@@ -42,11 +37,7 @@ jobs:
       - name: Determine release tag
         id: tag
         run: |
-          if [ -n "${{ github.event.inputs.release_tag }}" ]; then
-            TAG="${{ github.event.inputs.release_tag }}"
-          else
-            TAG="v${{ steps.version.outputs.name }}"
-          fi
+          TAG="android-v${{ steps.version.outputs.name }}"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           echo "Release tag: $TAG"
 
@@ -116,11 +107,24 @@ jobs:
 
       - name: Prepare release body
         run: |
-          git log -1 --pretty=%B > release_body.md
-          PREV=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || true)
-          if [ -n "$PREV" ]; then
-            echo "" >> release_body.md
-            echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREV}...${{ steps.tag.outputs.tag }}" >> release_body.md
+          VERSION="${{ steps.version.outputs.name }}"
+          CHANGELOG="CHANGELOG_ANDROID.md"
+          if [ -f "$CHANGELOG" ]; then
+            START=$(grep -n "## \[$VERSION\]" "$CHANGELOG" | head -1 | cut -d: -f1)
+            if [ -n "$START" ]; then
+              NEXT=$(tail -n +$((START + 1)) "$CHANGELOG" | grep -n "^## \[" | head -1 | cut -d: -f1)
+              if [ -n "$NEXT" ]; then
+                END=$((START + NEXT - 2))
+              else
+                END=$(wc -l < "$CHANGELOG")
+              fi
+              sed -n "${START},${END}p" "$CHANGELOG" > release_body.md
+            else
+              echo "## [$VERSION]" > release_body.md
+              echo "- No Android release notes found in CHANGELOG_ANDROID.md." >> release_body.md
+            fi
+          else
+            git log -1 --pretty=%B > release_body.md
           fi
 
       - name: Create GitHub Release

@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <meta name="color-scheme" content="dark" />
+    <title>Musika Desktop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="app.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo" aria-hidden="true"></div>
+          <div>
+            <div class="name">Musika</div>
+            <div class="tagline">Desktop Preview</div>
+          </div>
+        </div>
+        <label class="search" aria-label="Search music">
+          <input
+            type="search"
+            placeholder="Search artists, songs, albums"
+          />
+        </label>
+        <div class="actions">
+          <button class="btn ghost">Sign in</button>
+          <button class="btn primary">Upgrade</button>
+        </div>
+      </header>
+
+      <div class="shell">
+        <nav class="rail" aria-label="Primary">
+          <button class="nav-item active">Home</button>
+          <button class="nav-item">Library</button>
+          <button class="nav-item">Explore</button>
+          <button class="nav-item">Playlists</button>
+          <button class="nav-item">Settings</button>
+        </nav>
+
+        <main class="content">
+          <section class="hero">
+            <div class="hero-card">
+              <div class="hero-header">
+                <span class="eyebrow">Now playing</span>
+                <span class="status" data-status>Checking desktop core...</span>
+              </div>
+              <h1>Quiet Stars</h1>
+              <p>
+                Desktop is ready. Bring your library into a fast, low-memory
+                player built for Windows.
+              </p>
+              <div class="hero-actions">
+                <button class="btn primary">Play</button>
+                <button class="btn ghost">Add to queue</button>
+              </div>
+              <div class="hero-meta">
+                <div>
+                  <div class="meta-label">Device</div>
+                  <div>Musika Desktop</div>
+                </div>
+                <div>
+                  <div class="meta-label">Version</div>
+                  <div data-version>v4.0.0</div>
+                </div>
+                <div>
+                  <div class="meta-label">Mode</div>
+                  <div>Low power</div>
+                </div>
+              </div>
+            </div>
+            <div class="hero-visual" aria-hidden="true">
+              <div class="pulse"></div>
+              <div class="pulse delay"></div>
+              <div class="pulse delay-2"></div>
+            </div>
+          </section>
+
+          <section class="grid">
+            <div class="panel">
+              <div class="panel-header">
+                <h2>Continue listening</h2>
+                <button class="link">View all</button>
+              </div>
+              <div class="card-list">
+                <article class="card">
+                  <div class="art"></div>
+                  <div>
+                    <div class="card-title">Afterglow</div>
+                    <div class="card-sub">Synthwave</div>
+                  </div>
+                </article>
+                <article class="card">
+                  <div class="art alt"></div>
+                  <div>
+                    <div class="card-title">Sunset Drive</div>
+                    <div class="card-sub">Chillhop</div>
+                  </div>
+                </article>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-header">
+                <h2>Smart queue</h2>
+                <button class="link">Shuffle</button>
+              </div>
+              <ol class="queue">
+                <li>
+                  <span>1</span>
+                  <div>
+                    <div class="card-title">Midnight Bloom</div>
+                    <div class="card-sub">Echo Axis</div>
+                  </div>
+                  <span class="time">3:42</span>
+                </li>
+                <li>
+                  <span>2</span>
+                  <div>
+                    <div class="card-title">Warm Static</div>
+                    <div class="card-sub">Violet Tape</div>
+                  </div>
+                  <span class="time">4:05</span>
+                </li>
+                <li>
+                  <span>3</span>
+                  <div>
+                    <div class="card-title">Quiet Line</div>
+                    <div class="card-sub">Neon Hours</div>
+                  </div>
+                  <span class="time">2:58</span>
+                </li>
+              </ol>
+            </div>
+          </section>
+        </main>
+      </div>
+
+      <footer class="player">
+        <div class="track">
+          <div class="art small"></div>
+          <div>
+            <div class="card-title">Quiet Stars</div>
+            <div class="card-sub">Echo Axis</div>
+          </div>
+        </div>
+        <div class="controls">
+          <button class="icon">⏮</button>
+          <button class="icon">▶</button>
+          <button class="icon">⏭</button>
+        </div>
+        <div class="meta">
+          <span>3:18 / 4:05</span>
+          <div class="bar"><span></span></div>
+        </div>
+      </footer>
+    </div>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
