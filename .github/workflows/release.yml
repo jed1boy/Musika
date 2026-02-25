@@ -15,7 +15,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
 
     steps:
       - name: Checkout
@@ -131,4 +131,5 @@ jobs:
           body_path: release_body.md
           files: artifacts/*.apk
           fail_on_unmatched_files: true
+          overwrite: true
           make_latest: true
