@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.screens
+package com.musika.app.ui.screens
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -24,9 +24,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -448,10 +449,10 @@ fun HomeScreen(
                                 .height(ListItemHeight * 4)
                                 .animateItem()
                         ) {
-                            items(
+                            itemsIndexed(
                                 items = quickPicks.distinctBy { it.id },
-                                key = { it.id }
-                            ) { originalSong ->
+                                key = { index, song -> "${song.id}_$index" }
+                            ) { _, originalSong ->
                                 // fetch song from database to keep updated
                                 val song by database.song(originalSong.id)
                                     .collectAsState(initial = originalSong)
@@ -534,7 +535,7 @@ fun HomeScreen(
                                 }) * rows)
                                 .animateItem()
                         ) {
-                            items(keepListening) {
+                            itemsIndexed(keepListening, key = { index, it -> "${it.id}_$index" }) { _, it ->
                                 localGridItem(it)
                             }
                         }
@@ -585,10 +586,10 @@ fun HomeScreen(
                                 .asPaddingValues(),
                             modifier = Modifier.animateItem()
                         ) {
-                            items(
+                            itemsIndexed(
                                 items = accountPlaylists.distinctBy { it.id },
-                                key = { it.id },
-                            ) { item ->
+                                key = { index, item -> "${item.id}_$index" },
+                            ) { _, item ->
                                 ytGridItem(item)
                             }
                         }
@@ -619,10 +620,10 @@ fun HomeScreen(
                                 .height(ListItemHeight * rows)
                                 .animateItem()
                         ) {
-                            items(
+                            itemsIndexed(
                                 items = forgottenFavorites.distinctBy { it.id },
-                                key = { it.id }
-                            ) { originalSong ->
+                                key = { index, song -> "${song.id}_$index" }
+                            ) { _, originalSong ->
                                 val song by database.song(originalSong.id)
                                     .collectAsState(initial = originalSong)
 
@@ -720,7 +721,7 @@ fun HomeScreen(
                                 .asPaddingValues(),
                             modifier = Modifier.animateItem()
                         ) {
-                            items(recommendation.items) { item ->
+                            itemsIndexed(recommendation.items, key = { index, item -> "${item.id}_$index" }) { _, item ->
                                 ytGridItem(item)
                             }
                         }
@@ -766,7 +767,7 @@ fun HomeScreen(
                             .asPaddingValues(),
                         modifier = Modifier.animateItem()
                     ) {
-                        items(section.items) { item ->
+                        itemsIndexed(section.items, key = { index, item -> "${item.id}_$index" }) { _, item ->
                             ytGridItem(item)
                         }
                     }
@@ -814,7 +815,7 @@ fun HomeScreen(
                                 .height((MoodAndGenresButtonHeight + 12.dp) * 4 + 12.dp)
                                 .animateItem()
                         ) {
-                            items(moodAndGenres) {
+                            itemsIndexed(moodAndGenres, key = { index, it -> "${it.endpoint.browseId}_$index" }) { _, it ->
                                 MoodAndGenresButton(
                                     title = it.title,
                                     onClick = {

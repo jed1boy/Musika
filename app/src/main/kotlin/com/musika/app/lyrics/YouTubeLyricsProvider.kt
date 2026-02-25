@@ -1,13 +1,16 @@
-﻿package com.musika.app.lyrics
+package com.musika.app.lyrics
 
 import android.content.Context
+import com.musika.app.constants.EnableYouTubeLyricsKey
+import com.musika.app.utils.dataStore
+import com.musika.app.utils.get
 import com.musika.innertube.YouTube
 import com.musika.innertube.models.WatchEndpoint
 
 object YouTubeLyricsProvider : LyricsProvider {
     override val name = "YouTube Music"
 
-    override fun isEnabled(context: Context) = true
+    override fun isEnabled(context: Context): Boolean = context.dataStore[EnableYouTubeLyricsKey] ?: true
 
     override suspend fun getLyrics(
         id: String,

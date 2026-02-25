@@ -1,4 +1,4 @@
-﻿@file:Suppress("UNUSED_EXPRESSION")
+@file:Suppress("UNUSED_EXPRESSION")
 
 package com.musika.app.ui.screens
 
@@ -23,9 +23,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -133,6 +134,7 @@ fun YouTubeBrowseScreen(
                         }
                     }
                     if (it.items.all { item -> item is SongItem }) {
+                        val songs = it.items.filterIsInstance<SongItem>()
                         item(key = "section_songs_${it.title?.hashCode() ?: it.hashCode()}") {
                             LazyHorizontalGrid(
                                 state = lazyGridState,
@@ -146,12 +148,13 @@ fun YouTubeBrowseScreen(
                                     .height(ListItemHeight * 4)
                                     .animateItem()
                             ) {
-                                items(
-                                    items = it.items,
-                                ) { song ->
+                                itemsIndexed(
+                                    items = songs,
+                                    key = { index, song -> "${song.id}_$index" },
+                                ) { _, song ->
                                     Box(Modifier.width(350.dp)) {
                                         YouTubeListItem(
-                                            item = song as SongItem,
+                                            item = song,
                                             isActive = mediaMetadata?.id == song.id,
                                             isPlaying = isPlaying,
                                             isSwipeable = false,
@@ -197,9 +200,10 @@ fun YouTubeBrowseScreen(
                             LazyRow(
                                 contentPadding = WindowInsets.systemBars.only(WindowInsetsSides.Horizontal).asPaddingValues(),
                             ) {
-                                items(
+                                itemsIndexed(
                                     items = it.items,
-                                ) { item ->
+                                    key = { index, item -> "${item.id}_$index" },
+                                ) { _, item ->
                                     YouTubeGridItem(
                                         item = item,
                                         isActive =

@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.component
+package com.musika.app.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -268,6 +268,7 @@ fun ActionPromptDialog(
 fun ListDialog(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
+    title: (@Composable () -> Unit)? = null,
     content: LazyListScope.() -> Unit,
 ) {
     Dialog(
@@ -284,6 +285,10 @@ fun ListDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = modifier.padding(vertical = 24.dp),
             ) {
+                title?.let { Title ->
+                    Title()
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
                 LazyColumn(content = content)
             }
         }

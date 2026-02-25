@@ -424,6 +424,10 @@ class MusicService :
         // connectivityObserver initialized at start of onCreate
 
         scope.launch {
+            lyricsHelper.preferred.collect { }
+        }
+
+        scope.launch {
             connectivityObserver.networkStatus.collect { isConnected ->
                 isNetworkConnected.value = isConnected
                 if (isConnected && waitingForNetworkConnection.value) {

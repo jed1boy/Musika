@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.player
+package com.musika.app.ui.player
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
@@ -114,8 +114,8 @@ fun LyricsScreen(
     onBackClick: () -> Unit,
     navController: NavController,
     modifier: Modifier = Modifier,
-    backgroundAlpha: Float = 1f, // Add this parameter
-    isVisible: Boolean = true // Add this parameter
+    backgroundAlpha: Float = 1f,
+    isVisible: Boolean = true,
 ) {
     val context = LocalContext.current
     val activity = context as? Activity
