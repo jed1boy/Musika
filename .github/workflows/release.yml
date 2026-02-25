@@ -114,12 +114,21 @@ jobs:
           echo "build_type=$BUILD_TYPE" >> "$GITHUB_OUTPUT"
           ls -la
 
+      - name: Prepare release body
+        run: |
+          git log -1 --pretty=%B > release_body.md
+          PREV=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || true)
+          if [ -n "$PREV" ]; then
+            echo "" >> release_body.md
+            echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREV}...${{ steps.tag.outputs.tag }}" >> release_body.md
+          fi
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.tag.outputs.tag }}
           name: ${{ steps.tag.outputs.tag }}
+          body_path: release_body.md
           files: artifacts/*.apk
           fail_on_unmatched_files: true
-          generate_release_notes: true
           make_latest: true
