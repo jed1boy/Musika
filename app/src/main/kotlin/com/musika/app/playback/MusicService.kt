@@ -77,6 +77,7 @@ import com.musika.app.constants.AutoDownloadOnLikeKey
 import com.musika.app.constants.AutoLoadMoreKey
 import com.musika.app.constants.AutoSkipNextOnErrorKey
 import com.musika.app.constants.DisableLoadMoreWhenRepeatAllKey
+import com.musika.app.constants.ForceMusicTrackArtKey
 import com.musika.app.constants.HideExplicitKey
 import com.musika.app.constants.HistoryDuration
 import com.musika.app.constants.MediaSessionConstants.CommandToggleLike
@@ -200,6 +201,8 @@ class MusicService :
     var queueTitle: String? = null
 
     val currentMediaMetadata = MutableStateFlow<com.musika.app.models.MediaMetadata?>(null)
+    private val albumArtCache = mutableMapOf<String, String>()
+    val albumArtOverride = MutableStateFlow<String?>(null)
     private val currentSong =
         currentMediaMetadata
             .flatMapLatest { mediaMetadata ->
@@ -446,6 +449,40 @@ class MusicService :
 
         currentSong.debounce(1000).collect(scope) { song ->
             updateNotification()
+        }
+
+        combine(
+            currentMediaMetadata,
+            dataStore.data.map { it[ForceMusicTrackArtKey] ?: false }
+        ) { metadata, forceMusicTrackArt ->
+            Pair(metadata, forceMusicTrackArt)
+        }.collect(scope) { (metadata, forceMusicTrackArt) ->
+            if (!forceMusicTrackArt || metadata == null) {
+                albumArtOverride.value = null
+                return@collect
+            }
+            val albumId = metadata.album?.id ?: run {
+                albumArtOverride.value = null
+                return@collect
+            }
+            val cached = albumArtCache[albumId]
+            if (cached != null) {
+                albumArtOverride.value = cached
+                return@collect
+            }
+            scope.launch(Dispatchers.IO) {
+                val albumArt = YouTube.album(albumId, withSongs = false).getOrNull()?.album?.thumbnail
+                if (albumArt != null) {
+                    albumArtCache[albumId] = albumArt
+                    albumArtOverride.value = albumArt
+                } else {
+                    albumArtOverride.value = null
+                }
+            }
+        }
+
+        albumArtOverride.collect(scope) {
+            updateWidget()
         }
 
         combine(
@@ -1833,11 +1870,12 @@ class MusicService :
     
     private fun updateWidget() {
         val metadata = player.currentMetadata
+        val effectiveThumbnail = albumArtOverride.value ?: metadata?.thumbnailUrl
         MusicWidgetProvider.updateWidget(
             context = this,
             songTitle = metadata?.title,
             artistName = metadata?.artists?.joinToString(", ") { it.name },
-            albumArtUrl = metadata?.thumbnailUrl,
+            albumArtUrl = effectiveThumbnail,
             isPlaying = player.isPlaying
         )
     }

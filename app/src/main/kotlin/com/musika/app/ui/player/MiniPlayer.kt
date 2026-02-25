@@ -147,6 +147,7 @@ private fun NewMiniPlayer(
     val playbackState by playerConnection.playbackState.collectAsState()
     val error by playerConnection.error.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
+    val albumArtOverride by playerConnection.albumArtOverride.collectAsState()
     val canSkipNext by playerConnection.canSkipNext.collectAsState()
     val canSkipPrevious by playerConnection.canSkipPrevious.collectAsState()
 
@@ -164,9 +165,10 @@ private fun NewMiniPlayer(
     // Extract gradient colors from album art
     val context = LocalContext.current
     var gradientColors by remember { mutableStateOf<List<Color>>(emptyList()) }
+    val effectiveThumbnail = albumArtOverride ?: mediaMetadata?.thumbnailUrl
     
-    LaunchedEffect(mediaMetadata?.thumbnailUrl) {
-        mediaMetadata?.thumbnailUrl?.let { url ->
+    LaunchedEffect(effectiveThumbnail) {
+        effectiveThumbnail?.let { url ->
             try {
                 val request = ImageRequest.Builder(context)
                     .data(url)
@@ -368,7 +370,7 @@ private fun NewMiniPlayer(
                         // Thumbnail background
                         mediaMetadata?.let { metadata ->
                             AsyncImage(
-                                model = metadata.thumbnailUrl,
+                                model = albumArtOverride ?: metadata.thumbnailUrl,
                                 contentDescription = null,
                                 contentScale = ContentScale.Crop,
                                 error = painterResource(R.drawable.musika_logo),
@@ -572,6 +574,7 @@ private fun LegacyMiniPlayer(
     val playbackState by playerConnection.playbackState.collectAsState()
     val error by playerConnection.error.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
+    val albumArtOverride by playerConnection.albumArtOverride.collectAsState()
     val canSkipNext by playerConnection.canSkipNext.collectAsState()
     val canSkipPrevious by playerConnection.canSkipPrevious.collectAsState()
 
@@ -589,9 +592,10 @@ private fun LegacyMiniPlayer(
     // Extract gradient colors from album art
     val context = LocalContext.current
     var gradientColors by remember { mutableStateOf<List<Color>>(emptyList()) }
+    val effectiveThumbnail = albumArtOverride ?: mediaMetadata?.thumbnailUrl
     
-    LaunchedEffect(mediaMetadata?.thumbnailUrl) {
-        mediaMetadata?.thumbnailUrl?.let { url ->
+    LaunchedEffect(effectiveThumbnail) {
+        effectiveThumbnail?.let { url ->
             try {
                 val request = ImageRequest.Builder(context)
                     .data(url)
@@ -747,6 +751,7 @@ private fun LegacyMiniPlayer(
                 mediaMetadata?.let {
                     LegacyMiniMediaInfo(
                         mediaMetadata = it,
+                        thumbnailOverride = albumArtOverride,
                         error = error,
                         pureBlack = pureBlack,
                         hasGradient = gradientColors.isNotEmpty(),
@@ -831,6 +836,7 @@ private fun LegacyMiniPlayer(
 @Composable
 private fun LegacyMiniMediaInfo(
     mediaMetadata: MediaMetadata,
+    thumbnailOverride: String? = null,
     error: PlaybackException?,
     pureBlack: Boolean,
     modifier: Modifier = Modifier,
@@ -855,7 +861,7 @@ private fun LegacyMiniMediaInfo(
 
             // Main thumbnail
             AsyncImage(
-                model = mediaMetadata.thumbnailUrl,
+                model = thumbnailOverride ?: mediaMetadata.thumbnailUrl,
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 error = painterResource(R.drawable.musika_logo),

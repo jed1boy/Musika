@@ -1,4 +1,4 @@
-﻿package com.musika.app.playback
+package com.musika.app.playback
 
 import android.content.Context
 import android.media.AudioDeviceInfo
@@ -13,6 +13,7 @@ import androidx.media3.common.Player.COMMAND_SEEK_TO_PREVIOUS_MEDIA_ITEM
 import androidx.media3.common.Player.REPEAT_MODE_OFF
 import androidx.media3.common.Player.STATE_ENDED
 import androidx.media3.common.Timeline
+import com.musika.app.constants.ForceMusicTrackArtKey
 import com.musika.app.db.MusicDatabase
 import com.musika.app.extensions.currentMetadata
 import com.musika.app.extensions.getCurrentQueueIndex
@@ -20,24 +21,33 @@ import com.musika.app.extensions.getQueueWindows
 import com.musika.app.extensions.metadata
 import com.musika.app.playback.MusicService.MusicBinder
 import com.musika.app.playback.queues.Queue
+import com.musika.app.utils.dataStore
 import com.musika.app.utils.reportException
+import com.musika.innertube.YouTube
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class PlayerConnection(
-    context: Context,
+    private val context: Context,
     binder: MusicBinder,
     val database: MusicDatabase,
     scope: CoroutineScope,
 ) : Player.Listener {
     val service = binder.service
     val player = service.player
+
+    private val albumArtCache = mutableMapOf<String, String>()
+    val albumArtOverride = MutableStateFlow<String?>(null)
 
     val playbackState = MutableStateFlow(player.playbackState)
     private val playWhenReady = MutableStateFlow(player.playWhenReady)
@@ -88,6 +98,38 @@ class PlayerConnection(
         currentMediaItemIndex.value = player.currentMediaItemIndex
         shuffleModeEnabled.value = player.shuffleModeEnabled
         repeatMode.value = player.repeatMode
+
+        scope.launch {
+            combine(
+                mediaMetadata,
+                context.dataStore.data.map { it[ForceMusicTrackArtKey] ?: false }
+            ) { metadata, forceMusicTrackArt ->
+                Pair(metadata, forceMusicTrackArt)
+            }.collect { (metadata, forceMusicTrackArt) ->
+                if (!forceMusicTrackArt || metadata == null) {
+                    albumArtOverride.value = null
+                    return@collect
+                }
+                val albumId = metadata.album?.id ?: run {
+                    albumArtOverride.value = null
+                    return@collect
+                }
+                val cached = albumArtCache[albumId]
+                if (cached != null) {
+                    albumArtOverride.value = cached
+                    return@collect
+                }
+                val albumArt = withContext(Dispatchers.IO) {
+                    YouTube.album(albumId, withSongs = false).getOrNull()?.album?.thumbnail
+                }
+                if (albumArt != null) {
+                    albumArtCache[albumId] = albumArt
+                    albumArtOverride.value = albumArt
+                } else {
+                    albumArtOverride.value = null
+                }
+            }
+        }
     }
 
     fun playQueue(queue: Queue) {

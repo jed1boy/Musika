@@ -102,6 +102,7 @@ fun Thumbnail(
 
     // States
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
+    val albumArtOverride by playerConnection.albumArtOverride.collectAsState()
     val error by playerConnection.error.collectAsState()
     val queueTitle by playerConnection.queueTitle.collectAsState()
 
@@ -346,10 +347,15 @@ fun Thumbnail(
                                         .size(containerMaxWidth - (PlayerHorizontalPadding * 2))
                                         .clip(RoundedCornerShape(ThumbnailCornerRadius * 2))
                                 ) {
+                                    val effectiveThumbnail = if (item == currentMediaItem && albumArtOverride != null) {
+                                        albumArtOverride
+                                    } else {
+                                        item.mediaMetadata.artworkUri?.toString()
+                                    }
                                     // Main image
                                     AsyncImage(
                                         model = coil3.request.ImageRequest.Builder(LocalContext.current)
-                                            .data(item.mediaMetadata.artworkUri?.toString())
+                                            .data(effectiveThumbnail)
                                             .memoryCachePolicy(coil3.request.CachePolicy.ENABLED)
                                             .diskCachePolicy(coil3.request.CachePolicy.ENABLED)
                                             .networkCachePolicy(coil3.request.CachePolicy.ENABLED)
