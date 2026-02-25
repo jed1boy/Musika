@@ -1,8 +1,9 @@
-﻿package com.musika.app.ui.screens.library
+package com.musika.app.ui.screens.library
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.asPaddingValues
@@ -44,6 +45,8 @@ import com.musika.app.LocalPlayerAwareWindowInsets
 import com.musika.app.R
 import com.musika.app.constants.ArtistFilter
 import com.musika.app.constants.ArtistFilterKey
+import com.musika.app.constants.LibrarySourceFilter
+import com.musika.app.constants.LibrarySourceFilterKey
 import com.musika.app.constants.ArtistSortDescendingKey
 import com.musika.app.constants.ArtistSortType
 import com.musika.app.constants.ArtistSortTypeKey
@@ -79,6 +82,7 @@ fun LibraryArtistsScreen(
     var viewType by rememberEnumPreference(ArtistViewTypeKey, LibraryViewType.GRID)
 
     var filter by rememberEnumPreference(ArtistFilterKey, ArtistFilter.LIKED)
+    var sourceFilter by rememberEnumPreference(LibrarySourceFilterKey, LibrarySourceFilter.ALL)
     val (sortType, onSortTypeChange) = rememberEnumPreference(
         ArtistSortTypeKey,
         ArtistSortType.CREATE_DATE
@@ -89,30 +93,40 @@ fun LibraryArtistsScreen(
     val (ytmSync) = rememberPreference(YtmSyncKey, true)
 
     val filterContent = @Composable {
-        Row {
-            Spacer(Modifier.width(12.dp))
-            FilterChip(
-                label = { Text(stringResource(R.string.artists)) },
-                selected = true,
-                colors = FilterChipDefaults.filterChipColors(containerColor = MaterialTheme.colorScheme.surface),
-                onClick = onDeselect,
-                shape = RoundedCornerShape(16.dp),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-                leadingIcon = {
-                    Icon(painter = painterResource(R.drawable.close), contentDescription = "")
-                },
-            )
+        Column {
+            Row {
+                Spacer(Modifier.width(12.dp))
+                FilterChip(
+                    label = { Text(stringResource(R.string.artists)) },
+                    selected = true,
+                    colors = FilterChipDefaults.filterChipColors(containerColor = MaterialTheme.colorScheme.surface),
+                    onClick = onDeselect,
+                    shape = RoundedCornerShape(16.dp),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                    leadingIcon = {
+                        Icon(painter = painterResource(R.drawable.close), contentDescription = "")
+                    },
+                )
+                ChipsRow(
+                    chips =
+                    listOf(
+                        ArtistFilter.LIKED to stringResource(R.string.filter_liked),
+                        ArtistFilter.LIBRARY to stringResource(R.string.filter_library)
+                    ),
+                    currentValue = filter,
+                    onValueUpdate = { filter = it },
+                    modifier = Modifier.weight(1f),
+                )
+            }
             ChipsRow(
-                chips =
-                listOf(
-                    ArtistFilter.LIKED to stringResource(R.string.filter_liked),
-                    ArtistFilter.LIBRARY to stringResource(R.string.filter_library)
+                chips = listOf(
+                    LibrarySourceFilter.ALL to stringResource(R.string.filter_all),
+                    LibrarySourceFilter.YOUTUBE to stringResource(R.string.filter_source_youtube),
+                    LibrarySourceFilter.LOCAL to stringResource(R.string.filter_source_local),
                 ),
-                currentValue = filter,
-                onValueUpdate = {
-                    filter = it
-                },
-                modifier = Modifier.weight(1f),
+                currentValue = sourceFilter,
+                onValueUpdate = { sourceFilter = it },
+                modifier = Modifier.padding(top = 8.dp),
             )
         }
     }

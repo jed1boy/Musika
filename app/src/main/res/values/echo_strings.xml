@@ -227,6 +227,7 @@
     <string name="lyrics_romanize_title">Romanization</string>
     <string name="lyrics_romanization">Lyrics romanization</string>
     <string name="romanization">Romanization</string>
+    <string name="lyrics_translation_language">Lyrics translation language</string>
     <string name="lyrics_romanize_japanese">Romanize Japanese lyrics</string>
     <string name="lyrics_romanize_korean">Romanize Korean lyrics</string>
     <string name="lyrics_romanize_russian">Romanize Russian lyrics</string>
@@ -274,4 +275,8 @@
     <string name="scrobble_min_track_duration">Scrobble songs longer than</string>
     <string name="scrobble_delay_percent">Scrobble delay percent</string>
     <string name="scrobble_delay_minutes">Scrobble delay minutes</string>
+    <string name="lastfm_logged_in">Logged in to Last.fm</string>
+    <string name="lastfm_login">Log in to Last.fm</string>
+    <string name="lastfm_logout">Log out</string>
+    <string name="lastfm_api_key_required">Add LASTFM_API_KEY and LASTFM_API_SECRET to gradle.properties. Register at last.fm/api/account/create</string>
 </resources>

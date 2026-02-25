@@ -53,6 +53,8 @@
     <string name="filter_liked">Liked</string>
     <string name="filter_downloaded">Downloaded</string>
     <string name="filter_all">All</string>
+    <string name="filter_source_youtube">YouTube</string>
+    <string name="filter_source_local">Local</string>
     <string name="filter_songs">Songs</string>
     <string name="filter_videos">Videos</string>
     <string name="filter_albums">Albums</string>
