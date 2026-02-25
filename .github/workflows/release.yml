@@ -45,7 +45,8 @@ jobs:
           if [ -n "${{ github.event.inputs.release_tag }}" ]; then
             TAG="${{ github.event.inputs.release_tag }}"
           else
-            TAG="v${{ steps.version.outputs.name }}"
+            # Unique tag per run so every push creates a new release (avoids "tag already exists" when version unchanged)
+            TAG="v${{ steps.version.outputs.name }}+build.${{ github.run_number }}"
           fi
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           echo "Release tag: $TAG"
@@ -96,22 +97,34 @@ jobs:
         run: |
           mkdir -p artifacts
           BUILD_TYPE="release"
-          if [ -z "$KEYSTORE_PATH" ]; then
+          if [ -z "${KEYSTORE_PATH:-}" ]; then
             BUILD_TYPE="debug"
           fi
 
-          find app/build/outputs/apk -name "*.apk" -exec cp {} artifacts/ \;
+          echo "Searching for APKs in app/build/outputs/apk..."
+          find app/build/outputs/apk -name "*.apk" -type f 2>/dev/null || true
+          APK_COUNT=$(find app/build/outputs/apk -name "*.apk" -type f 2>/dev/null | wc -l)
+          echo "Found $APK_COUNT APK(s)"
+
+          if [ "$APK_COUNT" -eq 0 ]; then
+            echo "::error::No APKs found. Build may have failed or output path changed."
+            exit 1
+          fi
+
+          find app/build/outputs/apk -name "*.apk" -type f -exec cp {} artifacts/ \;
 
           TAG="${{ steps.tag.outputs.tag }}"
           cd artifacts
           for f in *.apk; do
+            [ -f "$f" ] || continue
             case "$f" in
-              *arm64*) mv "$f" "Musika-${TAG}-arm64-${BUILD_TYPE}.apk" 2>/dev/null || true ;;
-              *x86_64*|*x86*) mv "$f" "Musika-${TAG}-x64-${BUILD_TYPE}.apk" 2>/dev/null || true ;;
+              *arm64*) mv "$f" "Musika-${TAG}-arm64-${BUILD_TYPE}.apk" ;;
+              *x86_64*|*x86*) mv "$f" "Musika-${TAG}-x64-${BUILD_TYPE}.apk" ;;
             esac
           done
 
           echo "build_type=$BUILD_TYPE" >> "$GITHUB_OUTPUT"
+          echo "Artifacts to upload:"
           ls -la
 
       - name: Prepare release body
@@ -129,6 +142,9 @@ jobs:
           tag_name: ${{ steps.tag.outputs.tag }}
           name: ${{ steps.tag.outputs.tag }}
           body_path: release_body.md
-          files: artifacts/*.apk
+          working_directory: ${{ github.workspace }}
+          files: |
+            artifacts/Musika-${{ steps.tag.outputs.tag }}-arm64-${{ steps.apks.outputs.build_type }}.apk
+            artifacts/Musika-${{ steps.tag.outputs.tag }}-x64-${{ steps.apks.outputs.build_type }}.apk
           fail_on_unmatched_files: true
           make_latest: true
