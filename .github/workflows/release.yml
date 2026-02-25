@@ -123,6 +123,11 @@ jobs:
             echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREV}...${{ steps.tag.outputs.tag }}" >> release_body.md
           fi
 
+      - name: Force update release tag
+        run: |
+          git tag -fa "${{ steps.tag.outputs.tag }}" -m "Release ${{ steps.tag.outputs.tag }}" || exit 1
+          git push origin "${{ steps.tag.outputs.tag }}" --force || exit 1
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
