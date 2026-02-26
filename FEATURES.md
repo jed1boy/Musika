@@ -258,7 +258,7 @@ This document provides a comprehensive overview of all features available in Ech
 ## Future Features
 
 ### Planned Features
-- **Multi-Platform Support**: iOS and desktop versions
+- **Multi-Platform Support**: iOS
 
 ### Experimental Features
 - **Voice Commands**: Advanced voice control
