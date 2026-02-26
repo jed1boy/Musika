@@ -42,6 +42,7 @@ import androidx.compose.material.icons.filled.FormatAlignCenter
 fun LyricsShareDialog(
     mediaMetadata: MediaMetadata,
     lyrics: String,
+    showBranding: Boolean,
     onDismiss: () -> Unit,
     onShare: (Bitmap) -> Unit
 ) {
@@ -118,7 +119,8 @@ fun LyricsShareDialog(
                            Layout.Alignment.ALIGN_CENTER -> TextAlign.Center
                            Layout.Alignment.ALIGN_OPPOSITE -> TextAlign.End
                        },
-                       fontScale = fontScale
+                       fontScale = fontScale,
+                       showBranding = showBranding
                    )
                 }
 
@@ -243,7 +245,8 @@ fun LyricsShareDialog(
                                         gradientColors = if (useGradient) listOf(backgroundColor.toArgb(), backgroundColor.copy(alpha=0.6f).toArgb()) else null,
                                         cornerRadius = actualCornerRadius * (size.toFloat() / 360f), // Scale radius to output size
                                         textAlign = textAlign,
-                                        fontScale = fontScale
+                                        fontScale = fontScale,
+                                        showBranding = showBranding
                                     )
                                     onShare(bitmap)
                                 } catch (e: Exception) {
@@ -276,7 +279,8 @@ fun LyricsImageCard(
     useGradient: Boolean,
     imageCornerRadius: androidx.compose.ui.unit.Dp,
     textAlign: TextAlign,
-    fontScale: Float
+    fontScale: Float,
+    showBranding: Boolean = false
 ) {
     val backgroundBrush = if (useGradient) {
         Brush.linearGradient(
@@ -333,8 +337,10 @@ fun LyricsImageCard(
                  )
              }
              
-             // Footer
-             Text("Musika.fun", color = Color.White.copy(alpha=0.5f), style = MaterialTheme.typography.labelSmall)
+             // Footer (optional branding)
+             if (showBranding) {
+                 Text("Musika.fun", color = Color.White.copy(alpha=0.5f), style = MaterialTheme.typography.labelSmall)
+             }
          }
     }
 }

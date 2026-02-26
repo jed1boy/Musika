@@ -41,7 +41,8 @@ object ComposeToImage {
         secondaryTextColor: Int? = null,
         cornerRadius: Float = 20f,
         textAlign: Layout.Alignment = Layout.Alignment.ALIGN_CENTER,
-        fontScale: Float = 1f
+        fontScale: Float = 1f,
+        showBranding: Boolean = false
     ): Bitmap = withContext(Dispatchers.Default) {
         val cardSize = minOf(width, height) - 32
         val bitmap = createBitmap(cardSize, cardSize)
@@ -144,9 +145,13 @@ object ComposeToImage {
         }
 
         val lyricsMaxWidth = (cardSize * 0.85f).toInt()
-        val logoBlockHeight = (cardSize * 0.08f).toInt()
         val lyricsTop = cardSize * 0.18f
-        val lyricsBottom = cardSize - (logoBlockHeight + 32)
+        val lyricsBottom = if (showBranding) {
+            val logoBlockHeight = (cardSize * 0.08f).toInt()
+            cardSize - (logoBlockHeight + 32)
+        } else {
+            cardSize - 32
+        }
         val availableLyricsHeight = lyricsBottom - lyricsTop
 
         var lyricsTextSize = cardSize * 0.06f * fontScale
@@ -173,7 +178,9 @@ object ComposeToImage {
             lyricsLayout.draw(this)
         }
 
-        AppLogo(context, canvas, cardSize, padding, secondaryTxtColor, bgColor)
+        if (showBranding) {
+            AppLogo(context, canvas, cardSize, padding, secondaryTxtColor, bgColor)
+        }
 
         return@withContext bitmap
     }

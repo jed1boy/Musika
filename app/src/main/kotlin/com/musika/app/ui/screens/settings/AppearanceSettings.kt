@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.screens.settings
+package com.musika.app.ui.screens.settings
 
 import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
@@ -69,6 +69,7 @@ import com.musika.app.constants.GridItemsSizeKey
 import com.musika.app.constants.LibraryFilter
 import com.musika.app.constants.LyricsClickKey
 import com.musika.app.constants.LyricsScrollKey
+import com.musika.app.constants.ShareLyricsShowBrandingKey
 import com.musika.app.constants.LyricsTextPositionKey
 import com.musika.app.constants.UseNewPlayerDesignKey
 import com.musika.app.constants.UseNewMiniPlayerDesignKey
@@ -164,6 +165,10 @@ val (darkMode, onDarkModeChange) = rememberEnumPreference(
     )
     val (lyricsClick, onLyricsClickChange) = rememberPreference(LyricsClickKey, defaultValue = true)
     val (lyricsScroll, onLyricsScrollChange) = rememberPreference(LyricsScrollKey, defaultValue = true)
+    val (shareLyricsShowBranding, onShareLyricsShowBrandingChange) = rememberPreference(
+        ShareLyricsShowBrandingKey,
+        defaultValue = false
+    )
 
     val (sliderStyle, onSliderStyleChange) = rememberEnumPreference(
         SliderStyleKey,
@@ -601,6 +606,14 @@ AnimatedVisibility(visible = materialYou) {
             icon = { Icon(painterResource(R.drawable.lyrics), null) },
             checked = lyricsScroll,
             onCheckedChange = onLyricsScrollChange,
+        )
+
+        SwitchPreference(
+            title = { Text(stringResource(R.string.share_lyrics_show_branding)) },
+            description = stringResource(R.string.share_lyrics_show_branding_description),
+            icon = { Icon(painterResource(R.drawable.lyrics), null) },
+            checked = shareLyricsShowBranding,
+            onCheckedChange = onShareLyricsShowBrandingChange,
         )
 
         PreferenceGroupTitle(

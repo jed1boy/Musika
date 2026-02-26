@@ -43,6 +43,14 @@
     <string name="share_as_image">Share as image</string>
     <string name="max_selection_limit">Max selection limit</string>
     <string name="share_selected">Share selected</string>
+    <string name="copy_to_clipboard">Copy to clipboard</string>
+    <string name="share_lyrics_show_branding">Show app branding on shared lyrics</string>
+    <string name="share_lyrics_show_branding_description">Add Musika.fun logo to shared lyric images</string>
+    <string name="select_lyrics">Select Lyrics</string>
+    <plurals name="lines_selected">
+        <item quantity="one">1 line selected</item>
+        <item quantity="other">%d lines selected</item>
+    </plurals>
     <string name="customize_colors">Customize colors</string>
     <string name="more_options">More options</string>
     <string name="text_color">Text color</string>
@@ -58,6 +66,7 @@
     <string name="dislike_all">Dislike all</string>
     <string name="sort_by_last_updated">Date updated</string>
     <string name="link_copied">Link copied to clipboard</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="starting_radio">Starting radio</string>
     <string name="now_playing">Now Playing</string>
 

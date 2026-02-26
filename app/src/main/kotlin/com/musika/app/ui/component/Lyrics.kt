@@ -1,6 +1,9 @@
 package com.musika.app.ui.component
 
 import android.annotation.SuppressLint
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Build
@@ -85,6 +88,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -103,7 +107,9 @@ import coil3.request.allowHardware
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import coil3.toBitmap
 import com.musika.app.LocalPlayerConnection
 import com.musika.app.R
@@ -120,6 +126,7 @@ import com.musika.app.constants.LyricsRomanizeSerbianKey
 import com.musika.app.constants.LyricsRomanizeUkrainianKey
 import com.musika.app.constants.LyricsRomanizeMacedonianKey
 import com.musika.app.constants.LyricsScrollKey
+import com.musika.app.constants.ShareLyricsShowBrandingKey
 import com.musika.app.constants.LyricsTextPositionKey
 import com.musika.app.constants.PlayerBackgroundStyle
 import com.musika.app.constants.PlayerBackgroundStyleKey
@@ -184,6 +191,7 @@ fun Lyrics(
     val lyricsTextPosition by rememberEnumPreference(LyricsTextPositionKey, LyricsPosition.CENTER)
     val changeLyrics by rememberPreference(LyricsClickKey, true)
     val scrollLyrics by rememberPreference(LyricsScrollKey, true)
+    val shareLyricsShowBranding by rememberPreference(ShareLyricsShowBrandingKey, false)
     val romanizeJapaneseLyrics by rememberPreference(LyricsRomanizeJapaneseKey, true)
     val romanizeKoreanLyrics by rememberPreference(LyricsRomanizeKoreanKey, true)
     val romanizeRussianLyrics by rememberPreference(LyricsRomanizeRussianKey, true)
@@ -752,11 +760,38 @@ var showColorPickerDialog by remember { mutableStateOf(false) }
                 )
             }
         } else {
-            LazyColumn(
+            Column(modifier = Modifier.fillMaxSize()) {
+                AnimatedVisibility(
+                    visible = isSelectionModeActive,
+                    enter = fadeIn() + slideInVertically(),
+                    exit = fadeOut() + slideOutVertically()
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp, vertical = 12.dp)
+                            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(R.string.select_lyrics),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Text(
+                            text = pluralStringResource(R.plurals.lines_selected, selectedIndices.size, selectedIndices.size),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
+                        )
+                    }
+                }
+                LazyColumn(
             state = lazyListState,
             contentPadding = WindowInsets.systemBars
                 .only(WindowInsetsSides.Top)
-                .add(WindowInsets(top = maxHeight / 3, bottom = maxHeight / 2))
+                .add(WindowInsets(top = this@BoxWithConstraints.maxHeight / 3, bottom = this@BoxWithConstraints.maxHeight / 2))
                 .asPaddingValues(),
             modifier = Modifier
                 .fadingEdge(vertical = 64.dp)
@@ -1027,6 +1062,8 @@ var showColorPickerDialog by remember { mutableStateOf(false) }
                 }
             }
         }
+            }
+        }
 
 
 
@@ -1158,6 +1195,34 @@ var showColorPickerDialog by remember { mutableStateOf(false) }
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     val shareLyricsChooserTitle = stringResource(R.string.share_lyrics)
+                    val songLink = "https://music.youtube.com/watch?v=${mediaMetadata?.id}"
+                    val shareText = "\"$lyricsText\"\n\n$songTitle - $artists\n$songLink"
+                    // Copy to clipboard Row
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                val clip = ClipData.newPlainText("lyrics", shareText)
+                                clipboard.setPrimaryClip(clip)
+                                Toast.makeText(context, context.getString(R.string.copied_to_clipboard), Toast.LENGTH_SHORT).show()
+                                showShareDialog = false
+                            }
+                            .padding(vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.content_copy),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Text(
+                            text = stringResource(R.string.copy_to_clipboard),
+                            fontSize = 16.sp,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                     // Share as Text Row
                     Row(
                         modifier = Modifier
@@ -1166,13 +1231,7 @@ var showColorPickerDialog by remember { mutableStateOf(false) }
                                 val shareIntent = Intent().apply {
                                     action = Intent.ACTION_SEND
                                     type = "text/plain"
-                                    val songLink =
-                                        "https://music.youtube.com/watch?v=${mediaMetadata?.id}"
-                                    // Use the potentially multi-line lyricsText here
-                                    putExtra(
-                                        Intent.EXTRA_TEXT,
-                                        "\"$lyricsText\"\n\n$songTitle - $artists\n$songLink"
-                                    )
+                                    putExtra(Intent.EXTRA_TEXT, shareText)
                                 }
                                 context.startActivity(
                                     Intent.createChooser(
@@ -1248,6 +1307,7 @@ var showColorPickerDialog by remember { mutableStateOf(false) }
             LyricsShareDialog(
                 mediaMetadata = metadata,
                 lyrics = lyricsText,
+                showBranding = shareLyricsShowBranding,
                 onDismiss = { showImageCustomizationDialog = false },
                 onShare = { bitmap ->
                     scope.launch {
@@ -1270,10 +1330,7 @@ var showColorPickerDialog by remember { mutableStateOf(false) }
                 }
             )
         }
-
-
     }
-}
 }
 
 private const val METROLIST_AUTO_SCROLL_DURATION = 1500L // Much slower auto-scroll for smooth transitions
