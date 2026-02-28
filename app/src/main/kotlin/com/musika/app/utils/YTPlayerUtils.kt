@@ -1,4 +1,4 @@
-﻿package com.musika.app.utils
+package com.musika.app.utils
 
 import android.net.ConnectivityManager
 import androidx.media3.common.PlaybackException
@@ -18,16 +18,14 @@ import com.musika.innertube.models.YouTubeClient.Companion.TVHTML5_SIMPLY_EMBEDD
 import com.musika.innertube.models.YouTubeClient.Companion.WEB
 import com.musika.innertube.models.YouTubeClient.Companion.WEB_CREATOR
 import com.musika.innertube.models.YouTubeClient.Companion.WEB_REMIX
+import com.musika.app.di.OkHttpClientProvider
 import com.musika.innertube.models.response.PlayerResponse
-import okhttp3.OkHttpClient
 import timber.log.Timber
 
 object YTPlayerUtils {
     private const val logTag = "YTPlayerUtils"
 
-    private val httpClient = OkHttpClient.Builder()
-        .proxy(YouTube.proxy)
-        .build()
+    private val httpClient get() = OkHttpClientProvider.default
     /**
      * The main client is used for metadata and initial streams.
      * Do not use other clients for this because it can result in inconsistent metadata.

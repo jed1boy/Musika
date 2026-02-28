@@ -54,7 +54,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.launch
 import java.text.Collator
 import java.time.LocalDateTime
@@ -1180,14 +1179,10 @@ interface DatabaseDao {
     /**
      * Increment by one the play count with today's year and month.
      */
-    fun incrementPlayCount(songId: String) {
+    suspend fun incrementPlayCount(songId: String) {
         val time = LocalDateTime.now().atOffset(ZoneOffset.UTC)
-        var oldCount: Int
-        runBlocking {
-            oldCount = getPlayCountByMonth(songId, time.year, time.monthValue).first()
-        }
+        val oldCount = getPlayCountByMonth(songId, time.year, time.monthValue).first()
 
-        // add new
         if (oldCount <= 0) {
             insert(PlayCountEntity(songId, time.year, time.monthValue, 0))
         }
@@ -1328,7 +1323,7 @@ interface DatabaseDao {
     }
 
     @Transaction
-    fun insert(albumPage: AlbumPage) {
+    fun insert(albumPage: AlbumPage, existingSongs: Map<String, Song?>) {
         if (insert(
                 AlbumEntity(
                     id = albumPage.album.browseId,
@@ -1348,7 +1343,7 @@ interface DatabaseDao {
             .map(SongItem::toMediaMetadata)
             .onEach(::insert)
             .onEach {
-                val existingSong = getSongByIdBlocking(it.id)
+                val existingSong = existingSongs[it.id]
                 if (existingSong != null) {
                     update(existingSong, it)
                 }
@@ -1446,6 +1441,7 @@ interface DatabaseDao {
     fun update(
         album: AlbumEntity,
         albumPage: AlbumPage,
+        existingSongs: Map<String, Song?>,
         artists: List<ArtistEntity>? = emptyList(),
     ) {
         update(
@@ -1467,7 +1463,7 @@ interface DatabaseDao {
             .map(SongItem::toMediaMetadata)
             .onEach(::insert)
             .onEach {
-                val existingSong = getSongByIdBlocking(it.id)
+                val existingSong = existingSongs[it.id]
                 if (existingSong != null) {
                     update(existingSong, it)
                 }

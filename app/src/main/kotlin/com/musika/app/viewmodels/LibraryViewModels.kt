@@ -238,9 +238,7 @@ constructor(
                         YouTube
                             .album(album.id)
                             .onSuccess { albumPage ->
-                                database.query {
-                                    update(album.album, albumPage, album.artists)
-                                }
+                                database.update(album.album, albumPage, album.artists)
                             }.onFailure {
                                 reportException(it)
                                 if (it.message?.contains("NOT_FOUND") == true) {
@@ -359,9 +357,7 @@ constructor(
                         YouTube
                             .album(album.id)
                             .onSuccess { albumPage ->
-                                database.query {
-                                    update(album.album, albumPage, album.artists)
-                                }
+                                database.update(album.album, albumPage, album.artists)
                             }.onFailure {
                                 reportException(it)
                                 if (it.message?.contains("NOT_FOUND") == true) {

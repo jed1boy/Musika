@@ -1,4 +1,4 @@
-﻿package com.musika.app.db
+package com.musika.app.db
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -36,6 +36,9 @@ import com.musika.app.db.entities.SongEntity
 import com.musika.app.db.entities.SortedSongAlbumMap
 import com.musika.app.db.entities.SortedSongArtistMap
 import com.musika.app.extensions.toSQLiteQuery
+import com.musika.innertube.pages.AlbumPage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -65,6 +68,16 @@ class MusicDatabase(
                 }
             }
         }
+
+    suspend fun insert(albumPage: AlbumPage) = withContext(Dispatchers.IO) {
+        val existingSongs = albumPage.songs.associate { it.id to getSongById(it.id) }
+        transaction { insert(albumPage, existingSongs) }
+    }
+
+    suspend fun update(album: com.musika.app.db.entities.AlbumEntity, albumPage: AlbumPage, artists: List<com.musika.app.db.entities.ArtistEntity>? = emptyList()) = withContext(Dispatchers.IO) {
+        val existingSongs = albumPage.songs.associate { it.id to getSongById(it.id) }
+        transaction { update(album, albumPage, existingSongs, artists) }
+    }
 
     fun close() = delegate.close()
 }

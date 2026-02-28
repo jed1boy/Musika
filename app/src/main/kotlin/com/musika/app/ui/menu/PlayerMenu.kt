@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.menu
+package com.musika.app.ui.menu
 
 import android.content.Intent
 import android.content.res.Configuration
@@ -155,7 +155,7 @@ fun PlayerMenu(
                 )
             }
             
-            items(artists) { artist ->
+            items(artists, key = { it.id ?: "artist_${it.name.hashCode()}" }) { artist ->
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()

@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.screens.playlist
+package com.musika.app.ui.screens.playlist
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -483,6 +483,7 @@ fun OnlinePlaylistScreen(
 
                     itemsIndexed(
                         items = wrappedSongs,
+                        key = { _, song -> song.item.second.id },
                     ) { index, song ->
                         YouTubeListItem(
                             item = song.item.second,

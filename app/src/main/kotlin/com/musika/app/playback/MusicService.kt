@@ -65,6 +65,7 @@ import com.google.android.gms.cast.framework.CastContext
 import com.google.common.util.concurrent.MoreExecutors
 import java.util.concurrent.TimeUnit
 import com.musika.innertube.YouTube
+import com.musika.app.di.DefaultOkHttpClient
 import com.musika.app.dlna.DLNAManager
 import com.musika.innertube.models.SongItem
 import com.musika.innertube.models.WatchEndpoint
@@ -224,6 +225,10 @@ class MusicService :
     @Inject
     @DownloadCache
     lateinit var downloadCache: SimpleCache
+
+    @Inject
+    @DefaultOkHttpClient
+    lateinit var okHttpClient: okhttp3.OkHttpClient
 
     lateinit var player: ExoPlayer
     private lateinit var mediaSession: MediaLibrarySession
@@ -1545,22 +1550,7 @@ class MusicService :
                     .setUpstreamDataSourceFactory(
                         DefaultDataSource.Factory(
                             this,
-                            OkHttpDataSource.Factory(
-                                OkHttpClient
-                                    .Builder()
-                                    .proxy(YouTube.proxy)
-                                    .connectTimeout(5, TimeUnit.SECONDS)
-                                    .readTimeout(8, TimeUnit.SECONDS)
-                                    .callTimeout(10, TimeUnit.SECONDS)
-                                    .proxyAuthenticator { _, response ->
-                                        YouTube.proxyAuth?.let { auth ->
-                                            response.request.newBuilder()
-                                                .header("Proxy-Authorization", auth)
-                                                .build()
-                                        } ?: response.request
-                                    }
-                                    .build(),
-                            ),
+                            OkHttpDataSource.Factory(okHttpClient),
                         ),
                     ),
             ).setCacheWriteDataSinkFactory(null)
