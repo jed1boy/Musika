@@ -15,8 +15,8 @@ android {
         applicationId = "com.musika.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 9
-        versionName = "1.1.9"
+        versionCode = 10
+        versionName = "1.2.0"
 
         // Last.fm: add LASTFM_API_KEY and LASTFM_API_SECRET to gradle.properties (register at last.fm/api/account/create)
         val lastFmApiKey = project.findProperty("LASTFM_API_KEY") as? String ?: ""
