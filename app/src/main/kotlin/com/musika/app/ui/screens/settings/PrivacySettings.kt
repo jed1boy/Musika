@@ -52,6 +52,7 @@ import com.musika.app.constants.AutoClearHistoryOnCloseKey
 import com.musika.app.constants.IncognitoModeKey
 import com.musika.app.constants.PauseListenHistoryKey
 import com.musika.app.constants.PauseSearchHistoryKey
+import com.musika.app.ui.theme.GoogleSansFlex
 import com.musika.app.ui.component.DefaultDialog
 import com.musika.app.ui.component.IconButton
 import com.musika.app.ui.component.PreferenceEntry
@@ -401,7 +402,7 @@ fun PrivacySettings(
                 Text(
                     text = stringResource(R.string.privacy),
                     style = MaterialTheme.typography.titleLarge.copy(
-                        fontFamily = FontFamily(Font(R.font.zalando_sans_expanded)),
+                        fontFamily = GoogleSansFlex,
                         fontWeight = FontWeight.Bold
                     )
                 )

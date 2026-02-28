@@ -98,8 +98,6 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
@@ -213,6 +211,7 @@ import com.musika.app.ui.screens.search.LocalSearchScreen
 import com.musika.app.ui.screens.search.OnlineSearchScreen
 import com.musika.app.ui.screens.settings.DarkMode
 import com.musika.app.ui.screens.settings.NavigationTab
+import com.musika.app.ui.theme.GoogleSansFlex
 import com.musika.app.ui.theme.ColorSaver
 import com.musika.app.ui.theme.DefaultThemeColor
 import com.musika.app.ui.theme.MusikaTheme
@@ -467,7 +466,10 @@ class MainActivity : ComponentActivity() {
             }
 
             val enableDynamicTheme by rememberPreference(DynamicThemeKey, defaultValue = true)
-            val enableMaterialYou by rememberPreference(MaterialYouKey, defaultValue = false)
+            val enableMaterialYou by rememberPreference(
+                MaterialYouKey,
+                defaultValue = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+            )
             
             // Read dark mode preference
             val darkModePreference by rememberEnumPreference(DarkModeKey, defaultValue = DarkMode.AUTO)
@@ -1024,7 +1026,7 @@ MusikaTheme(
                                                             currentTitleRes?.let { stringResource(it) } ?: ""
                                                         },
                                                         style = MaterialTheme.typography.titleLarge.copy(
-                                                            fontFamily = FontFamily(Font(R.font.zalando_sans_expanded)),
+                                                            fontFamily = GoogleSansFlex,
                                                             fontWeight = FontWeight.Bold,
                                                             fontSize = if (navBackStackEntry?.destination?.route == Screens.Home.route) 28.sp else MaterialTheme.typography.titleLarge.fontSize
                                                         ),

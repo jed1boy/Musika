@@ -48,6 +48,7 @@ import androidx.navigation.NavController
 import com.musika.app.LocalPlayerAwareWindowInsets
 import com.musika.app.R
 import com.musika.app.db.entities.Song
+import com.musika.app.ui.theme.GoogleSansFlex
 import com.musika.app.ui.component.IconButton
 import com.musika.app.ui.component.PreferenceEntry
 import com.musika.app.ui.menu.AddToPlaylistDialogOnline
@@ -199,7 +200,7 @@ fun BackupAndRestore(
                 Text(
                     text = stringResource(R.string.backup_restore),
                     style = MaterialTheme.typography.titleLarge.copy(
-                        fontFamily = FontFamily(Font(R.font.zalando_sans_expanded)),
+                        fontFamily = GoogleSansFlex,
                         fontWeight = FontWeight.Bold
                     )
                 )

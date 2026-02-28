@@ -64,6 +64,7 @@ import com.musika.app.LocalPlayerAwareWindowInsets
 import com.musika.app.MainActivity
 import com.musika.app.R
 import com.musika.app.constants.CheckForUpdatesKey
+import com.musika.app.ui.theme.GoogleSansFlex
 import com.musika.app.ui.component.IconButton
 import com.musika.app.ui.component.SwitchPreference
 import com.musika.app.ui.utils.backToMain
@@ -237,7 +238,7 @@ fun UpdaterScreen(
                 Text(
                     text = stringResource(R.string.updater),
                     style = MaterialTheme.typography.titleLarge.copy(
-                        fontFamily = FontFamily(Font(R.font.zalando_sans_expanded)),
+                        fontFamily = GoogleSansFlex,
                         fontWeight = FontWeight.Bold
                     )
                 )

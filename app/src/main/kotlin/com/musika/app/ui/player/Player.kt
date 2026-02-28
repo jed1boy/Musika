@@ -130,6 +130,7 @@ import com.musika.app.constants.PlayerBackgroundStyle
 import com.musika.app.constants.PlayerBackgroundStyleKey
 import com.musika.app.constants.PlayerButtonsStyle
 import com.musika.app.constants.PlayerButtonsStyleKey
+import com.musika.app.ui.theme.GoogleSansFlex
 import com.musika.app.ui.theme.PlayerColorExtractor
 import com.musika.app.ui.theme.PlayerSliderColors
 import com.musika.app.constants.PlayerHorizontalPadding
@@ -1188,7 +1189,7 @@ val defaultGradientColors = listOf(MaterialTheme.colorScheme.surfaceContainer, M
                     Text(
                         text = "Musika",
                         style = MaterialTheme.typography.titleLarge.copy(
-                            fontFamily = androidx.compose.ui.text.font.FontFamily(androidx.compose.ui.text.font.Font(R.font.zalando_sans_expanded)),
+                            fontFamily = GoogleSansFlex,
                             fontWeight = FontWeight.Bold,
                             fontSize = 28.sp
                         ),
@@ -1350,7 +1351,7 @@ val defaultGradientColors = listOf(MaterialTheme.colorScheme.surfaceContainer, M
                     Text(
                         text = "Musika",
                         style = MaterialTheme.typography.titleLarge.copy(
-                            fontFamily = androidx.compose.ui.text.font.FontFamily(androidx.compose.ui.text.font.Font(R.font.zalando_sans_expanded)),
+                            fontFamily = GoogleSansFlex,
                             fontWeight = FontWeight.Bold,
                             fontSize = 28.sp
                         ),

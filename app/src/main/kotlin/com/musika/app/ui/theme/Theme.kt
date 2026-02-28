@@ -1,8 +1,8 @@
 package com.musika.app.ui.theme
 
 import android.graphics.Bitmap
-
 import android.os.Build
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
@@ -10,17 +10,28 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.Shapes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.SaverScope
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.palette.graphics.Palette
 import com.materialkolor.score.Score
+import com.musika.app.extensions.findActivity
 
 val DefaultThemeColor = Color(0xFFED5564)
+
+private val AppShapes = Shapes(
+    extraSmall = RoundedCornerShape(8.dp),
+    small = RoundedCornerShape(12.dp),
+    medium = RoundedCornerShape(16.dp),
+    large = RoundedCornerShape(20.dp),
+    extraLarge = RoundedCornerShape(28.dp),
+)
 
 // Pitch black dark color scheme
 private val DarkColorScheme = darkColorScheme(
@@ -110,9 +121,10 @@ fun MusikaTheme(
     content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current
+    val activityContext = context.findActivity() ?: context
     val baseColorScheme = when {
         isDynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            if (darkTheme) dynamicDarkColorScheme(activityContext) else dynamicLightColorScheme(activityContext)
         }
         else -> if (darkTheme) DarkColorScheme else LightColorScheme
     }
@@ -140,6 +152,7 @@ fun MusikaTheme(
     MaterialTheme(
         colorScheme = colorScheme.pureBlack(pureBlack),
         typography = AppTypography,
+        shapes = AppShapes,
         content = content
     )
 }

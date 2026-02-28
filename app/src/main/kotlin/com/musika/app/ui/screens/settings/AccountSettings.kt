@@ -71,6 +71,7 @@ import com.musika.app.constants.InnerTubeCookieKey
 import com.musika.app.constants.UseLoginForBrowse
 import com.musika.app.constants.VisitorDataKey
 import com.musika.app.constants.YtmSyncKey
+import com.musika.app.ui.theme.GoogleSansFlex
 import com.musika.app.ui.component.InfoLabel
 import com.musika.app.ui.component.PreferenceEntry
 import com.musika.app.ui.component.ReleaseNotesCard
@@ -133,7 +134,7 @@ fun AccountSettings(
             Text(
                 text = stringResource(R.string.account),
                 style = MaterialTheme.typography.titleMedium.copy(
-                    fontFamily = FontFamily(Font(R.font.zalando_sans_expanded)),
+                    fontFamily = GoogleSansFlex,
                     fontWeight = FontWeight.Bold
                 ),
                 modifier = Modifier.padding(start = 4.dp)

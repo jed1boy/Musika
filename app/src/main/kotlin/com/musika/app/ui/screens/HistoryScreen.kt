@@ -44,8 +44,6 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
@@ -76,6 +74,7 @@ import com.musika.app.ui.component.YouTubeListItem
 import com.musika.app.ui.menu.SelectionMediaMetadataMenu
 import com.musika.app.ui.menu.SongMenu
 import com.musika.app.ui.menu.YouTubeSongMenu
+import com.musika.app.ui.theme.GoogleSansFlex
 import com.musika.app.ui.utils.backToMain
 import com.musika.app.utils.rememberPreference
 import com.musika.app.viewmodels.DateAgo
@@ -444,7 +443,7 @@ fun HistoryScreen(
                 Text(
                     text = stringResource(R.string.history),
                     style = MaterialTheme.typography.titleLarge.copy(
-                        fontFamily = FontFamily(Font(R.font.zalando_sans_expanded)),
+                        fontFamily = GoogleSansFlex,
                         fontWeight = FontWeight.Bold
                     )
                 )

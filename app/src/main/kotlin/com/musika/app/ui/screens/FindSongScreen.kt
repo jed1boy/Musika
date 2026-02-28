@@ -33,8 +33,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -52,6 +50,7 @@ import coil3.toBitmap
 import com.musika.app.R
 import com.musika.app.recognition.MusicRecognitionViewModel
 import com.musika.app.recognition.RecognitionState
+import com.musika.app.ui.theme.GoogleSansFlex
 import com.musika.app.ui.theme.extractThemeColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -144,7 +143,7 @@ fun FindSongScreen(
                     Text(
                         text = "Musika Find",
                         style = MaterialTheme.typography.titleLarge.copy(
-                            fontFamily = FontFamily(Font(R.font.zalando_sans_expanded)),
+                            fontFamily = GoogleSansFlex,
                             fontWeight = FontWeight.Bold,
                             fontSize = 28.sp
                         ),

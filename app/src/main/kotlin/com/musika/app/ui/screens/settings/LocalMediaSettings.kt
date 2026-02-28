@@ -44,6 +44,7 @@ import com.musika.app.constants.ScanPathsKey
 import com.musika.app.constants.ScannerSensitivityKey
 import com.musika.app.constants.ScannerStrictExtKey
 import com.musika.app.constants.ScannerStrictFilePathsKey
+import com.musika.app.ui.theme.GoogleSansFlex
 import com.musika.app.ui.component.*
 import com.musika.app.utils.rememberPreference
 import com.musika.app.viewmodels.SettingsViewModel
@@ -307,7 +308,7 @@ fun LocalMediaSettings(
                 Text(
                     text = stringResource(R.string.local_media),
                     style = MaterialTheme.typography.titleLarge.copy(
-                        fontFamily = androidx.compose.ui.text.font.FontFamily(androidx.compose.ui.text.font.Font(R.font.zalando_sans_expanded)),
+                        fontFamily = GoogleSansFlex,
                         fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
                     )
                 )

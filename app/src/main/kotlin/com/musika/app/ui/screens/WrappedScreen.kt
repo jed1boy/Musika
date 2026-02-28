@@ -2,7 +2,6 @@ package com.musika.app.ui.screens
 
 import android.app.Activity
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
 import android.content.res.AssetFileDescriptor
 import android.graphics.Bitmap
@@ -91,6 +90,7 @@ import coil3.imageLoader
 import coil3.request.ImageRequest
 import coil3.request.allowHardware
 import coil3.toBitmap
+import com.musika.app.extensions.findActivity
 import com.musika.app.R
 import com.musika.app.utils.makeTimeString
 import com.musika.app.viewmodels.ArtistStats
@@ -117,7 +117,7 @@ fun WrappedScreen(
 
     // Immersive Mode
     DisposableEffect(Unit) {
-        val window = context.findActivity()?.window ?: return@DisposableEffect onDispose {}
+        val window = context.findActivity()?.window ?: return@DisposableEffect onDispose { }
         val insetsController = WindowCompat.getInsetsController(window, view)
         insetsController.hide(WindowInsetsCompat.Type.systemBars())
         insetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
@@ -551,12 +551,6 @@ fun LavaLampBackground() {
         drawCircle(Color(0xFF8E2DE2).copy(0.3f), size.width*0.5f, Offset(size.width/2 + cos(b1)*size.width*0.3f, size.height/2 + sin(b1)*size.height*0.2f))
         drawCircle(Color(0xFF4A00E0).copy(0.3f), size.width*0.4f, Offset(size.width/2 + sin(b2)*size.width*0.3f, size.height/2 + cos(b2)*size.height*0.3f))
     }
-}
-
-fun Context.findActivity(): Activity? = when (this) {
-    is Activity -> this
-    is ContextWrapper -> baseContext.findActivity()
-    else -> null
 }
 
 suspend fun shareWrapped(context: Context, data: WrappedData) {
