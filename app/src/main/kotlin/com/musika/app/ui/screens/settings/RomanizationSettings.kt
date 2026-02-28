@@ -42,6 +42,7 @@ import com.musika.innertube.YouTube
 import com.musika.app.LocalPlayerAwareWindowInsets
 import com.musika.app.R
 import com.musika.app.constants.*
+import com.musika.app.ui.theme.GoogleSansFlex
 import com.musika.app.ui.component.*
 import com.musika.app.ui.utils.backToMain
 import com.musika.app.utils.rememberEnumPreference
@@ -178,7 +179,7 @@ fun RomanizationSettings(
             Text(
                 text = stringResource(R.string.lyrics_romanize_title),
                 style = MaterialTheme.typography.titleLarge.copy(
-                    fontFamily = FontFamily(Font(R.font.zalando_sans_expanded)),
+                    fontFamily = GoogleSansFlex,
                     fontWeight = FontWeight.Bold
                 )
             )

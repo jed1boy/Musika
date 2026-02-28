@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.screens.settings
+package com.musika.app.ui.screens.settings
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -55,6 +55,7 @@ import com.musika.app.BuildConfig
 import com.musika.app.LocalPlayerAwareWindowInsets
 import com.musika.app.R
 import com.musika.app.constants.MaterialYouKey
+import com.musika.app.ui.theme.GoogleSansFlex
 import com.musika.app.ui.component.IconButton
 import com.musika.app.ui.component.Material3SettingsGroup
 import com.musika.app.ui.component.Material3SettingsItem
@@ -74,7 +75,10 @@ fun SettingsScreen(
     val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
     val isAndroid12OrLater = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-    val (enableMaterialYou) = com.musika.app.utils.rememberPreference(MaterialYouKey, defaultValue = false)
+    val (enableMaterialYou) = com.musika.app.utils.rememberPreference(
+        MaterialYouKey,
+        defaultValue = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+    )
 
     Column(
         Modifier
@@ -494,7 +498,7 @@ fun SettingsScreen(
                 Text(
                     text = stringResource(R.string.settings),
                     style = MaterialTheme.typography.titleLarge.copy(
-                        fontFamily = FontFamily(Font(R.font.zalando_sans_expanded)),
+                        fontFamily = GoogleSansFlex,
                         fontWeight = FontWeight.Bold
                     )
                 )

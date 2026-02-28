@@ -64,6 +64,7 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.musika.app.LocalPlayerAwareWindowInsets
 import com.musika.app.R
+import com.musika.app.ui.theme.GoogleSansFlex
 import com.musika.app.ui.component.IconButton
 import com.musika.app.ui.component.Material3SettingsGroup
 import com.musika.app.ui.component.Material3SettingsItem
@@ -109,7 +110,7 @@ fun SupporterScreen(
             Text(
                 text = "Hall of Fame",
                 style = MaterialTheme.typography.titleLarge.copy(
-                    fontFamily = FontFamily(Font(R.font.zalando_sans_expanded)),
+                    fontFamily = GoogleSansFlex,
                     fontWeight = FontWeight.Bold
                 )
             )
@@ -274,7 +275,7 @@ fun SupporterScreen(
             Text(
                 text = "Ways to Support",
                 style = MaterialTheme.typography.titleLarge.copy(
-                    fontFamily = FontFamily(Font(R.font.zalando_sans_expanded)),
+                    fontFamily = GoogleSansFlex,
                     fontWeight = FontWeight.Bold
                 )
             )
@@ -405,7 +406,7 @@ fun SupporterScreen(
                 Text(
                     text = "Supporter",
                     style = MaterialTheme.typography.titleLarge.copy(
-                        fontFamily = FontFamily(Font(R.font.zalando_sans_expanded)),
+                        fontFamily = GoogleSansFlex,
                         fontWeight = FontWeight.Bold
                     )
                 )

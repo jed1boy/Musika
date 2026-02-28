@@ -1,6 +1,8 @@
 package com.musika.app.extensions
 
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import com.musika.app.constants.InnerTubeCookieKey
@@ -22,6 +24,12 @@ fun Context.isUserLoggedIn(): Boolean {
         val cookie = getSensitivePreference(InnerTubeCookieKey)
         "SAPISID" in parseCookieString(cookie) && isInternetConnected()
     }
+}
+
+fun Context.findActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> null
 }
 
 fun Context.isInternetConnected(): Boolean {

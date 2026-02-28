@@ -76,6 +76,7 @@ import com.musika.innertube.YouTube
 import com.musika.app.LocalPlayerAwareWindowInsets
 import com.musika.app.R
 import com.musika.app.constants.*
+import com.musika.app.ui.theme.GoogleSansFlex
 import com.musika.app.ui.component.*
 import com.musika.app.ui.utils.backToMain
 import com.musika.app.utils.rememberEnumPreference
@@ -629,7 +630,7 @@ fun ContentSettings(
                 Text(
                     text = stringResource(R.string.content),
                     style = MaterialTheme.typography.titleLarge.copy(
-                        fontFamily = FontFamily(Font(R.font.zalando_sans_expanded)),
+                        fontFamily = GoogleSansFlex,
                         fontWeight = FontWeight.Bold
                     )
                 )

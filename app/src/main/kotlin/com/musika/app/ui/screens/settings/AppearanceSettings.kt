@@ -83,6 +83,7 @@ import com.musika.app.constants.SliderStyleKey
 import com.musika.app.constants.ComponentAccentModeKey
 import com.musika.app.constants.ComponentAccentColorKey
 import com.musika.app.constants.ComponentAccentMode
+import com.musika.app.ui.theme.GoogleSansFlex
 import com.musika.app.ui.component.ColorPickerPreference
 import com.musika.app.constants.SlimNavBarKey
 import com.musika.app.constants.ShowLikedPlaylistKey
@@ -120,9 +121,10 @@ val (darkMode, onDarkModeChange) = rememberEnumPreference(
         defaultValue = DarkMode.AUTO
     )
     
+    val materialYouSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
     val (materialYou, onMaterialYouChange) = rememberPreference(
         MaterialYouKey,
-        defaultValue = false
+        defaultValue = materialYouSupported
     )
     
     // Dynamic theme removed - always disabled
@@ -405,9 +407,15 @@ val (darkMode, onDarkModeChange) = rememberEnumPreference(
 
         SwitchPreference(
             title = { Text(stringResource(R.string.material_you)) },
+            description = if (materialYouSupported) {
+                stringResource(R.string.material_you_description)
+            } else {
+                stringResource(R.string.material_you_requires_android12)
+            },
             icon = { Icon(painterResource(R.drawable.palette), null) },
             checked = materialYou,
             onCheckedChange = onMaterialYouChange,
+            isEnabled = materialYouSupported,
         )
 
 AnimatedVisibility(visible = materialYou) {
@@ -738,7 +746,7 @@ AnimatedVisibility(visible = materialYou) {
                 Text(
                     text = stringResource(R.string.appearance),
                     style = MaterialTheme.typography.titleLarge.copy(
-                        fontFamily = FontFamily(Font(R.font.zalando_sans_expanded)),
+                        fontFamily = GoogleSansFlex,
                         fontWeight = FontWeight.Bold
                     )
                 )

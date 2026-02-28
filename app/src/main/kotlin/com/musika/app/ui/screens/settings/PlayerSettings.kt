@@ -67,6 +67,7 @@ import com.musika.app.constants.TapAlbumArtForLyricsKey
 import com.musika.app.constants.ForceMusicTrackArtKey
 import com.musika.app.constants.HistoryDuration
 import com.musika.app.constants.SeekExtraSeconds
+import com.musika.app.ui.theme.GoogleSansFlex
 import com.musika.app.ui.component.EnumListPreference
 import com.musika.app.ui.component.IconButton
 import com.musika.app.ui.component.PreferenceGroupTitle
@@ -343,7 +344,7 @@ fun PlayerSettings(
                 Text(
                     text = stringResource(R.string.player_and_audio),
                     style = MaterialTheme.typography.titleLarge.copy(
-                        fontFamily = FontFamily(Font(R.font.zalando_sans_expanded)),
+                        fontFamily = GoogleSansFlex,
                         fontWeight = FontWeight.Bold
                     )
                 )

@@ -47,6 +47,7 @@ import com.musika.app.extensions.toMediaItem
 import com.musika.app.models.toMediaMetadata
 import com.musika.app.playback.queues.ListQueue
 import com.musika.app.playback.queues.YouTubeQueue
+import com.musika.app.ui.theme.GoogleSansFlex
 import com.musika.app.ui.component.ChoiceChipsRow
 import com.musika.app.ui.component.HideOnScrollFAB
 import com.musika.app.ui.component.IconButton
@@ -440,7 +441,7 @@ fun StatsScreen(
                 Text(
                     text = stringResource(R.string.stats),
                     style = MaterialTheme.typography.titleLarge.copy(
-                        fontFamily = FontFamily(Font(R.font.zalando_sans_expanded)),
+                        fontFamily = GoogleSansFlex,
                         fontWeight = FontWeight.Bold
                     )
                 )

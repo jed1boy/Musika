@@ -54,6 +54,7 @@ import com.musika.app.R
 import com.musika.app.constants.MaxImageCacheSizeKey
 import com.musika.app.constants.MaxSongCacheSizeKey
 import com.musika.app.extensions.tryOrNull
+import com.musika.app.ui.theme.GoogleSansFlex
 import com.musika.app.ui.component.ActionPromptDialog
 import com.musika.app.ui.component.DefaultDialog
 import com.musika.app.ui.component.IconButton
@@ -376,7 +377,7 @@ fun StorageSettings(
                 Text(
                     text = stringResource(R.string.storage),
                     style = MaterialTheme.typography.titleLarge.copy(
-                        fontFamily = FontFamily(Font(R.font.zalando_sans_expanded)),
+                        fontFamily = GoogleSansFlex,
                         fontWeight = FontWeight.Bold
                     )
                 )
