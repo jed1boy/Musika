@@ -16,12 +16,12 @@ import javax.inject.Singleton
 
 @Singleton
 class DLNAManager @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val mediaServer: DLNAMediaServer,
 ) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     
     private val ssdpDiscovery = SSDPDiscovery()
-    private val mediaServer = DLNAMediaServer()
     
     private val _devices = MutableStateFlow<List<DLNADevice>>(emptyList())
     val devices: StateFlow<List<DLNADevice>> = _devices.asStateFlow()

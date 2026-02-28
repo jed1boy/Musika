@@ -113,7 +113,7 @@ fun AddToPlaylistDialogOnline(
                 )
             }
 
-            items(playlists) { playlist ->
+            items(playlists, key = { it.id }) { playlist ->
                 PlaylistListItem(
                     playlist = playlist,
                     modifier = Modifier.clickable {

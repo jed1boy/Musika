@@ -50,7 +50,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -475,9 +474,10 @@ fun AlbumListItem(
         val downloadUtil = LocalDownloadUtil.current
         val database = LocalDatabase.current
 
-        val songs by produceState<List<Song>>(initialValue = emptyList(), album.id) {
+        var songs by remember(album.id) { mutableStateOf<List<Song>>(emptyList()) }
+        LaunchedEffect(album.id) {
             withContext(Dispatchers.IO) {
-                value = database.albumSongs(album.id).first()
+                songs = database.albumSongs(album.id).first()
             }
         }
 
@@ -538,9 +538,10 @@ fun AlbumGridItem(
         val downloadUtil = LocalDownloadUtil.current
         val database = LocalDatabase.current
 
-        val songs by produceState<List<Song>>(initialValue = emptyList(), album.id) {
+        var songs by remember(album.id) { mutableStateOf<List<Song>>(emptyList()) }
+        LaunchedEffect(album.id) {
             withContext(Dispatchers.IO) {
-                value = database.albumSongs(album.id).first()
+                songs = database.albumSongs(album.id).first()
             }
         }
 
@@ -799,11 +800,13 @@ fun YouTubeListItem(
     trailingContent: @Composable RowScope.() -> Unit = {},
     badges: @Composable RowScope.() -> Unit = {
         val database = LocalDatabase.current
-        val song by produceState<Song?>(initialValue = null, item.id) {
-            if (item is SongItem) value = database.song(item.id).firstOrNull()
-        }
-        val album by produceState<Album?>(initialValue = null, item.id) {
-            if (item is AlbumItem) value = database.album(item.id).firstOrNull()
+        var song by remember(item.id) { mutableStateOf<Song?>(null) }
+        var album by remember(item.id) { mutableStateOf<Album?>(null) }
+        LaunchedEffect(item.id) {
+            withContext(Dispatchers.IO) {
+                if (item is SongItem) song = database.song(item.id).firstOrNull()
+                if (item is AlbumItem) album = database.album(item.id).firstOrNull()
+            }
         }
 
         if ((item is SongItem && song?.song?.liked == true) ||
@@ -869,11 +872,13 @@ fun YouTubeGridItem(
     coroutineScope: CoroutineScope? = null,
     badges: @Composable RowScope.() -> Unit = {
         val database = LocalDatabase.current
-        val song by produceState<Song?>(initialValue = null, item.id) {
-            if (item is SongItem) value = database.song(item.id).firstOrNull()
-        }
-        val album by produceState<Album?>(initialValue = null, item.id) {
-            if (item is AlbumItem) value = database.album(item.id).firstOrNull()
+        var song by remember(item.id) { mutableStateOf<Song?>(null) }
+        var album by remember(item.id) { mutableStateOf<Album?>(null) }
+        LaunchedEffect(item.id) {
+            withContext(Dispatchers.IO) {
+                if (item is SongItem) song = database.song(item.id).firstOrNull()
+                if (item is AlbumItem) album = database.album(item.id).firstOrNull()
+            }
         }
 
         if (item is SongItem && song?.song?.liked == true ||
@@ -947,7 +952,7 @@ fun YouTubeGridItem(
                     var albumWithSongs = database.albumWithSongs(item.id).first()
                     if (albumWithSongs?.songs.isNullOrEmpty()) {
                         YouTube.album(item.id).onSuccess { albumPage ->
-                            database.transaction { insert(albumPage) }
+                            database.insert(albumPage)
                             albumWithSongs = database.albumWithSongs(item.id).first()
                         }.onFailure { reportException(it) }
                     }
