@@ -1,4 +1,4 @@
-package com.musika.app.viewmodels
+﻿package com.musika.app.viewmodels
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -38,10 +38,12 @@ constructor(
                 .onSuccess {
                     playlistId.value = it.album.playlistId
                     otherVersions.value = it.otherVersions
-                    if (album == null) {
-                        database.insert(it)
-                    } else {
-                        database.update(album.album, it, album.artists)
+                    database.transaction {
+                        if (album == null) {
+                            insert(it)
+                        } else {
+                            update(album.album, it, album.artists)
+                        }
                     }
                 }.onFailure {
                     reportException(it)

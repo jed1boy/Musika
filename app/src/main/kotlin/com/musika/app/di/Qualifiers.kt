@@ -1,4 +1,4 @@
-package com.musika.app.di
+﻿package com.musika.app.di
 
 import javax.inject.Qualifier
 
@@ -13,11 +13,3 @@ annotation class DownloadCache
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class ApplicationScope
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class DefaultOkHttpClient
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class NoProxyOkHttpClient

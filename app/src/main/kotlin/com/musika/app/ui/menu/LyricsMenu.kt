@@ -244,7 +244,7 @@ fun LyricsMenu(
                 )
             },
         ) {
-            itemsIndexed(results, key = { index, result -> "lyrics_${result.providerName}_$index" }) { index, result ->
+            itemsIndexed(results) { index, result ->
                 Row(
                     modifier =
                     Modifier

@@ -1,4 +1,4 @@
-package com.musika.app.playback
+﻿package com.musika.app.playback
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -12,12 +12,12 @@ import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.offline.Download
 import androidx.media3.exoplayer.offline.DownloadManager
 import androidx.media3.exoplayer.offline.DownloadNotificationHelper
+import com.musika.innertube.YouTube
 import com.musika.app.constants.AudioQuality
 import com.musika.app.constants.AudioQualityKey
 import com.musika.app.db.MusicDatabase
 import com.musika.app.db.entities.FormatEntity
 import com.musika.app.db.entities.SongEntity
-import com.musika.app.di.DefaultOkHttpClient
 import com.musika.app.di.DownloadCache
 import com.musika.app.di.PlayerCache
 import com.musika.app.utils.YTPlayerUtils
@@ -36,7 +36,6 @@ class DownloadUtil
 @Inject
 constructor(
     @ApplicationContext context: Context,
-    @DefaultOkHttpClient private val okHttpClient: OkHttpClient,
     val database: MusicDatabase,
     val databaseProvider: DatabaseProvider,
     @DownloadCache val downloadCache: SimpleCache,
@@ -56,7 +55,18 @@ constructor(
                 .Factory()
                 .setCache(playerCache)
                 .setUpstreamDataSourceFactory(
-                    OkHttpDataSource.Factory(okHttpClient),
+                    OkHttpDataSource.Factory(
+                        OkHttpClient.Builder()
+                            .proxy(YouTube.proxy)
+                            .proxyAuthenticator { _, response ->
+                                YouTube.proxyAuth?.let { auth ->
+                                    response.request.newBuilder()
+                                        .header("Proxy-Authorization", auth)
+                                        .build()
+                                } ?: response.request
+                            }
+                            .build(),
+                    ),
                 ),
         ) { dataSpec ->
             val mediaId = dataSpec.key ?: error("No media id")

@@ -295,7 +295,7 @@ fun YouTubePlaylistMenu(
                 )
             }
 
-            items(notAddedList, key = { it.id }) { song ->
+            items(notAddedList) { song ->
                 ListItem(
                     headlineContent = { Text(text = song.title) },
                     leadingContent = {

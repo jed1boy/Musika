@@ -99,7 +99,7 @@ fun AddToPlaylistDialog(
                 )
             }
 
-            items(playlists, key = { it.id }) { playlist ->
+            items(playlists) { playlist ->
                 PlaylistListItem(
                     playlist = playlist,
                     modifier = Modifier.clickable {

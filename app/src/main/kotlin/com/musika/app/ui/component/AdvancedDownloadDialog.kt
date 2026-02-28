@@ -195,7 +195,7 @@ fun AdvancedDownloadDialog(
                                     modifier = Modifier.padding(vertical = 8.dp)
                                 )
                             }
-                            items(audioFormats, key = { it.itag }) { format ->
+                            items(audioFormats) { format ->
                                 DownloadOptionItem(
                                     icon = R.drawable.music_note,
                                     title = "Audio (${format.bitrate / 1000}kbps)",
@@ -222,7 +222,7 @@ fun AdvancedDownloadDialog(
                                     modifier = Modifier.padding(vertical = 8.dp)
                                 )
                             }
-                            items(videoFormats, key = { it.itag }) { format ->
+                            items(videoFormats) { format ->
                                 DownloadOptionItem(
                                     icon = R.drawable.video, 
                                     title = "Video ${format.height}p",

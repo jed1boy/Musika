@@ -174,7 +174,7 @@ fun SettingsScreen(
                                 coroutineScope.launch(Dispatchers.IO) {
                                     try {
                                         // Fetch latest release info
-                                        val client = com.musika.app.di.OkHttpClientProvider.noProxy
+                                        val client = okhttp3.OkHttpClient()
                                         val request = okhttp3.Request.Builder()
                                             .url("https://api.github.com/repos/jed1boy/Musika/releases/latest")
                                             .build()

@@ -204,7 +204,7 @@ fun AlbumMenu(
                 )
             }
 
-            items(notAddedList, key = { it.id }) { song ->
+            items(notAddedList) { song ->
                 SongListItem(song = song)
             }
         }
@@ -552,7 +552,9 @@ fun AlbumMenu(
                     refetchIconDegree -= 360
                     scope.launch(Dispatchers.IO) {
                         YouTube.album(album.id).onSuccess {
-                            database.update(album.album, it, album.artists)
+                            database.transaction {
+                                update(album.album, it, album.artists)
+                            }
                         }
                     }
                 }

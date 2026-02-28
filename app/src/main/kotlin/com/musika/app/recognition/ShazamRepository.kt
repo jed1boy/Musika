@@ -3,8 +3,8 @@ package com.musika.app.recognition
 import com.github.f4b6a3.uuid.UuidCreator
 import com.alexmercerind.audire.native.ShazamSignature
 import com.github.f4b6a3.uuid.enums.UuidNamespace
-import com.musika.app.di.NoProxyOkHttpClient
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.Calendar
@@ -12,9 +12,12 @@ import timber.log.Timber
 import javax.inject.Inject
 import kotlin.random.Random
 
-class ShazamRepository @Inject constructor(
-    @NoProxyOkHttpClient private val client: OkHttpClient,
-) {
+class ShazamRepository @Inject constructor() {
+    private val client: OkHttpClient by lazy {
+        OkHttpClient.Builder()
+            .addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
+            .build()
+    }
 
     private val api: ShazamAPI by lazy {
         Retrofit.Builder()

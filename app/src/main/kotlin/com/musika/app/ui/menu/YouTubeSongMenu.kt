@@ -1,4 +1,4 @@
-package com.musika.app.ui.menu
+﻿package com.musika.app.ui.menu
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -148,7 +148,7 @@ fun YouTubeSongMenu(
                 )
             }
             
-            items(artists, key = { it.id ?: "artist_${it.name.hashCode()}" }) { artist ->  
+            items(artists) { artist ->  
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()

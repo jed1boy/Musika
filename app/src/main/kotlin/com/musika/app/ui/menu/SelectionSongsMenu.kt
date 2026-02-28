@@ -1,4 +1,4 @@
-package com.musika.app.ui.menu
+﻿package com.musika.app.ui.menu
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
@@ -56,6 +56,8 @@ import com.musika.app.ui.component.NewAction
 import com.musika.app.ui.component.NewActionGrid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 
 @SuppressLint("MutableCollectionMutableState")
@@ -526,10 +528,14 @@ fun SelectionMediaMetadataMenu(
 
     AddToPlaylistDialog(
         isVisible = showChoosePlaylistDialog,
-        onGetSong = { _ ->
-            songSelection.map { mediaMetadata ->
-                database.insert(mediaMetadata)
-                mediaMetadata.id
+        onGetSong = {
+            songSelection.map {
+                runBlocking {
+                    withContext(Dispatchers.IO) {
+                        database.insert(it)
+                    }
+                }
+                it.id
             }
         },
         onDismiss = { showChoosePlaylistDialog = false }

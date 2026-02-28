@@ -4,35 +4,35 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.compose.runtime.remember
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.scale
 import com.musika.app.R
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeoutOrNull
-
-private const val MIN_DISPLAY_MS = 800L
-private const val MAX_DISPLAY_MS = 2000L
 
 @Composable
 fun SplashScreen(
-    onTimeout: () -> Unit,
-    viewModel: com.musika.app.viewmodels.SplashViewModel = hiltViewModel(),
+    onTimeout: () -> Unit
 ) {
     val scale = remember { Animatable(0.5f) }
     val alpha = remember { Animatable(0f) }
@@ -50,11 +50,7 @@ fun SplashScreen(
                 animationSpec = tween(durationMillis = 400)
             )
         }
-        delay(MIN_DISPLAY_MS)
-        val remaining = (MAX_DISPLAY_MS - MIN_DISPLAY_MS).coerceAtLeast(0L)
-        withTimeoutOrNull(remaining) {
-            viewModel.isReady.first { it }
-        }
+        delay(1500) // 1.5 seconds - gives time for app to load smoothly
         onTimeout()
     }
 

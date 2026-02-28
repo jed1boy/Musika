@@ -20,9 +20,6 @@ import com.musika.innertube.models.YouTubeLocale
 import com.musika.kugou.KuGou
 import com.musika.app.constants.*
 import com.musika.app.di.ApplicationScope
-import com.musika.app.di.DefaultOkHttpClient
-import com.musika.app.di.NoProxyOkHttpClient
-import com.musika.app.di.OkHttpClientProvider
 import com.musika.app.extensions.toEnum
 import com.musika.app.extensions.toInetSocketAddress
 import com.musika.app.utils.CrashHandler
@@ -42,7 +39,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.Credentials
-import okhttp3.OkHttpClient
 import timber.log.Timber
 import java.net.Authenticator
 import java.net.PasswordAuthentication
@@ -57,18 +53,8 @@ class App : Application(), SingletonImageLoader.Factory {
     @ApplicationScope
     lateinit var applicationScope: CoroutineScope
 
-    @Inject
-    @DefaultOkHttpClient
-    lateinit var defaultOkHttpClient: OkHttpClient
-
-    @Inject
-    @NoProxyOkHttpClient
-    lateinit var noProxyOkHttpClient: OkHttpClient
-
     override fun onCreate() {
         super.onCreate()
-        OkHttpClientProvider.default = defaultOkHttpClient
-        OkHttpClientProvider.noProxy = noProxyOkHttpClient
         Thread.setDefaultUncaughtExceptionHandler(CrashHandler(applicationContext))
         Timber.plant(Timber.DebugTree())
 

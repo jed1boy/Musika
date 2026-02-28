@@ -1,13 +1,14 @@
 package com.musika.app.api
 
 import com.musika.app.BuildConfig
-import com.musika.app.di.OkHttpClientProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody
+import okhttp3.OkHttpClient
 import okhttp3.Request
 import timber.log.Timber
 import java.security.MessageDigest
+import java.util.concurrent.TimeUnit
 
 /**
  * Last.fm API client for scrobbling.
@@ -18,7 +19,10 @@ object LastFmApi {
     private const val BASE_URL = "https://ws.audioscrobbler.com/2.0/"
     private const val TAG = "LastFmApi"
 
-    private val client get() = OkHttpClientProvider.noProxy
+    private val client = OkHttpClient.Builder()
+        .connectTimeout(15, TimeUnit.SECONDS)
+        .readTimeout(15, TimeUnit.SECONDS)
+        .build()
 
     val isConfigured: Boolean
         get() = BuildConfig.LASTFM_API_KEY.isNotEmpty() && BuildConfig.LASTFM_API_SECRET.isNotEmpty()

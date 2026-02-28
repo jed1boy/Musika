@@ -1,4 +1,4 @@
-package com.musika.app.viewmodels
+﻿package com.musika.app.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -154,13 +154,18 @@ constructor(
                     .filter {
                         it.album.songCount == 0
                     }.forEach { album ->
-                        YouTube.album(album.id)
+                        YouTube
+                            .album(album.id)
                             .onSuccess { albumPage ->
-                                database.update(album.album, albumPage, album.artists)
+                                database.query {
+                                    update(album.album, albumPage, album.artists)
+                                }
                             }.onFailure {
                                 reportException(it)
                                 if (it.message?.contains("NOT_FOUND") == true) {
-                                    database.query { delete(album.album) }
+                                    database.query {
+                                        delete(album.album)
+                                    }
                                 }
                             }
                     }

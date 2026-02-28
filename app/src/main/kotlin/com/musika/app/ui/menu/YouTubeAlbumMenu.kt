@@ -1,4 +1,4 @@
-package com.musika.app.ui.menu
+﻿package com.musika.app.ui.menu
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -99,7 +99,9 @@ fun YouTubeAlbumMenu(
                 YouTube
                     .album(albumItem.id)
                     .onSuccess { albumPage ->
-                        database.insert(albumPage)
+                        database.transaction {
+                            insert(albumPage)
+                        }
                     }.onFailure {
                         reportException(it)
                     }
@@ -179,7 +181,7 @@ fun YouTubeAlbumMenu(
                 )
             }
 
-            items(notAddedList, key = { it.id }) { song ->
+            items(notAddedList) { song ->
                 SongListItem(song = song)
             }
         }

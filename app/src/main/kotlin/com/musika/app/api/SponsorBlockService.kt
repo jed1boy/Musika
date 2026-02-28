@@ -1,13 +1,17 @@
-package com.musika.app.api
+﻿package com.musika.app.api
 
-import com.musika.app.di.OkHttpClientProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
+import java.util.concurrent.TimeUnit
 
 object SponsorBlockService {
-    private val client get() = OkHttpClientProvider.noProxy
+    private val client = OkHttpClient.Builder()
+        .connectTimeout(10, TimeUnit.SECONDS)
+        .readTimeout(10, TimeUnit.SECONDS)
+        .build()
 
     data class Segment(
         val category: String,
