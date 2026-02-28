@@ -1,5 +1,6 @@
 package com.musika.app.dlna
 
+import com.musika.app.di.DLNAPort
 import com.musika.app.di.NoProxyOkHttpClient
 import timber.log.Timber
 import fi.iki.elonen.NanoHTTPD
@@ -10,7 +11,7 @@ import javax.inject.Inject
 
 class DLNAMediaServer @Inject constructor(
     @NoProxyOkHttpClient private val httpClient: OkHttpClient,
-    private val port: Int = 8080,
+    @DLNAPort private val port: Int,
 ) : NanoHTTPD(port) {
     
     override fun serve(session: IHTTPSession): Response {

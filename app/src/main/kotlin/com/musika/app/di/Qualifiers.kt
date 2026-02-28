@@ -21,3 +21,7 @@ annotation class DefaultOkHttpClient
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class NoProxyOkHttpClient
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class DLNAPort

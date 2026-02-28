@@ -48,6 +48,11 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    @DLNAPort
+    fun provideDLNAPort(): Int = 8080
+
+    @Provides
+    @Singleton
     @NoProxyOkHttpClient
     fun provideNoProxyOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
         .connectTimeout(15, TimeUnit.SECONDS)
