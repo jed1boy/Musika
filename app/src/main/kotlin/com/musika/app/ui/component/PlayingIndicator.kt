@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.component
+package com.musika.app.ui.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.musika.app.R
 import com.musika.app.constants.ThumbnailCornerRadius
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -50,7 +51,7 @@ fun PlayingIndicator(
         delay(300)
         animatables.forEach { animatable ->
             launch {
-                while (true) {
+                while (isActive) {
                     animatable.animateTo(Random.nextFloat() * 0.9f + 0.1f)
                     delay(50)
                 }

@@ -106,7 +106,7 @@ class MusicDatabase(
         SortedSongAlbumMap::class,
         PlaylistSongMapPreview::class,
     ],
-    version = 26,
+    version = 27,
     exportSchema = false,
 )
 @TypeConverters(Converters::class)
@@ -122,7 +122,7 @@ abstract class InternalDatabase : RoomDatabase() {
                 delegate =
                 Room
                     .databaseBuilder(context, InternalDatabase::class.java, DB_NAME)
-                    .addMigrations(MIGRATION_1_2, MIGRATION_25_26)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_25_26, MIGRATION_26_27)
                     .fallbackToDestructiveMigrationOnDowngrade(dropAllTables = true)
                     .build(),
             )
@@ -522,3 +522,20 @@ class Migration25To26 : AutoMigrationSpec {
         db.execSQL("ALTER TABLE song ADD COLUMN localPath TEXT DEFAULT NULL")
     }
 }
+
+val MIGRATION_26_27 =
+    object : Migration(26, 27) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_song_inLibrary` ON `song` (`inLibrary`)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_song_liked` ON `song` (`liked`)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_song_totalPlayTime` ON `song` (`totalPlayTime`)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_song_isLocal` ON `song` (`isLocal`)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_song_isDownloaded` ON `song` (`isDownloaded`)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_song_title` ON `song` (`title`)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_event_timestamp` ON `event` (`timestamp`)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_album_bookmarkedAt` ON `album` (`bookmarkedAt`)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_album_title` ON `album` (`title`)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_artist_bookmarkedAt` ON `artist` (`bookmarkedAt`)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_artist_name` ON `artist` (`name`)")
+        }
+    }

@@ -585,7 +585,7 @@ fun Queue(
         val mutableQueueWindows = remember { mutableStateListOf<Timeline.Window>() }
         val queueLength =
             remember(queueWindows) {
-                queueWindows.sumOf { it.mediaItem.metadata!!.duration }
+                queueWindows.sumOf { it.mediaItem.metadata?.duration ?: 0 }
             }
 
         val coroutineScope = rememberCoroutineScope()
@@ -682,11 +682,11 @@ fun Queue(
 
                 itemsIndexed(
                     items = mutableQueueWindows,
-                    key = { _, item -> item.uid.hashCode() },
+                    key = { _, item -> item.uid },
                 ) { index, window ->
                     ReorderableItem(
                         state = reorderableState,
-                        key = window.uid.hashCode(),
+                        key = window.uid,
                     ) {
                         val currentItem by rememberUpdatedState(window)
                         val dismissBoxState =

@@ -82,7 +82,9 @@ import com.musika.app.extensions.togglePlayPause
 import com.musika.app.models.MediaMetadata
 import com.musika.app.utils.rememberPreference
 import com.musika.app.ui.theme.PlayerColorExtractor
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 import androidx.compose.foundation.clickable
@@ -176,16 +178,19 @@ private fun NewMiniPlayer(
                     .build()
                 val result = context.imageLoader.execute(request)
                 result.image?.let { image ->
-                    val bitmap = image.toBitmap()
-                    val palette = Palette.from(bitmap)
-                        .maximumColorCount(32)
-                        .generate()
-                    gradientColors = PlayerColorExtractor.extractGradientColors(
-                        palette = palette,
-                        fallbackColor = Color.Black.toArgb()
-                    )
+                    val colors = withContext(Dispatchers.Default) {
+                        val bitmap = image.toBitmap()
+                        val palette = Palette.from(bitmap)
+                            .maximumColorCount(24)
+                            .generate()
+                        PlayerColorExtractor.extractGradientColors(
+                            palette = palette,
+                            fallbackColor = Color.Black.toArgb()
+                        )
+                    }
+                    gradientColors = colors
                 }
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 gradientColors = emptyList()
             }
         }
@@ -195,7 +200,6 @@ private fun NewMiniPlayer(
     var dragStartTime by remember { mutableLongStateOf(0L) }
     var totalDragDistance by remember { mutableFloatStateOf(0f) }
 
-    // Optimized animation spec for smoother, more responsive feel
     val animationSpec = spring<Float>(
         dampingRatio = Spring.DampingRatioNoBouncy,
         stiffness = Spring.StiffnessHigh,
@@ -603,16 +607,19 @@ private fun LegacyMiniPlayer(
                     .build()
                 val result = context.imageLoader.execute(request)
                 result.image?.let { image ->
-                    val bitmap = image.toBitmap()
-                    val palette = Palette.from(bitmap)
-                        .maximumColorCount(32)
-                        .generate()
-                    gradientColors = PlayerColorExtractor.extractGradientColors(
-                        palette = palette,
-                        fallbackColor = Color.Black.toArgb()
-                    )
+                    val colors = withContext(Dispatchers.Default) {
+                        val bitmap = image.toBitmap()
+                        val palette = Palette.from(bitmap)
+                            .maximumColorCount(24)
+                            .generate()
+                        PlayerColorExtractor.extractGradientColors(
+                            palette = palette,
+                            fallbackColor = Color.Black.toArgb()
+                        )
+                    }
+                    gradientColors = colors
                 }
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 gradientColors = emptyList()
             }
         }

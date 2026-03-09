@@ -202,7 +202,9 @@ class MusicService :
     var queueTitle: String? = null
 
     val currentMediaMetadata = MutableStateFlow<com.musika.app.models.MediaMetadata?>(null)
-    private val albumArtCache = mutableMapOf<String, String>()
+    private val albumArtCache = object : LinkedHashMap<String, String>(32, 0.75f, true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, String>?) = size > 100
+    }
     val albumArtOverride = MutableStateFlow<String?>(null)
     private val currentSong =
         currentMediaMetadata
