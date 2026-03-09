@@ -48,6 +48,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableFloatStateOf
@@ -483,8 +484,8 @@ fun AlbumListItem(
 
         val allDownloads by downloadUtil.downloads.collectAsState()
 
-        val downloadState by remember(songs, allDownloads) {
-            mutableIntStateOf(
+        val downloadState by remember {
+            derivedStateOf {
                 if (songs.isEmpty()) {
                     Download.STATE_STOPPED
                 } else {
@@ -494,7 +495,7 @@ fun AlbumListItem(
                         else -> Download.STATE_STOPPED
                     }
                 }
-            )
+            }
         }
 
         if (showLikedIcon && album.album.bookmarkedAt != null) {
@@ -547,8 +548,8 @@ fun AlbumGridItem(
 
         val allDownloads by downloadUtil.downloads.collectAsState()
 
-        val downloadState by remember(songs, allDownloads) {
-            mutableIntStateOf(
+        val downloadState by remember {
+            derivedStateOf {
                 if (songs.isEmpty()) {
                     Download.STATE_STOPPED
                 } else {
@@ -558,7 +559,7 @@ fun AlbumGridItem(
                         else -> Download.STATE_STOPPED
                     }
                 }
-            )
+            }
         }
 
         if (album.album.bookmarkedAt != null) {

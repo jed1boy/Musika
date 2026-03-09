@@ -1,8 +1,9 @@
-﻿package com.musika.app.db.entities
+package com.musika.app.db.entities
 
 import androidx.compose.runtime.Immutable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.musika.innertube.YouTube
 import kotlinx.coroutines.CoroutineScope
@@ -13,7 +14,13 @@ import org.apache.commons.lang3.RandomStringUtils
 import java.time.LocalDateTime
 
 @Immutable
-@Entity(tableName = "artist")
+@Entity(
+    tableName = "artist",
+    indices = [
+        Index(value = ["bookmarkedAt"]),
+        Index(value = ["name"]),
+    ]
+)
 data class ArtistEntity(
     @PrimaryKey val id: String,
     val name: String,

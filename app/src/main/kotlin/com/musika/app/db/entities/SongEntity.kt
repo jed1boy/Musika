@@ -1,4 +1,4 @@
-﻿package com.musika.app.db.entities
+package com.musika.app.db.entities
 
 import androidx.compose.runtime.Immutable
 import androidx.room.ColumnInfo
@@ -16,9 +16,13 @@ import java.time.LocalDateTime
 @Entity(
     tableName = "song",
     indices = [
-        Index(
-            value = ["albumId"]
-        )
+        Index(value = ["albumId"]),
+        Index(value = ["inLibrary"]),
+        Index(value = ["liked"]),
+        Index(value = ["totalPlayTime"]),
+        Index(value = ["isLocal"]),
+        Index(value = ["isDownloaded"]),
+        Index(value = ["title"]),
     ]
 )
 data class SongEntity(

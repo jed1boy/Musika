@@ -384,8 +384,9 @@ fun AlbumScreen(
                         OutlinedButton(
                             onClick = {
                                 playerConnection.service.getAutomix(playlistId)
+                                val shuffled = albumWithSongs.songs.shuffled()
                                 playerConnection.playQueue(
-                                    LocalAlbumRadio(albumWithSongs.copy(songs = albumWithSongs.songs.shuffled())),
+                                    LocalAlbumRadio(albumWithSongs.copy(songs = shuffled)),
                                 )
                             },
                             contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
