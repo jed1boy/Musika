@@ -5,6 +5,13 @@ All notable changes to Echo Music will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.4] - 2026-03-09
+- **Performance**: Added database indices on song, event, album, and artist tables for faster library queries and scrolling.
+- **Performance**: Fixed recomposition issues in scroll detection, album download badges, home screen song lists, and library screens.
+- **Performance**: Moved palette color extraction off the main thread in the mini player.
+- **Performance**: Fixed queue list key collisions and unbounded album art cache in the music service.
+- **Performance**: Fixed playing indicator animation loop and album shuffle recomputation.
+
 ## [3.3.3] - 2026-01-06
 - **Local Media Scanner**: Added ability to scan and import locally stored music files via the Content settings.
 - **Manual Lyrics Fix**: Fixed an issue where manually selected lyrics were overwritten by auto-fetched lyrics.
