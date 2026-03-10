@@ -1,20 +1,27 @@
-﻿package com.musika.app.lyrics
+package com.musika.app.lyrics
 
 import android.content.Context
 import com.musika.app.constants.EnableLrcLibKey
 import com.musika.app.lyrics.lrclib.LrcLibService
 import com.musika.app.utils.dataStore
 import com.musika.app.utils.get
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 object LrcLibLyricsProvider : LyricsProvider {
     override val name = "LrcLib"
-    
-    // Explicitly using the base URL from the service implementation plan
+
+    private val httpClient = OkHttpClient.Builder()
+        .connectTimeout(5, TimeUnit.SECONDS)
+        .readTimeout(8, TimeUnit.SECONDS)
+        .build()
+
     private val service = Retrofit.Builder()
         .baseUrl("https://lrclib.net/")
+        .client(httpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(LrcLibService::class.java)

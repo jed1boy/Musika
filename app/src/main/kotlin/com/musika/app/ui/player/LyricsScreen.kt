@@ -84,7 +84,6 @@ import com.musika.app.constants.PlayerBackgroundStyle
 import com.musika.app.constants.PlayerBackgroundStyleKey
 import com.musika.app.constants.SliderStyle
 import com.musika.app.constants.SliderStyleKey
-import com.musika.app.db.entities.LyricsEntity
 import com.musika.app.extensions.togglePlayPause
 import com.musika.app.extensions.toggleRepeatMode
 import com.musika.app.models.MediaMetadata
@@ -98,14 +97,12 @@ import com.musika.app.ui.menu.LyricsMenu
 import com.musika.app.ui.theme.PlayerColorExtractor
 import com.musika.app.ui.theme.PlayerSliderColors
 import com.musika.app.utils.rememberEnumPreference
-import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.musika.app.utils.makeTimeString
-import kotlinx.coroutines.flow.first
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -141,30 +138,6 @@ fun LyricsScreen(
     val currentLyrics by playerConnection.currentLyrics.collectAsState(initial = null)
     val currentSong by playerConnection.currentSong.collectAsState(initial = null)
 
-
-    LaunchedEffect(mediaMetadata.id, currentLyrics) {
-        if (currentLyrics == null) {
-            withContext(Dispatchers.IO) {
-                try {
-                    val entryPoint = EntryPointAccessors.fromApplication(
-                        context.applicationContext,
-                        com.musika.app.di.LyricsHelperEntryPoint::class.java
-                    )
-                    val lyricsHelper = entryPoint.lyricsHelper()
-                    val lyrics = lyricsHelper.getLyrics(mediaMetadata)
-                    
-                    // Check if lyrics were added manually while we were fetching
-                    if (database.lyrics(mediaMetadata.id).first() == null) {
-                        database.query {
-                            upsert(LyricsEntity(mediaMetadata.id, lyrics))
-                        }
-                    }
-                } catch (e: Exception) {
-                    // Handle error
-                }
-            }
-        }
-    }
 
     var position by remember { mutableLongStateOf(0L) }
     var duration by remember { mutableLongStateOf(C.TIME_UNSET) }

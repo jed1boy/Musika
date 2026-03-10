@@ -1,22 +1,30 @@
-﻿package com.musika.app.lyrics.simpmusic
+package com.musika.app.lyrics.simpmusic
 
 import android.content.Context
 import com.musika.app.constants.EnableSimpMusicKey
 import com.musika.app.lyrics.LyricsProvider
 import com.musika.app.utils.dataStore
 import com.musika.app.utils.get
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 object SimpMusicLyricsProvider : LyricsProvider {
     override val name = "SimpMusic"
 
     private const val BASE_URL = "https://api-lyrics.simpmusic.org/"
 
+    private val httpClient = OkHttpClient.Builder()
+        .connectTimeout(5, TimeUnit.SECONDS)
+        .readTimeout(8, TimeUnit.SECONDS)
+        .build()
+
     private val service: SimpMusicService by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(httpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(SimpMusicService::class.java)

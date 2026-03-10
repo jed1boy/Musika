@@ -1,4 +1,4 @@
-﻿package com.musika.kugou
+package com.musika.kugou
 
 import com.musika.kugou.models.DownloadLyricsResponse
 import com.musika.kugou.models.Keyword
@@ -44,9 +44,9 @@ private val client = HttpClient {
     }
 
     install(HttpTimeout) {
-        requestTimeoutMillis = 30000
-        connectTimeoutMillis = 15000
-        socketTimeoutMillis = 30000
+        requestTimeoutMillis = 10000
+        connectTimeoutMillis = 5000
+        socketTimeoutMillis = 8000
     }
 
     defaultRequest {

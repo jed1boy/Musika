@@ -13,17 +13,18 @@ import com.musika.app.utils.dataStore
 import com.musika.app.utils.reportException
 import com.musika.app.utils.NetworkConnectivityObserver
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withTimeout
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 
 class LyricsHelper
@@ -87,58 +88,78 @@ constructor(
             }
 
     private val cache = LruCache<String, List<LyricsResult>>(MAX_CACHE_SIZE)
+    private val inFlightRequests = ConcurrentHashMap<String, Deferred<String>>()
     private var currentLyricsJob: Job? = null
 
     suspend fun getLyrics(mediaMetadata: MediaMetadata): String {
-        currentLyricsJob?.cancel()
-
         val cached = cache.get(mediaMetadata.id)?.firstOrNull()
-        if (cached != null) {
-            return cached.lyrics
+        if (cached != null) return cached.lyrics
+
+        inFlightRequests[mediaMetadata.id]?.let { existing ->
+            return try { existing.await() } catch (_: Exception) { LYRICS_NOT_FOUND }
         }
 
-        // Check network connectivity before making network requests
-        // Use synchronous check as fallback if flow doesn't emit
         val isNetworkAvailable = try {
             networkConnectivity.isCurrentlyConnected()
-        } catch (e: Exception) {
-            // If network check fails, try to proceed anyway
-            true
-        }
-        
-        if (!isNetworkAvailable) {
-            // Still proceed but return not found to avoid hanging
-            return LYRICS_NOT_FOUND
-        }
+        } catch (_: Exception) { true }
 
-        val scope = CoroutineScope(SupervisorJob())
-        val deferred = scope.async {
-            for (provider in lyricsProviders) {
-                if (provider.isEnabled(context)) {
-                    try {
-                        val result = provider.getLyrics(
-                            mediaMetadata.id,
-                            mediaMetadata.title,
-                            mediaMetadata.artists.joinToString { it.name },
-                            mediaMetadata.duration,
-                        )
-                        result.onSuccess { lyrics ->
-                            return@async lyrics
-                        }.onFailure {
-                            reportException(it)
-                        }
-                    } catch (e: Exception) {
-                        // Catch network-related exceptions like UnresolvedAddressException
-                        reportException(e)
-                    }
-                }
+        if (!isNetworkAvailable) return LYRICS_NOT_FOUND
+
+        val deferred = CompletableDeferred<String>()
+        inFlightRequests[mediaMetadata.id] = deferred
+
+        try {
+            val lyrics = raceProviders(mediaMetadata)
+            if (lyrics != LYRICS_NOT_FOUND) {
+                cache.put(mediaMetadata.id, listOf(LyricsResult("", lyrics)))
             }
-            return@async LYRICS_NOT_FOUND
+            deferred.complete(lyrics)
+            return lyrics
+        } catch (e: Exception) {
+            deferred.completeExceptionally(e)
+            return LYRICS_NOT_FOUND
+        } finally {
+            inFlightRequests.remove(mediaMetadata.id)
         }
+    }
 
-        val lyrics = deferred.await()
-        scope.cancel()
-        return lyrics
+    private suspend fun raceProviders(mediaMetadata: MediaMetadata): String {
+        val enabledProviders = lyricsProviders.filter { it.isEnabled(context) }
+        if (enabledProviders.isEmpty()) return LYRICS_NOT_FOUND
+
+        val id = mediaMetadata.id
+        val title = mediaMetadata.title
+        val artist = mediaMetadata.artists.joinToString { it.name }
+        val duration = mediaMetadata.duration
+
+        return coroutineScope {
+            val result = CompletableDeferred<String>()
+            val jobs = mutableListOf<Job>()
+
+            enabledProviders.forEachIndexed { index, provider ->
+                val job = launch {
+                    if (index > 0) delay(index * STAGGER_DELAY_MS)
+                    if (result.isCompleted) return@launch
+                    try {
+                        withTimeout(PER_PROVIDER_TIMEOUT_MS) {
+                            provider.getLyrics(id, title, artist, duration)
+                                .onSuccess { lyrics ->
+                                    result.complete(lyrics)
+                                }
+                                .onFailure { reportException(it) }
+                        }
+                    } catch (_: Exception) { }
+                }
+                jobs += job
+            }
+
+            val lyrics = try {
+                withTimeout(TOTAL_TIMEOUT_MS) { result.await() }
+            } catch (_: Exception) { LYRICS_NOT_FOUND }
+
+            jobs.forEach { it.cancel() }
+            lyrics
+        }
     }
 
     suspend fun getAllLyrics(
@@ -152,25 +173,15 @@ constructor(
 
         val cacheKey = "$songArtists-$songTitle".replace(" ", "")
         cache.get(cacheKey)?.let { results ->
-            results.forEach {
-                callback(it)
-            }
+            results.forEach { callback(it) }
             return
         }
 
-        // Check network connectivity before making network requests
-        // Use synchronous check as fallback if flow doesn't emit
         val isNetworkAvailable = try {
             networkConnectivity.isCurrentlyConnected()
-        } catch (e: Exception) {
-            // If network check fails, try to proceed anyway
-            true
-        }
-        
-        if (!isNetworkAvailable) {
-            // Still try to proceed in case of false negative
-            return
-        }
+        } catch (_: Exception) { true }
+
+        if (!isNetworkAvailable) return
 
         val allResult = mutableListOf<LyricsResult>()
         currentLyricsJob = CoroutineScope(SupervisorJob()).launch {
@@ -183,7 +194,6 @@ constructor(
                             callback(result)
                         }
                     } catch (e: Exception) {
-                        // Catch network-related exceptions like UnresolvedAddressException
                         reportException(e)
                     }
                 }
@@ -200,7 +210,10 @@ constructor(
     }
 
     companion object {
-        private const val MAX_CACHE_SIZE = 3
+        private const val MAX_CACHE_SIZE = 50
+        private const val PER_PROVIDER_TIMEOUT_MS = 8_000L
+        private const val STAGGER_DELAY_MS = 2_000L
+        private const val TOTAL_TIMEOUT_MS = 15_000L
     }
 }
 

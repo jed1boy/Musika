@@ -7,3 +7,6 @@
 - User runs Unix-native CLIs (Turso, bash tools) via WSL; Windows PowerShell lacks winget, turso, and standard Unix utilities. Provide WSL bash commands for CLI tasks and PowerShell syntax for Windows-side operations.
 - Avoid proposing production setups that require paid infrastructure when the user is asking for no-domain/public alternatives; provide practical fallback paths.
 - Keep crash-reporting and observability implementations practical and low-friction for this Android workspace.
+- Do not include "Made-with: Cursor" or similar tool-attribution trailers in git commits.
+- For commit messages, prefer short release-note style (title + concise bullet points); omit version prefixes unless requested.
+- For web UI work, avoid generic bento-grid layouts; prefer editorial/asymmetric designs with strong mobile-first presentation.
