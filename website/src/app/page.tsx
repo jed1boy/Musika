@@ -4,6 +4,7 @@ import { Ticker } from "@/components/Ticker";
 import { SpecsList } from "@/components/SpecsList";
 import { FinalCTA } from "@/components/FinalCTA";
 import { FeatureShowcase } from "@/components/FeatureShowcase";
+import { AnimatedStats } from "@/components/AnimatedStats";
 import { getLatestReleaseApkUrl } from "@/lib/github";
 import { Music, Radio, CloudOff, Mic2 } from "lucide-react";
 import { Metadata } from "next";
@@ -23,7 +24,7 @@ export default async function Home() {
       {/* Dynamic ambient background layer */}
       <div className="absolute top-0 inset-x-0 h-[600px] md:h-[800px] w-full bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-white/[0.06] via-black to-black -z-10 pointer-events-none" />
 
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 py-12 md:py-32 flex flex-col gap-16 md:gap-40">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 py-12 md:py-32 flex flex-col gap-16 md:gap-40 mt-16 md:mt-0">
         
         {/* Editorial Hero: Massive Typography & Asymmetrical CTA */}
         <section className="relative flex flex-col xl:flex-row justify-between items-start xl:items-end gap-10 md:gap-16 pt-4 md:pt-10">
@@ -46,20 +47,7 @@ export default async function Home() {
         <FeatureShowcase />
 
         {/* Feature Row 4 - Floating Statistics/Data points */}
-        <section className="w-full flex flex-col md:flex-row gap-6 md:gap-12 mt-12 md:mt-24 mb-12">
-          <div className="flex-1 bg-white/[0.02] border border-white/10 rounded-[40px] p-10 flex flex-col items-center text-center justify-center min-h-[300px]">
-            <h3 className="text-6xl md:text-8xl font-bold tracking-tighter mb-4">0</h3>
-            <p className="text-xl text-white/50 font-light tracking-wide uppercase">Advertisements</p>
-          </div>
-          <div className="flex-1 bg-white/[0.02] border border-white/10 rounded-[40px] p-10 flex flex-col items-center text-center justify-center min-h-[300px]">
-            <h3 className="text-6xl md:text-8xl font-bold tracking-tighter mb-4">100<span className="text-4xl text-white/30">%</span></h3>
-            <p className="text-xl text-white/50 font-light tracking-wide uppercase">Open Source</p>
-          </div>
-          <div className="flex-1 bg-white/[0.02] border border-white/10 rounded-[40px] p-10 flex flex-col items-center text-center justify-center min-h-[300px]">
-            <h3 className="text-6xl md:text-8xl font-bold tracking-tighter mb-4">∞</h3>
-            <p className="text-xl text-white/50 font-light tracking-wide uppercase">Library Access</p>
-          </div>
-        </section>
+        <AnimatedStats />
 
       </div>
 

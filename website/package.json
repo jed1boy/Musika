@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently \"npx react-grab-cursor\" \"next dev\"",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
@@ -16,7 +16,10 @@
     "react-dom": "19.2.3"
   },
   "devDependencies": {
+    "@react-grab/cursor": "^0.1.27",
+    "concurrently": "^9.1.2",
     "@tailwindcss/postcss": "^4",
+    "react-grab": "^0.1.27",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

@@ -26,7 +26,7 @@ const features = [
   {
     id: "sync",
     title: "Synced Lyrics.",
-    description: "Real-time synchronized lyrics paired with an AI-powered multilingual translation engine. Understand the music, whatever the language.",
+    description: "Real-time synchronized open-source lyrics. Understand the music, whatever the language.",
     icon: Radio,
   }
 ];
@@ -44,7 +44,7 @@ export function FeatureShowcase() {
             <div 
               key={feature.id} 
               className={`flex flex-col border-b border-white/10 overflow-hidden cursor-pointer transition-colors duration-300 ${isActive ? "pb-8" : "pb-6 hover:border-white/30"}`}
-              onClick={() => setActiveFeature(feature.id)}
+              onClick={() => setActiveFeature(isActive ? "" : feature.id)}
             >
               <div className="flex items-center justify-between pt-6 pb-2">
                 <h3 className={`text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight transition-all duration-300 ${isActive ? "text-white" : "text-white/30"}`}>
@@ -100,6 +100,21 @@ export function FeatureShowcase() {
               <f.icon className="w-48 h-48 xl:w-64 xl:h-64 text-white/20 relative z-10" strokeWidth={1} />
             </motion.div>
           ))}
+          {!activeFeature && (
+            <motion.div
+              key="empty-state"
+              initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
+              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+              exit={{ opacity: 0, scale: 1.2, filter: "blur(10px)" }}
+              transition={{ type: "spring", stiffness: 120, damping: 20 }}
+              className="absolute inset-0 flex items-center justify-center"
+            >
+              <div className="absolute inset-0 bg-white/5 blur-[100px] rounded-full scale-50" />
+              <span className="text-[180px] xl:text-[240px] font-bold tracking-tighter text-white/5 relative z-10 select-none leading-none">
+                M.
+              </span>
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
     </div>
