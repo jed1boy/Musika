@@ -1,9 +1,15 @@
 # Changelog
 
-All notable changes to Echo Music will be documented in this file.
+All notable changes to Musika will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.2.3] - 2026-03-10
+
+### Changed
+- Removed legacy fork-owned website references from project docs and templates.
+- Cleaned changelog history by dropping legacy 2.x/3.x entries.
 
 ## [1.2.1] - 2026-03-09
 - **Performance**: Added database indices on song, event, album, and artist tables for faster library queries and scrolling.
@@ -12,88 +18,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Performance**: Fixed queue list key collisions and unbounded album art cache in the music service.
 - **Performance**: Fixed playing indicator animation loop and album shuffle recomputation.
 
-## [3.3.3] - 2026-01-06
-- **Local Media Scanner**: Added ability to scan and import locally stored music files via the Content settings.
-- **Manual Lyrics Fix**: Fixed an issue where manually selected lyrics were overwritten by auto-fetched lyrics.
-
-## [3.1.3] - 2025-11-22
-- Fixed a database migration issue.  
-  The schema was at version 25, but only a **1 → 2** migration was defined.  
-  Any install starting from another version had no valid upgrade path, causing the app to crash during migration.  
-  All required migration steps are now in place so upgrades work correctly across versions.
-
-**Thanks to:** pixelated_buttons and justkev_3611
-
-## [3.1.2] - 2025-11-22
-
-## [3.1.1] - 2025-11-22
-- Video Quality: Added support for upto 1080p playback.
-- DLNA: Introduced DLNA streaming support (suggestion by owenconnor98).
-- Lyrics: Improved layout and performance of lyrics on tablet devices.
-
-## [3.1] - 2025-11-22
-- “Switch to Video” Restored
-The switch-to-video button is back, letting you move to the song’s video with a single tap.
-- Nearby Devices Permission Update
-Added required Wi-Fi and Location permissions to improve nearby device discovery.
-- Google Cast Improvements
-Internal refinements to casting functionality. Thanks to owenconnor98 for the contribution.
-- Music Page Visual Update
-Removed the black background behind the artwork for a cleaner, more consistent look.
-- Redesigned Audio Output Window
-The audio output selector has been refreshed for better clarity.
-- Multi-Account Support
-You can now add and switch between multiple accounts easily. Suggested by job_done.
-- Playback Stability Fix
-Fixed an issue where music stopped playing due to URL expiration.
-- Updated Mini Player
-The mini player now features a modern pill-shaped design.
-
-## [3.0.0] - 2025-11-x
-
-## [2.0.8] - 2025-11-11
-
-## [2.0.1] - 2025-10-22
-
-- Fixed Audio routing features for greater flexibility and control
-- Revamped Library Page
-- Fixed Widgets Layout
-- Major bug fixes improving overall stability
-- Enhanced performance for a smoother, more responsive experience
-
-## [2.0] - 2025-10-20
-
-### Changed
-- **🎯 Streamlined Integration**
-  - Removed Discord RPC integration for cleaner codebase
-  - Removed Last.fm scrobbling integration
-  - Removed Spotify integration references
-  - Focused exclusively on YouTube Music streaming
-
-### Added
-- **🔥 Firebase Analytics & Crashlytics**
-  - Integrated Firebase for better app stability monitoring
-  - Added crash reporting for improved debugging
-  - Privacy-focused analytics implementation
-
-### Improved
-- **📱 Enhanced User Experience**
-  - Cleaner settings interface without external integrations
-  - Simplified app architecture
-  - Better performance with reduced dependencies
-
 ## [1.8.1] - 2025-01-27
 
 ### Changed
 - **🔧 Settings Improvements**
   - Hidden the "Fetch Home Data Limit" setting from the settings screen
-  - Removed the "Buy Me a Coffee" button from the About Echo section
+  - Removed the "Buy Me a Coffee" button from the About section
   - Improved settings UI organization and user experience
 
 ### Fixed
 - **🎨 UI/UX Enhancements**
   - Cleaned up settings interface by removing unused options
-  - Streamlined About Echo section for better user experience
+  - Streamlined About section for better user experience
 
 ## [1.8.0] - 2025-10-12
 
@@ -316,66 +252,6 @@ The mini player now features a modern pill-shaped design.
 - Cross-platform synchronization
 - Enhanced accessibility features
 
-## [2.0.0] - 2025-01-XX
-
-### Added
-- **Comprehensive Documentation**
-  - Complete architecture documentation
-  - Detailed API integration guide
-  - Comprehensive features documentation
-  - Troubleshooting guide for common issues
-  - Development roadmap for future releases
-
-- **Enhanced User Experience**
-  - Improved Material Design 3 implementation
-  - Better typography and visual hierarchy
-  - Enhanced empty state handling
-  - Improved navigation and user flow
-
-- **Advanced Features**
-  - AI-powered song recommendations
-  - Enhanced lyrics support with multiple providers
-  - Improved offline download management
-  - Advanced audio quality settings
-
-### Changed
-- **Documentation Overhaul**
-  - Complete rewrite of README.md with professional structure
-  - Enhanced CONTRIBUTING.md with detailed guidelines
-  - Comprehensive SETUP.md with step-by-step instructions
-  - Updated PRIVACY_POLICY.md with detailed privacy information
-
-- **Code Quality Improvements**
-  - Enhanced error handling and state management
-  - Improved code organization and structure
-  - Better separation of concerns
-  - Enhanced testing coverage
-
-### Fixed
-- **Stability Issues**
-  - Resolved memory leaks and performance issues
-  - Fixed crash scenarios and edge cases
-  - Improved error handling and recovery
-  - Enhanced app stability and reliability
-
-- **UI/UX Issues**
-  - Fixed layout issues and visual inconsistencies
-  - Improved accessibility and usability
-  - Enhanced responsive design
-  - Better dark mode implementation
-
-### Technical Improvements
-- **Architecture Enhancements**
-  - Improved MVVM implementation
-  - Better dependency injection with Koin
-  - Enhanced repository pattern usage
-  - Improved state management with StateFlow
-
-- **Performance Optimizations**
-  - Reduced memory usage and battery consumption
-  - Improved app startup time
-  - Enhanced caching mechanisms
-  - Better network optimization
 
 ## [1.2] - 2024-12-19
 
@@ -424,11 +300,11 @@ The mini player now features a modern pill-shaped design.
     - `labelSmall`: 14sp → 14sp (maintained)
     - Added `headlineSmall`: 20sp
 
-  - **Echo Branding**: Increased "Echo" text size in top app bar (30sp)
+  - **Branding**: Increased app title text size in top app bar (30sp)
   - **Library Filter Buttons**: Updated font size to 18sp to prevent text wrapping
   - **Album Screen**: Added large green play button (72dp) positioned on the right side
   - **About Section**: Changed "Author" to "Modified by" in settings
-  - **Credit Screen**: Updated attribution text to "Modified by iad1tya"
+  - **Credit Screen**: Updated attribution text to "Modified by project maintainer"
 
 - **Widget Improvements**
   - **Song Poster Display**: Fixed widget poster display for YouTube videos and general media
@@ -494,7 +370,7 @@ The mini player now features a modern pill-shaped design.
 
 ## [1.1] - Previous Version
 - Initial fork from SimpMusic
-- Basic Echo Music branding and package name changes
+- Basic app branding and package name changes
 - Initial customizations and modifications
 
 ---
@@ -522,4 +398,4 @@ The mini player now features a modern pill-shaped design.
 
 ---
 
-*This changelog documents all significant changes made to Echo Music v1.2, including new features, bug fixes, and technical improvements.*
+*This changelog documents significant changes made to Musika, including new features, bug fixes, and technical improvements.*

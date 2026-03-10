@@ -1,4 +1,4 @@
-# Build Instructions for Echo Music on M30s
+# Build Instructions for Musika on M30s
 
 ## Device Information
 - **Model**: Samsung SM-M307F (Galaxy M30s)

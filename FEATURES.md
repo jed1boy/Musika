@@ -1,6 +1,6 @@
-# Echo Music - Features Documentation
+# Musika - Features Documentation
 
-This document provides a comprehensive overview of all features available in Echo Music, organized by category and functionality.
+This document provides a comprehensive overview of all features available in Musika, organized by category and functionality.
 
 ## Table of Contents
 
@@ -266,4 +266,4 @@ This document provides a comprehensive overview of all features available in Ech
 
 ---
 
-This features documentation provides a comprehensive overview of all available features in Echo Music. For specific implementation details, refer to the source code and user interface.
+This features documentation provides a comprehensive overview of all available features in Musika. For specific implementation details, refer to the source code and user interface.

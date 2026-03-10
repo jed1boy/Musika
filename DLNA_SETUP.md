@@ -1,10 +1,10 @@
 # DLNA/UPnP Setup Guide
 
-Echo Music now supports streaming to DLNA/UPnP compatible devices on your local network!
+Musika now supports streaming to DLNA/UPnP compatible devices on your local network!
 
 ## What is DLNA/UPnP?
 
-DLNA (Digital Living Network Alliance) and UPnP (Universal Plug and Play) are protocols that allow devices on your network to discover and stream media to each other. This means you can play music from Echo Music on:
+DLNA (Digital Living Network Alliance) and UPnP (Universal Plug and Play) are protocols that allow devices on your network to discover and stream media to each other. This means you can play music from Musika on:
 
 - Smart TVs
 - Network speakers (Sonos, Denon, etc.)
@@ -16,14 +16,14 @@ DLNA (Digital Living Network Alliance) and UPnP (Universal Plug and Play) are pr
 
 1. **Same Network**: Your Android device and DLNA device must be on the same WiFi network
 2. **WiFi Enabled**: WiFi must be enabled on your device
-3. **Permissions**: Echo Music needs WiFi and network permissions (granted automatically)
+3. **Permissions**: Musika needs WiFi and network permissions (granted automatically)
 4. **Compatible Device**: A DLNA/UPnP compatible media renderer on your network
 
 ## How to Use
 
 ### 1. Enable DLNA Discovery
 
-DLNA device discovery starts automatically when you open Echo Music. The app will search for compatible devices on your network.
+DLNA device discovery starts automatically when you open Musika. The app will search for compatible devices on your network.
 
 ### 2. Find DLNA Devices
 
@@ -69,7 +69,7 @@ If you don't see any DLNA devices:
 
 If you have trouble connecting:
 
-1. **Restart App**: Close and reopen Echo Music
+1. **Restart App**: Close and reopen Musika
 2. **Restart Device**: Power cycle your DLNA device
 3. **Network**: Try disconnecting and reconnecting to WiFi
 4. **Distance**: Move closer to your WiFi router for better signal
@@ -120,7 +120,7 @@ Most DLNA devices support:
 - WAV
 - FLAC
 
-Echo Music will automatically transcode if needed for compatibility.
+Musika will automatically transcode if needed for compatibility.
 
 ## Privacy & Security
 
@@ -170,7 +170,7 @@ If you encounter issues or have suggestions:
 | Protocol | UPnP/DLNA | Google Cast |
 | Open Standard | ✅ Yes | ❌ No |
 
-Both protocols are supported in Echo Music, giving you maximum flexibility!
+Both protocols are supported in Musika, giving you maximum flexibility!
 
 ---
 

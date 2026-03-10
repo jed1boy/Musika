@@ -1,6 +1,6 @@
 ---
 name: Question
-about: Ask a question about Echo Music
+about: Ask a question about Musika
 title: '[QUESTION] '
 labels: question
 assignees: ''
@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 ## ❓ Question
-What would you like to know about Echo Music?
+What would you like to know about Musika?
 
 ## 🔍 Context
 Provide any relevant context about your question.

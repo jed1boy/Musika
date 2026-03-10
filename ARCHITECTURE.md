@@ -1,6 +1,6 @@
-# Echo Music - Architecture Documentation
+# Musika - Architecture Documentation
 
-This document provides a comprehensive overview of Echo Music's architecture, design patterns, and technical implementation.
+This document provides a comprehensive overview of Musika's architecture, design patterns, and technical implementation.
 
 ## Table of Contents
 
@@ -16,7 +16,7 @@ This document provides a comprehensive overview of Echo Music's architecture, de
 
 ## Overview
 
-Echo Music follows modern Android development best practices with a modular architecture that promotes maintainability, testability, and scalability. The app is built using the MVVM (Model-View-ViewModel) pattern with Repository pattern for data management.
+Musika follows modern Android development best practices with a modular architecture that promotes maintainability, testability, and scalability. The app is built using the MVVM (Model-View-ViewModel) pattern with Repository pattern for data management.
 
 ### Core Principles
 
@@ -383,4 +383,4 @@ class MusicRepositoryImpl(
 
 ---
 
-This architecture documentation provides a foundation for understanding Echo Music's technical implementation. For specific implementation details, refer to the source code and inline documentation.
+This architecture documentation provides a foundation for understanding Musika's technical implementation. For specific implementation details, refer to the source code and inline documentation.

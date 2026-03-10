@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Create a report to help us improve Echo Music
+about: Create a report to help us improve Musika
 title: '[BUG] '
 labels: bug
 assignees: ''

@@ -1,6 +1,6 @@
-# Echo Music - Development Roadmap
+# Musika - Development Roadmap
 
-There is no fixed roadmap for Echo Music. The app's features and updates are developed based on user demands and requirements. I prioritize community feedback and implement features that our users need most.
+There is no fixed roadmap for Musika. The app's features and updates are developed based on user demands and requirements. I prioritize community feedback and implement features that users need most.
 
 ---
 

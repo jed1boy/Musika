@@ -87,7 +87,7 @@ Download the latest APK from the [Releases Page](https://github.com/jed1boy/Musi
 
 ## Acknowledgments
 
-Musika is a fork of [Echo Music](https://github.com/iad1tya/Echo-Music), which was built on the shoulders of several excellent open-source projects:
+Musika is built on the shoulders of several excellent open-source projects:
 
 | Project | Description |
 |---------|-------------|
