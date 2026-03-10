@@ -60,7 +60,16 @@ Download the latest APK from the [Releases Page](https://github.com/jed1boy/Musi
 3. **Firebase configuration**
    Firebase is required for analytics and reliable imports. See [FIREBASE_SETUP.md](FIREBASE_SETUP.md) for instructions on adding your `google-services.json`.
 
-4. **Build**
+4. **Crash reporting (optional)**
+   Configure the crash report endpoint consumed by the in-app `Send Logs` action:
+   ```bash
+   # gradle.properties (local or global)
+   CRASH_REPORT_ENDPOINT=https://<your-worker-domain>/api/crash-report
+   ```
+   Deploy the ingest worker in [crash-reporter-worker/README.md](crash-reporter-worker/README.md), set Turso secrets, and apply the crash logs migration.
+   To inspect logs, run the local dashboard script on your machine (also documented there).
+
+5. **Build**
    ```bash
    ./gradlew :app:assembleArm64Debug
    # or

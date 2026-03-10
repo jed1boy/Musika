@@ -1,0 +1,9 @@
+- When a plan file is attached, execute the plan exactly as written and do not edit the plan file.
+- Always update existing plan todos during execution, starting with the first todo as in_progress, then progressing to completion.
+- For planned implementation tasks, do not stop early; continue until all listed todos are completed.
+- If the user asks to pull latest commits before a fix, sync safely first (preserve local changes) before making code changes.
+- Keep responses concise and action-oriented when the user asks for setup guidance.
+- For setup questions, prefer copy-paste command sequences over conceptual explanations.
+- User runs Unix-native CLIs (Turso, bash tools) via WSL; Windows PowerShell lacks winget, turso, and standard Unix utilities. Provide WSL bash commands for CLI tasks and PowerShell syntax for Windows-side operations.
+- Avoid proposing production setups that require paid infrastructure when the user is asking for no-domain/public alternatives; provide practical fallback paths.
+- Keep crash-reporting and observability implementations practical and low-friction for this Android workspace.

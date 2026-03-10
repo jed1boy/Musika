@@ -1,4 +1,4 @@
-﻿package com.musika.app.utils
+package com.musika.app.utils
 
 import android.content.Context
 import android.content.Intent
@@ -20,6 +20,8 @@ class CrashHandler(private val context: Context) : Thread.UncaughtExceptionHandl
             val intent = Intent(context, CrashActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 putExtra("stack_trace", stackTrace)
+                putExtra("thread_name", thread.name)
+                putExtra("crash_time_ms", System.currentTimeMillis())
             }
             context.startActivity(intent)
             

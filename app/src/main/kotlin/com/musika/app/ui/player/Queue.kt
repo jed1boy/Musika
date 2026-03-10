@@ -682,11 +682,11 @@ fun Queue(
 
                 itemsIndexed(
                     items = mutableQueueWindows,
-                    key = { _, item -> item.uid },
+                    key = { _, item -> "queue_${item.mediaItem.mediaId}_${item.uid.hashCode()}" },
                 ) { index, window ->
                     ReorderableItem(
                         state = reorderableState,
-                        key = window.uid,
+                        key = "queue_${window.mediaItem.mediaId}_${window.uid.hashCode()}",
                     ) {
                         val currentItem by rememberUpdatedState(window)
                         val dismissBoxState =

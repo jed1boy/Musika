@@ -15,14 +15,16 @@ android {
         applicationId = "com.musika.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 11
-        versionName = "1.2.1"
+        versionCode = 12
+        versionName = "1.2.3"
 
         // Last.fm: add LASTFM_API_KEY and LASTFM_API_SECRET to gradle.properties (register at last.fm/api/account/create)
         val lastFmApiKey = project.findProperty("LASTFM_API_KEY") as? String ?: ""
         val lastFmApiSecret = project.findProperty("LASTFM_API_SECRET") as? String ?: ""
+        val crashReportEndpoint = project.findProperty("CRASH_REPORT_ENDPOINT") as? String ?: ""
         buildConfigField("String", "LASTFM_API_KEY", "\"$lastFmApiKey\"")
         buildConfigField("String", "LASTFM_API_SECRET", "\"$lastFmApiSecret\"")
+        buildConfigField("String", "CRASH_REPORT_ENDPOINT", "\"$crashReportEndpoint\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
