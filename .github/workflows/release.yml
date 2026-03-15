@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -146,12 +148,73 @@ jobs:
       - name: Prepare release body
         if: steps.version_check.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
         run: |
-          git log -1 --pretty=%B > release_body.md
-          PREV=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || true)
+          TAG="${{ steps.tag.outputs.tag }}"
+          PREV=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+
           if [ -n "$PREV" ]; then
-            echo "" >> release_body.md
-            echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREV}...${{ steps.tag.outputs.tag }}" >> release_body.md
+            COMMITS=$(git log "${PREV}..HEAD" --pretty=format:"%s")
+          else
+            COMMITS=$(git log --pretty=format:"%s")
           fi
+
+          FEATURES=""
+          FIXES=""
+          IMPROVEMENTS=""
+          OTHERS=""
+
+          # Version-bump pattern to exclude
+          BUMP_PATTERN="(bump version|increment version|update version|versionCode|versionName)"
+
+          while IFS= read -r line; do
+            [ -z "$line" ] && continue
+            # Skip version-bump commits
+            if echo "$line" | grep -qiE "$BUMP_PATTERN"; then
+              continue
+            fi
+            if echo "$line" | grep -qiE "^feat(\([^)]+\))?!?:"; then
+              msg=$(echo "$line" | sed -E 's/^feat(\([^)]+\))?!?: //')
+              FEATURES="${FEATURES}- ${msg}\n"
+            elif echo "$line" | grep -qiE "^fix(\([^)]+\))?!?:"; then
+              msg=$(echo "$line" | sed -E 's/^fix(\([^)]+\))?!?: //')
+              FIXES="${FIXES}- ${msg}\n"
+            elif echo "$line" | grep -qiE "^(perf|refactor|style)(\([^)]+\))?!?:"; then
+              msg=$(echo "$line" | sed -E 's/^[a-z]+(\([^)]+\))?!?: //')
+              IMPROVEMENTS="${IMPROVEMENTS}- ${msg}\n"
+            else
+              # Strip chore/docs/ci/test prefixes silently, include the message
+              msg=$(echo "$line" | sed -E 's/^(chore|docs|ci|test|build)(\([^)]+\))?!?: //')
+              OTHERS="${OTHERS}- ${msg}\n"
+            fi
+          done <<< "$COMMITS"
+
+          {
+            if [ -n "$FEATURES" ]; then
+              echo "### What's New"
+              printf "%b" "$FEATURES"
+              echo ""
+            fi
+            if [ -n "$FIXES" ]; then
+              echo "### Bug Fixes"
+              printf "%b" "$FIXES"
+              echo ""
+            fi
+            if [ -n "$IMPROVEMENTS" ]; then
+              echo "### Improvements"
+              printf "%b" "$IMPROVEMENTS"
+              echo ""
+            fi
+            if [ -n "$OTHERS" ]; then
+              echo "### Other Changes"
+              printf "%b" "$OTHERS"
+              echo ""
+            fi
+            if [ -n "$PREV" ]; then
+              echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREV}...${TAG}"
+            fi
+          } > release_body.md
+
+          echo "--- Release body preview ---"
+          cat release_body.md
 
       - name: Create GitHub Release
         if: steps.version_check.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
