@@ -1,0 +1,2 @@
+src/components/DevInspector.tsx(182,44): error TS2339: Property 'name' does not exist on type 'ElementSourceInfo'.
+src/components/DevInspector.tsx(323,55): error TS2339: Property 'name' does not exist on type 'ElementSourceInfo'.

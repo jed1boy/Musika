@@ -12,6 +12,7 @@
 - For commit messages, prefer short release-note style (title + concise bullet points); omit version prefixes unless requested.
 - Always generate a markdown changelog/release notes for new app versions and format version releases exactly as `vX.Y.Z`.
 - For web UI work, avoid generic bento-grid layouts; prefer editorial/asymmetric designs with strong mobile-first presentation.
+- Prefer OAuth over manual credential paste for non-technical users.
 
 ## Learned Workspace Facts
 
