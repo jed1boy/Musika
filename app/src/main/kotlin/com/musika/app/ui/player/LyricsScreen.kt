@@ -3,10 +3,6 @@ package com.musika.app.ui.player
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.Crossfade
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -96,6 +92,8 @@ import me.saket.squiggles.SquigglySlider
 import com.musika.app.ui.menu.LyricsMenu
 import com.musika.app.ui.theme.PlayerColorExtractor
 import com.musika.app.ui.theme.PlayerSliderColors
+import com.musika.app.ui.theme.gradientBackgroundContentTransform
+import com.musika.app.ui.theme.musikaReduceMotionPreferred
 import com.musika.app.utils.rememberEnumPreference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -124,6 +122,7 @@ fun LyricsScreen(
         }
     }
     val playerConnection = LocalPlayerConnection.current ?: return
+    val reduceMotion = musikaReduceMotionPreferred()
     val player = playerConnection.player
     val menuState = LocalMenuState.current
     val database = LocalDatabase.current
@@ -221,7 +220,7 @@ fun LyricsScreen(
                     AnimatedContent(
                         targetState = gradientColors,
                         transitionSpec = {
-                            fadeIn(tween(800)).togetherWith(fadeOut(tween(800)))
+                            gradientBackgroundContentTransform(reduceMotion)
                         },
                         label = "gradientBackground"
                     ) { colors ->

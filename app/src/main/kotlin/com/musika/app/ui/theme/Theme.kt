@@ -14,6 +14,7 @@ import androidx.compose.material3.Shapes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.SaverScope
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
@@ -156,6 +157,20 @@ fun MusikaTheme(
         content = content
     )
 }
+
+@Composable
+fun durationMergedSubtitleTextStyle(): TextStyle =
+    MaterialTheme.typography.bodySmall.copy(
+        fontFeatureSettings = "tnum",
+        color = MaterialTheme.colorScheme.secondary,
+    )
+
+@Composable
+fun durationGridMergedSubtitleTextStyle(): TextStyle =
+    MaterialTheme.typography.bodyMedium.copy(
+        fontFeatureSettings = "tnum",
+        color = MaterialTheme.colorScheme.secondary,
+    )
 
 fun Bitmap.extractThemeColor(): Color {
     val colorsToPopulation = Palette.from(this)

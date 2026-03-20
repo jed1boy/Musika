@@ -215,6 +215,9 @@ import com.musika.app.ui.theme.GoogleSansFlex
 import com.musika.app.ui.theme.ColorSaver
 import com.musika.app.ui.theme.DefaultThemeColor
 import com.musika.app.ui.theme.MusikaTheme
+import com.musika.app.ui.theme.ambientModeFadeInSpec
+import com.musika.app.ui.theme.ambientModeFadeOutSpec
+import com.musika.app.ui.theme.musikaReduceMotionPreferred
 import com.musika.app.ui.theme.extractThemeColor
 import com.musika.app.ui.utils.appBarScrollBehavior
 import com.musika.app.ui.utils.backToMain
@@ -695,6 +698,8 @@ MusikaTheme(
                     var openSearchImmediately: Boolean by remember {
                         mutableStateOf(intent?.action == ACTION_SEARCH)
                     }
+
+                    val reduceMotion = musikaReduceMotionPreferred()
 
                     val inSearchScreen = remember(navBackStackEntry) {
                         navBackStackEntry?.destination?.route?.startsWith("search/") == true
@@ -1588,7 +1593,7 @@ NavigationBarItem(
                                         // Enter Transition - smoother with easing
                                         enterTransition = {
                                             if (targetState.destination.route == "ambient_mode") {
-                                                fadeIn(animationSpec = tween(700, easing = LinearEasing))
+                                                fadeIn(animationSpec = ambientModeFadeInSpec(reduceMotion))
                                             } else {
                                                 val currentRouteIndex = navigationItems.indexOfFirst {
                                                     it.route == targetState.destination.route
@@ -1614,7 +1619,7 @@ NavigationBarItem(
                                         // Exit Transition - smoother
                                         exitTransition = {
                                             if (initialState.destination.route == "ambient_mode") {
-                                                fadeOut(animationSpec = tween(700, easing = LinearEasing))
+                                                fadeOut(animationSpec = ambientModeFadeOutSpec(reduceMotion))
                                             } else {
                                                 val currentRouteIndex = navigationItems.indexOfFirst {
                                                     it.route == initialState.destination.route
@@ -1640,7 +1645,7 @@ NavigationBarItem(
                                         // Pop Enter Transition
                                         popEnterTransition = {
                                             if (targetState.destination.route == "ambient_mode") {
-                                                fadeIn(animationSpec = tween(700, easing = LinearEasing))
+                                                fadeIn(animationSpec = ambientModeFadeInSpec(reduceMotion))
                                             } else {
                                                 val currentRouteIndex = navigationItems.indexOfFirst {
                                                     it.route == targetState.destination.route
@@ -1666,7 +1671,7 @@ NavigationBarItem(
                                         // Pop Exit Transition
                                         popExitTransition = {
                                             if (initialState.destination.route == "ambient_mode") {
-                                                fadeOut(animationSpec = tween(700, easing = LinearEasing))
+                                                fadeOut(animationSpec = ambientModeFadeOutSpec(reduceMotion))
                                             } else {
                                                 val currentRouteIndex = navigationItems.indexOfFirst {
                                                     it.route == initialState.destination.route

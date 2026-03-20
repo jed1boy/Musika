@@ -115,6 +115,8 @@ import com.musika.app.ui.theme.extractThemeColor
 import com.musika.app.ui.utils.resize
 import com.musika.app.utils.joinByBullet
 import com.musika.app.utils.makeTimeString
+import com.musika.app.ui.theme.durationGridMergedSubtitleTextStyle
+import com.musika.app.ui.theme.durationMergedSubtitleTextStyle
 import com.musika.app.utils.rememberPreference
 import com.musika.app.utils.reportException
 import kotlinx.coroutines.CoroutineScope
@@ -172,7 +174,12 @@ fun ListItem(
     subtitle = {
         badges()
         if (!subtitle.isNullOrEmpty()) {
-            Text(text = subtitle, color = MaterialTheme.colorScheme.secondary, fontSize = 12.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(
+                text = subtitle,
+                style = durationMergedSubtitleTextStyle(),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
         }
     },
     thumbnailContent = thumbnailContent,
@@ -369,8 +376,7 @@ fun SongGridItem(
                 song.artists.joinToString { it.name },
                 makeTimeString(song.song.duration * 1000L)
             ),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.secondary,
+            style = durationGridMergedSubtitleTextStyle(),
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
         )
@@ -920,8 +926,7 @@ fun YouTubeGridItem(
         if (subtitle != null) {
             Text(
                 text = subtitle,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.secondary,
+                style = durationGridMergedSubtitleTextStyle(),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )

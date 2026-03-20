@@ -57,6 +57,7 @@ import kotlinx.coroutines.launch
 import com.musika.app.LocalPlayerConnection
 import com.musika.app.ui.component.AnimatedGradientBackground
 import com.musika.app.ui.theme.PlayerColorExtractor
+import com.musika.app.ui.theme.musikaReduceMotionPreferred
 import com.musika.app.utils.rememberPreference
 
 import android.provider.Settings
@@ -284,11 +285,11 @@ private fun PermissionDeniedView(onOpenSettings: () -> Unit) {
 
 @Composable
 private fun ListeningView(isListening: Boolean) {
-    // Pulse Animation
+    val reduceMotion = musikaReduceMotionPreferred()
     val infiniteTransition = rememberInfiniteTransition(label = "pulse")
     val scale by infiniteTransition.animateFloat(
         initialValue = 1f,
-        targetValue = 1.3f,
+        targetValue = if (reduceMotion) 1f else 1.3f,
         animationSpec = infiniteRepeatable(
             animation = tween(1500, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Reverse
@@ -296,8 +297,8 @@ private fun ListeningView(isListening: Boolean) {
         label = "scale"
     )
     val alpha by infiniteTransition.animateFloat(
-        initialValue = 0.5f,
-        targetValue = 0.1f,
+        initialValue = if (reduceMotion) 0.35f else 0.5f,
+        targetValue = if (reduceMotion) 0.35f else 0.1f,
         animationSpec = infiniteRepeatable(
             animation = tween(1500, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Reverse

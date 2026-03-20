@@ -132,6 +132,8 @@ import com.musika.app.constants.PlayerButtonsStyle
 import com.musika.app.constants.PlayerButtonsStyleKey
 import com.musika.app.ui.theme.GoogleSansFlex
 import com.musika.app.ui.theme.PlayerColorExtractor
+import com.musika.app.ui.theme.gradientBackgroundContentTransform
+import com.musika.app.ui.theme.musikaReduceMotionPreferred
 import com.musika.app.ui.theme.PlayerSliderColors
 import com.musika.app.constants.PlayerHorizontalPadding
 import com.musika.app.constants.QueuePeekHeight
@@ -175,6 +177,7 @@ fun BottomSheetPlayer(
     val menuState = LocalMenuState.current
     val bottomSheetPageState = LocalBottomSheetPageState.current
     val playerConnection = LocalPlayerConnection.current ?: return
+    val reduceMotion = musikaReduceMotionPreferred()
 
     val (useNewPlayerDesign, onUseNewPlayerDesignChange) = rememberPreference(
         UseNewPlayerDesignKey,
@@ -451,7 +454,7 @@ val defaultGradientColors = listOf(MaterialTheme.colorScheme.surfaceContainer, M
                         AnimatedContent(
                             targetState = gradientColors,
                             transitionSpec = {
-                                fadeIn(tween(800)).togetherWith(fadeOut(tween(800)))
+                                gradientBackgroundContentTransform(reduceMotion)
                             },
                             label = "gradientBackground"
                         ) { colors ->
