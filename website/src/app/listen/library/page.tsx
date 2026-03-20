@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
-import { Loader2, Library } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { AlbumArt } from "@/components/player/AlbumArt";
 import { useAuth } from "@/components/player/AuthProvider";
 import { getLibrary, getPlaylistTracks } from "@/lib/player/api";
 import { usePlayerActions } from "@/components/player/PlayerProvider";
@@ -13,23 +13,20 @@ import { useRouter } from "next/navigation";
 function LibraryCard({ item, onClick }: { item: LibraryItem; onClick: () => void }) {
   return (
     <button
+      type="button"
       onClick={onClick}
-      className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/[0.04] transition-colors w-full text-left"
+      className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/[0.04] transition-colors duration-200 ease-out w-full text-left motion-safe:active:scale-[0.99] motion-reduce:active:scale-100"
     >
-      {item.thumbnail ? (
-        <Image
+      <div className="relative w-14 h-14 shrink-0 rounded-lg overflow-hidden shadow-md shadow-black/30 ring-1 ring-white/[0.08]">
+        <AlbumArt
           src={item.thumbnail}
           alt=""
-          width={56}
-          height={56}
-          unoptimized
-          className="w-14 h-14 rounded-lg object-cover bg-white/5 shrink-0"
+          fill
+          sizes="56px"
+          placeholder="library"
+          className="rounded-lg"
         />
-      ) : (
-        <div className="w-14 h-14 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
-          <Library size={20} className="text-white/20" />
-        </div>
-      )}
+      </div>
       <div className="min-w-0">
         <p className="text-sm font-medium truncate text-white/80">{item.title}</p>
         {item.subtitle && (

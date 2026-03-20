@@ -10,14 +10,61 @@ import {
   type ReactNode,
 } from "react";
 import { AudioEngine } from "@/lib/player/audio-engine";
+import { formatArtists } from "@/lib/player/format-artists";
+import { trackThumbnailUrl } from "@/lib/player/thumbnail-url";
 import { loadState, saveState } from "@/lib/player/persistence";
-import type { Track, QueueItem, RepeatMode } from "@/lib/player/types";
+import type { Artist, Track, QueueItem, RepeatMode } from "@/lib/player/types";
 
 function makeQueueItem(track: Track): QueueItem {
-  return { ...track, queueId: `${track.id}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}` };
+  const artists = Array.isArray(track.artists) ? track.artists : [];
+  return {
+    ...track,
+    artists,
+    queueId: `${track.id}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+  };
 }
 
-interface PlayerActions {
+function sanitizeQueueItem(x: unknown): QueueItem | null {
+  if (!x || typeof x !== "object") return null;
+  const o = x as Record<string, unknown>;
+  if (typeof o.id !== "string" || o.id.length === 0) return null;
+  const artists: Artist[] = Array.isArray(o.artists)
+    ? (o.artists as unknown[]).reduce<Artist[]>((acc, a) => {
+        if (a && typeof a === "object" && typeof (a as { name?: unknown }).name === "string") {
+          const id = (a as { id?: unknown }).id;
+          acc.push({
+            name: (a as { name: string }).name,
+            ...(typeof id === "string" ? { id } : {}),
+          });
+        }
+        return acc;
+      }, [])
+    : [];
+  const queueId =
+    typeof o.queueId === "string" && o.queueId.length > 0
+      ? o.queueId
+      : `${o.id}-${Date.now()}-fix`;
+  return {
+    id: o.id,
+    title: typeof o.title === "string" ? o.title : "",
+    artists,
+    album:
+      o.album && typeof o.album === "object" && typeof (o.album as { name?: unknown }).name === "string"
+        ? {
+            name: (o.album as { name: string }).name,
+            ...(typeof (o.album as { id?: unknown }).id === "string"
+              ? { id: (o.album as { id: string }).id }
+              : {}),
+          }
+        : undefined,
+    duration: typeof o.duration === "number" ? o.duration : undefined,
+    thumbnail: typeof o.thumbnail === "string" ? o.thumbnail : undefined,
+    explicit: typeof o.explicit === "boolean" ? o.explicit : undefined,
+    queueId,
+  };
+}
+
+export interface PlayerActions {
   playTrack: (track: Track) => void;
   playTracks: (tracks: Track[], startIndex?: number) => void;
   addToQueue: (track: Track) => void;
@@ -30,9 +77,10 @@ interface PlayerActions {
   toggleMute: () => void;
   toggleShuffle: () => void;
   cycleRepeat: () => void;
+  clearPlaybackError: () => void;
 }
 
-interface PlayerSnapshot {
+export interface PlayerSnapshot {
   currentTrack: QueueItem | null;
   queue: QueueItem[];
   queueIndex: number;
@@ -44,6 +92,7 @@ interface PlayerSnapshot {
   shuffle: boolean;
   repeat: RepeatMode;
   isLoading: boolean;
+  playbackError: string | null;
 }
 
 const PlayerActionsCtx = createContext<PlayerActions | null>(null);
@@ -59,6 +108,7 @@ const PlayerStateCtx = createContext<() => PlayerSnapshot>(() => ({
   shuffle: false,
   repeat: "off",
   isLoading: false,
+  playbackError: null,
 }));
 const PlayerSubscribeCtx = createContext<(fn: () => void) => () => void>(
   () => () => {}
@@ -76,6 +126,20 @@ export function usePlayerState(): PlayerSnapshot {
   return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
 }
 
+/** Latest snapshot ref updated on every player tick, without re-rendering the caller (for global shortcuts, etc.). */
+export function usePlayerStateRef() {
+  const subscribe = useContext(PlayerSubscribeCtx);
+  const getSnapshot = useContext(PlayerStateCtx);
+  const ref = useRef<PlayerSnapshot>(getSnapshot());
+  useEffect(() => {
+    ref.current = getSnapshot();
+    return subscribe(() => {
+      ref.current = getSnapshot();
+    });
+  }, [subscribe, getSnapshot]);
+  return ref;
+}
+
 export function PlayerProvider({ children }: { children: ReactNode }) {
   const engineRef = useRef<AudioEngine | null>(null);
   const stateRef = useRef<PlayerSnapshot>({
@@ -90,6 +154,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     shuffle: false,
     repeat: "off",
     isLoading: false,
+    playbackError: null,
   });
   const listenersRef = useRef(new Set<() => void>());
   const loadingRef = useRef(false);
@@ -134,15 +199,22 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     engine.setVolume(initialVolume);
 
     if (saved.queue && saved.queue.length > 0) {
-      const idx = saved.queueIndex ?? 0;
-      update({
-        queue: saved.queue,
-        queueIndex: idx,
-        currentTrack: saved.queue[idx] ?? null,
-        volume: initialVolume,
-        shuffle: saved.shuffle ?? false,
-        repeat: saved.repeat ?? "off",
-      });
+      const sanitized = saved.queue
+        .map(sanitizeQueueItem)
+        .filter((q): q is QueueItem => q !== null);
+      if (sanitized.length > 0) {
+        const idx = Math.min(saved.queueIndex ?? 0, sanitized.length - 1);
+        update({
+          queue: sanitized,
+          queueIndex: idx,
+          currentTrack: sanitized[idx] ?? null,
+          volume: initialVolume,
+          shuffle: saved.shuffle ?? false,
+          repeat: saved.repeat ?? "off",
+        });
+      } else {
+        update({ volume: initialVolume });
+      }
     } else {
       update({ volume: initialVolume });
     }
@@ -204,19 +276,37 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     const engine = engineRef.current;
     if (!engine) return;
     loadingRef.current = true;
-    update({ isLoading: true });
+    update({ isLoading: true, playbackError: null });
+    const trackIdAtLoad = track.id;
+    const removeErr = engine.addErrorListenerOnce(() => {
+      if (stateRef.current.currentTrack?.id !== trackIdAtLoad) return;
+      loadingRef.current = false;
+      update({
+        isLoading: false,
+        playbackError: "Could not play this track",
+      });
+    });
     try {
       const proxyUrl = `/api/music/play?id=${encodeURIComponent(track.id)}`;
       await engine.load(proxyUrl);
-      await engine.play();
+      const { autoplayBlocked } = await engine.play();
+      if (autoplayBlocked) {
+        update({
+          playbackError: "Tap play to start audio",
+        });
+      }
+      const art = trackThumbnailUrl(track);
       engine.updateMediaSession({
         title: track.title,
-        artist: track.artists.map((a) => a.name).join(", "),
-        artwork: track.thumbnail,
+        artist: formatArtists(track),
+        artwork: art,
       });
     } catch (err) {
       console.error("Playback failed:", err);
+      const msg = err instanceof Error ? err.message : "Playback failed";
+      update({ playbackError: msg });
     } finally {
+      removeErr();
       loadingRef.current = false;
       update({ isLoading: false });
     }
@@ -274,11 +364,18 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         if (!engine.duration && stateRef.current.currentTrack) {
           loadAndPlay(stateRef.current.currentTrack);
         } else {
-          engine.play();
+          void engine.play().then(({ autoplayBlocked }) => {
+            if (!autoplayBlocked) {
+              update({ playbackError: null });
+            }
+          });
         }
       } else {
         engine.pause();
       }
+    },
+    clearPlaybackError() {
+      update({ playbackError: null });
     },
     next() {
       const s = stateRef.current;

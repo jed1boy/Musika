@@ -30,12 +30,26 @@ export class AudioEngine {
     this.audio.load();
   }
 
-  async play() {
+  /** Resolves when play() succeeds; `autoplayBlocked` if the browser rejected autoplay. */
+  async play(): Promise<{ autoplayBlocked?: boolean }> {
     try {
       await this.audio.play();
-    } catch {
-      /* autoplay blocked — user must interact first */
+      return {};
+    } catch (e) {
+      if (e instanceof DOMException && e.name === "NotAllowedError") {
+        return { autoplayBlocked: true };
+      }
+      return {};
     }
+  }
+
+  /** One-shot listener for media element error (decode/network). */
+  addErrorListenerOnce(fn: () => void) {
+    const wrapped = () => {
+      fn();
+    };
+    this.audio.addEventListener("error", wrapped, { once: true });
+    return () => this.audio.removeEventListener("error", wrapped);
   }
 
   pause() {

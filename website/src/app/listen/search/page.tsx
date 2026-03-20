@@ -53,7 +53,9 @@ function SearchResultsInner({ query }: { query: string }) {
     );
   }
 
-  if (!results || results.tracks.length === 0) {
+  const tracks = results?.tracks ?? [];
+
+  if (tracks.length === 0) {
     return (
       <div className="flex items-center justify-center py-32 text-white/20">
         <p className="text-lg">No results for &ldquo;{query}&rdquo;</p>
@@ -68,10 +70,10 @@ function SearchResultsInner({ query }: { query: string }) {
           Results for &ldquo;{query}&rdquo;
         </h1>
         <p className="text-sm text-white/30">
-          {results.tracks.length} track{results.tracks.length !== 1 ? "s" : ""} found
+          {tracks.length} track{tracks.length !== 1 ? "s" : ""} found
         </p>
       </div>
-      <TrackList tracks={results.tracks} showIndex />
+      <TrackList tracks={tracks} showIndex />
     </div>
   );
 }

@@ -2,8 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { User, LogOut, Heart, Library } from "lucide-react";
+import { AlbumArt } from "@/components/player/AlbumArt";
 import { SearchBar } from "@/components/player/SearchBar";
 import { useAuth } from "@/components/player/AuthProvider";
 
@@ -26,8 +26,9 @@ function AccountChip() {
   if (!status.connected) {
     return (
       <button
+        type="button"
         onClick={signIn}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 text-sm text-white/60 hover:text-white/90 hover:border-white/20 transition-all shrink-0"
+        className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 text-sm text-white/60 hover:text-white/90 hover:border-white/20 transition-all duration-200 ease-out shrink-0 motion-safe:active:scale-[0.98]"
       >
         <User size={16} />
         <span className="hidden sm:inline">Sign in</span>
@@ -38,23 +39,21 @@ function AccountChip() {
   return (
     <div ref={ref} className="relative shrink-0">
       <button
+        type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-2 rounded-full hover:bg-white/5 transition-colors p-1 pr-2"
+        className="flex items-center gap-2 rounded-full hover:bg-white/5 transition-colors duration-200 ease-out p-1 pr-2 motion-safe:active:scale-[0.98] motion-reduce:active:scale-100"
       >
-        {status.thumbnail ? (
-          <Image
+        <div className="relative w-7 h-7 shrink-0 rounded-full overflow-hidden ring-1 ring-white/10">
+          <AlbumArt
             src={status.thumbnail}
             alt=""
-            width={28}
-            height={28}
-            unoptimized
-            className="w-7 h-7 rounded-full object-cover"
+            fill
+            sizes="28px"
+            placeholder="user"
+            className="rounded-full"
+            imgClassName="rounded-full"
           />
-        ) : (
-          <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center">
-            <User size={14} className="text-white/60" />
-          </div>
-        )}
+        </div>
         <span className="text-sm text-white/70 max-w-[120px] truncate hidden sm:block">
           {status.name}
         </span>

@@ -2,21 +2,27 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { Loader2 } from "lucide-react";
+import { AlbumArt } from "./AlbumArt";
 import type { HomeSection, Track, Album, ArtistSummary, PlaylistSummary } from "@/lib/player/types";
+import { formatArtists } from "@/lib/player/format-artists";
+import { normalizeThumbnailUrl, trackThumbnailUrl } from "@/lib/player/thumbnail-url";
 import { getHomeFeed, getPlaylistTracks } from "@/lib/player/api";
 import { TrackRow } from "./TrackRow";
 import { usePlayerActions } from "./PlayerProvider";
 
 type SectionItem = Track | Album | ArtistSummary | PlaylistSummary;
 
+/** Video tracks only — albums also have id/title/artists but carry a watch `playlistId`. */
 function isTrack(item: SectionItem): item is Track {
-  return "id" in item && "artists" in item && "title" in item;
+  if (!("id" in item && "artists" in item && "title" in item)) return false;
+  const pl = "playlistId" in item ? (item as Album).playlistId : undefined;
+  if (typeof pl === "string" && pl.length > 0) return false;
+  return true;
 }
 
 function isAlbum(item: SectionItem): item is Album {
-  return "playlistId" in item && "title" in item && !("artists" in item && "id" in item && "duration" in item);
+  return "playlistId" in item && "title" in item && !("author" in item);
 }
 
 function isPlaylist(item: SectionItem): item is PlaylistSummary {
@@ -29,11 +35,13 @@ function isArtist(item: SectionItem): item is ArtistSummary {
 
 function getCardProps(item: SectionItem) {
   const raw = item as unknown as Record<string, unknown>;
-  const thumb = (raw.thumbnail as string) ?? undefined;
+  const thumb = isTrack(item as SectionItem)
+    ? trackThumbnailUrl(item as Track)
+    : normalizeThumbnailUrl((raw.thumbnail as string) ?? undefined);
   const title = (raw.title as string) ?? (raw.name as string) ?? "";
   let subtitle: string | undefined;
-  if ("artists" in item && Array.isArray(raw.artists)) {
-    subtitle = (raw.artists as { name: string }[]).map((a) => a.name).join(", ");
+  if ("artists" in item) {
+    subtitle = formatArtists(item as Pick<Track, "artists">) || undefined;
   } else if ("author" in item) {
     subtitle = raw.author as string;
   }
@@ -51,19 +59,19 @@ function SectionCard({
 
   return (
     <button
+      type="button"
       onClick={onPlay}
-      className="group flex flex-col gap-2 p-2 rounded-[14px] hover:bg-white/[0.04] transition-colors cursor-pointer w-40 md:w-44 shrink-0 text-left"
+      className="group flex flex-col gap-2.5 p-2 rounded-[14px] hover:bg-white/[0.04] transition-colors duration-200 ease-out cursor-pointer w-40 md:w-44 shrink-0 text-left motion-safe:active:scale-[0.98] motion-reduce:active:scale-100"
     >
-      {thumb && (
-        <Image
+      <div className="relative w-full aspect-square rounded-[12px] overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.45)] ring-1 ring-white/[0.07]">
+        <AlbumArt
           src={thumb}
           alt=""
-          width={176}
-          height={176}
-          unoptimized
-          className="w-full aspect-square rounded-[12px] object-cover bg-white/5"
+          fill
+          sizes="(max-width: 768px) 42vw, 176px"
+          className="rounded-[12px]"
         />
-      )}
+      </div>
       <div className="px-1">
         <p className="text-sm font-medium truncate text-white/80">{title}</p>
         {subtitle && (
@@ -103,31 +111,35 @@ export function HomeFeed() {
 
   const handleCardClick = useCallback(
     async (item: SectionItem) => {
-      if (isTrack(item)) {
-        actions.playTrack(item);
-        return;
-      }
-
       if (isArtist(item)) {
         router.push(`/listen/search?q=${encodeURIComponent(item.name)}`);
         return;
       }
 
-      const id = isAlbum(item)
-        ? item.playlistId ?? item.id
-        : isPlaylist(item)
-          ? item.id
-          : undefined;
-
-      if (!id) return;
-
-      try {
-        const tracks = await getPlaylistTracks(id);
-        if (tracks.length > 0) {
-          actions.playTracks(tracks);
+      if (isPlaylist(item)) {
+        try {
+          const tracks = await getPlaylistTracks(item.id);
+          if (tracks.length > 0) actions.playTracks(tracks);
+        } catch (err) {
+          console.error("Failed to load playlist:", err);
         }
-      } catch (err) {
-        console.error("Failed to load playlist:", err);
+        return;
+      }
+
+      if (isAlbum(item)) {
+        const id = item.playlistId ?? item.id;
+        if (!id) return;
+        try {
+          const tracks = await getPlaylistTracks(id);
+          if (tracks.length > 0) actions.playTracks(tracks);
+        } catch (err) {
+          console.error("Failed to load playlist:", err);
+        }
+        return;
+      }
+
+      if (isTrack(item)) {
+        actions.playTrack(item);
       }
     },
     [actions, router]

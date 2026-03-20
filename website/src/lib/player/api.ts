@@ -11,8 +11,29 @@ import type {
 
 async function get<T>(url: string): Promise<T> {
   const res = await fetch(url);
-  const body: ApiResponse<T> = await res.json();
-  if (!body.success) throw new Error(body.error.message);
+  let body: ApiResponse<T>;
+  try {
+    const text = await res.text();
+    if (!text.trim()) {
+      throw new Error(res.ok ? "Empty response" : `Request failed (${res.status})`);
+    }
+    body = JSON.parse(text) as ApiResponse<T>;
+  } catch (e) {
+    if (e instanceof SyntaxError) {
+      throw new Error(res.ok ? "Invalid response from server" : `Request failed (${res.status})`);
+    }
+    throw e;
+  }
+  if (!body || typeof body !== "object" || !("success" in body)) {
+    throw new Error(res.ok ? "Unexpected response shape" : `Request failed (${res.status})`);
+  }
+  if (!body.success) {
+    const msg =
+      body.error && typeof body.error.message === "string"
+        ? body.error.message
+        : "Request failed";
+    throw new Error(msg);
+  }
   return body.data;
 }
 

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { PlayerProvider } from "@/components/player/PlayerProvider";
 import { AuthProvider } from "@/components/player/AuthProvider";
 import { NowPlayingBar } from "@/components/player/NowPlayingBar";
+import { ListenKeyboardShortcuts } from "@/components/player/ListenKeyboardShortcuts";
 
 export const metadata: Metadata = {
   title: "Musika \u2014 Listen",
@@ -19,6 +20,7 @@ export default function ListenLayout({
         <div className="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black">
           {children}
           <NowPlayingBar />
+          <ListenKeyboardShortcuts />
         </div>
       </PlayerProvider>
     </AuthProvider>
