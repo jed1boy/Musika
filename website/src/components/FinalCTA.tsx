@@ -1,5 +1,3 @@
-import { DownloadButton } from "./DownloadButton";
-
 interface FinalCTAProps {
   apkUrl: string | null;
 }

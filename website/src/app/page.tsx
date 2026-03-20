@@ -6,7 +6,6 @@ import { FinalCTA } from "@/components/FinalCTA";
 import { FeatureShowcase } from "@/components/FeatureShowcase";
 import { AnimatedStats } from "@/components/AnimatedStats";
 import { getLatestReleaseApkUrl } from "@/lib/github";
-import { Music, Radio, CloudOff, Mic2 } from "lucide-react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

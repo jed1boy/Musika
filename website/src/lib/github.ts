@@ -1,3 +1,12 @@
+interface GitHubReleaseAsset {
+  name: string;
+  browser_download_url?: string;
+}
+
+interface GitHubLatestRelease {
+  assets?: GitHubReleaseAsset[];
+}
+
 export async function getLatestReleaseApkUrl(): Promise<string | null> {
   try {
     const res = await fetch("https://api.github.com/repos/jed1boy/Musika/releases/latest", {
@@ -9,11 +18,10 @@ export async function getLatestReleaseApkUrl(): Promise<string | null> {
       return null;
     }
     
-    const data = await res.json();
-    const assets = data.assets || [];
-    
-    // Find the first asset that ends with .apk
-    const apkAsset = assets.find((asset: any) => asset.name.endsWith('.apk'));
+    const data = (await res.json()) as GitHubLatestRelease;
+    const assets = data.assets ?? [];
+
+    const apkAsset = assets.find((asset) => asset.name.endsWith(".apk"));
     
     if (apkAsset && apkAsset.browser_download_url) {
       return apkAsset.browser_download_url;

@@ -16,5 +16,5 @@
 - The Android app does not require users to sign in to listen to music.
 - The Android UI utilizes Google Sans and Google Sans Flex fonts, heavily leveraging Material 3 Expressive design principles.
 - The user is the sole contributor; deprecated or unmaintained directories (e.g., Desktop app components) can be safely removed.
-- The Next.js web app serves marketing at `/` and the browser music player at `/listen`.
+- The Next.js web app serves marketing at `/` (legacy `/listen` URLs redirect home).
 - Android playlist import accepts exported CSV/JSON, matches tracks to YouTube Music via innertube, can write to local playlists and/or the signed-in YouTube Music library, and opens common export-tool sites in the external browser with `ACTION_VIEW` (no in-app Spotify Web API).
