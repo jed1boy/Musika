@@ -1833,7 +1833,7 @@ NavigationBarItem(
             Intent.ACTION_VIEW -> intent.data
             else -> intent.data ?: intent.extras?.getString(Intent.EXTRA_TEXT)?.toUri()
         } ?: return
-        
+
         val coroutineScope = lifecycleScope
 
         when (val path = uri.pathSegments.firstOrNull()) {

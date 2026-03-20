@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.screens
+package com.musika.app.ui.screens
 
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -50,6 +50,7 @@ import com.musika.app.ui.screens.artist.ArtistItemsScreen
 import com.musika.app.ui.screens.artist.ArtistScreen
 import com.musika.app.ui.screens.artist.ArtistSongsScreen
 import com.musika.app.ui.screens.library.LibraryScreen
+import com.musika.app.ui.screens.library.PlaylistImportScreen
 import com.musika.app.ui.player.VideoPlayerScreen
 import com.musika.app.ui.screens.playlist.AutoPlaylistScreen
 import com.musika.app.ui.screens.playlist.LocalPlaylistScreen
@@ -342,6 +343,9 @@ fun NavGraphBuilder.navigationBuilder(
     }
     composable("login") {
         LoginScreen(navController)
+    }
+    composable("playlist_import") {
+        PlaylistImportScreen(navController, scrollBehavior)
     }
     composable(
         route = "video/{videoId}",

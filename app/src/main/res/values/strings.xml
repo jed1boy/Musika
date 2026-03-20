@@ -399,4 +399,36 @@
     <string name="previous">Previous</string>
     <string name="play_pause">Play/Pause</string>
     <string name="next">Next</string>
+
+    <!-- Cross-platform playlist import -->
+    <string name="playlist_import_title">Import from other apps</string>
+    <string name="playlist_import_choose_file">Choose file</string>
+    <string name="playlist_import_file_help">Export a playlist from Spotify, Apple Music, or another service using a tool such as Exportify, Tune My Music, or Soundiiz, then save a CSV or JSON file and open it here. No Spotify developer account or API key is required. Musika matches each row to YouTube Music.</string>
+    <string name="playlist_import_playlist_name">Playlist name</string>
+    <string name="playlist_import_save_local">Save to Musika library</string>
+    <string name="playlist_import_save_ytm">Save to YouTube Music</string>
+    <string name="playlist_import_ytm_existing_hint">Existing YTM playlist (optional): URL or ID, or leave empty to create new</string>
+    <string name="playlist_import_start">Start import</string>
+    <string name="playlist_import_cancel">Cancel import</string>
+    <string name="playlist_import_matching">Matching on YouTube Music…</string>
+    <string name="playlist_import_writing_local">Saving local playlist…</string>
+    <string name="playlist_import_writing_ytm">Updating YouTube Music…</string>
+    <string name="playlist_import_done">Import finished</string>
+    <string name="playlist_import_matched">Matched %1$d tracks</string>
+    <string name="playlist_import_failed_count">Could not match %1$d tracks</string>
+    <string name="playlist_import_open_local">Open local playlist</string>
+    <string name="playlist_import_not_signed_ytm">Sign in to YouTube Music to sync playlists.</string>
+    <string name="playlist_import_no_tracks">No tracks to import.</string>
+    <string name="playlist_import_file_failed">Could not read file.</string>
+    <string name="playlist_import_pick_destination">Choose at least one destination.</string>
+    <string name="playlist_import_ytm_id_invalid">Could not parse YouTube Music playlist URL or ID.</string>
+    <string name="playlist_import_format_hint">CSV: columns like Track Name and Artist Name(s) (Exportify-style). JSON: { \"title\": \"…\", \"tracks\": [ { \"title\", \"artist\" or \"artists\" } ] } or a bare array of tracks.</string>
+    <string name="playlist_import_export_tools">Export tools</string>
+    <string name="playlist_import_link_exportify">Exportify</string>
+    <string name="playlist_import_link_tune_my_music">Tune My Music</string>
+    <string name="playlist_import_link_soundiiz">Soundiiz</string>
+    <string name="playlist_import_open_link_failed">Could not open link. Try opening it in a browser.</string>
+    <string name="url_playlist_export_exportify" translatable="false">https://exportify.net/</string>
+    <string name="url_playlist_export_tune_my_music" translatable="false">https://www.tunemymusic.com/</string>
+    <string name="url_playlist_export_soundiiz" translatable="false">https://soundiiz.com/</string>
 </resources>

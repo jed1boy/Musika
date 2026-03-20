@@ -1,4 +1,4 @@
-﻿package com.musika.app.ui.screens.library
+package com.musika.app.ui.screens.library
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -252,6 +252,15 @@ fun LibraryPlaylistsScreen(
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.secondary,
             )
+
+            IconButton(
+                onClick = { navController.navigate("playlist_import") },
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.playlist_import),
+                    contentDescription = stringResource(R.string.playlist_import_title),
+                )
+            }
 
             IconButton(
                 onClick = {

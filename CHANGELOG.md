@@ -5,6 +5,16 @@ All notable changes to Musika will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.5] - 2026-03-20
+
+### Added
+- Playlist import from CSV or JSON (exported from common playlist tools), with matching to YouTube Music and options to save tracks to local playlists and/or the signed-in YouTube Music library when available.
+- Shortcuts that open popular export and migration sites in the external browser to obtain playlist files before import.
+- Library playlists entry point to the import flow.
+
+### Changed
+- Database: suspend transaction helper used by the import pipeline for consistent writes.
+
 ## [1.2.3] - 2026-03-10
 
 ### Changed

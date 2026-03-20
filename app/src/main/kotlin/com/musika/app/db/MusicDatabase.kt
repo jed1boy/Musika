@@ -69,6 +69,17 @@ class MusicDatabase(
             }
         }
 
+    /**
+     * Runs [block] inside a Room transaction on the IO dispatcher and waits for completion.
+     * Prefer this for flows that must finish before continuing (e.g. playlist import).
+     */
+    suspend fun suspendTransaction(block: MusicDatabase.() -> Unit) =
+        withContext(Dispatchers.IO) {
+            delegate.runInTransaction {
+                block(this@MusicDatabase)
+            }
+        }
+
     suspend fun insert(albumPage: AlbumPage) = withContext(Dispatchers.IO) {
         val existingSongs = albumPage.songs.associate { it.id to getSongById(it.id) }
         transaction { insert(albumPage, existingSongs) }
