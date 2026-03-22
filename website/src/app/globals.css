@@ -45,6 +45,9 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --ease-out-ui: cubic-bezier(0.23, 1, 0.32, 1);
+  --duration-ui: 200ms;
+  --duration-press: 160ms;
 }
 
 body {
@@ -69,6 +72,13 @@ body {
 
 .animate-marquee {
   animation: marquee 20s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+    transform: none;
+  }
 }
 
 :root {
@@ -149,5 +159,55 @@ body {
   }
   html {
     @apply font-sans;
+  }
+}
+
+/* Fine-pointer hover only (no sticky hover on touch) */
+@layer components {
+  @media (hover: hover) and (pointer: fine) {
+    .marketing-nav-pill-github:hover {
+      background-color: rgb(255 255 255 / 0.2);
+    }
+    .marketing-nav-pill-coffee:hover {
+      background-color: rgb(255 221 0 / 0.2);
+    }
+    .marketing-download-btn:hover {
+      background-color: rgb(229 229 229);
+    }
+    .marketing-download-btn:hover .marketing-download-btn-icon-wrap {
+      background-color: rgb(0 0 0 / 0.1);
+    }
+    .marketing-download-btn:hover .marketing-download-btn-arrow {
+      transform: translateX(0.125rem);
+    }
+    .marketing-final-cta-btn:hover {
+      background-color: rgb(38 38 38);
+    }
+    .marketing-ghost-btn:hover {
+      background-color: rgb(255 255 255 / 0.1);
+    }
+    .marketing-llm-tile:hover {
+      background-color: rgb(255 255 255 / 0.08);
+      border-color: rgb(255 255 255 / 0.25);
+    }
+    .marketing-llm-tile:hover .marketing-llm-tile-logo {
+      opacity: 1;
+    }
+    .marketing-llm-tile:hover .marketing-llm-tile-label {
+      color: rgb(255 255 255 / 0.8);
+    }
+    .marketing-feature-row:hover {
+      border-color: rgb(255 255 255 / 0.3);
+    }
+    .marketing-inline-link:hover {
+      color: rgb(255 255 255);
+      text-decoration-color: rgb(255 255 255 / 0.6);
+    }
+    .marketing-subtle-link:hover {
+      color: rgb(255 255 255 / 0.4);
+    }
+    .marketing-stat-block:hover .marketing-stat-label {
+      color: rgb(255 255 255 / 0.7);
+    }
   }
 }

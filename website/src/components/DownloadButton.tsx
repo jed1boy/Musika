@@ -18,7 +18,7 @@ export function DownloadButton({ apkUrl }: DownloadButtonProps) {
     <a
       href={apkUrl || "https://github.com/jed1boy/Musika/releases/latest"}
       onClick={handleClick}
-      className="group relative flex items-center justify-between gap-4 md:gap-6 px-6 md:px-8 py-4 md:py-5 bg-white text-black rounded-[28px] md:rounded-[32px] overflow-hidden hover:bg-neutral-200 active:scale-[0.98] transition-all duration-200 ease-out w-full sm:w-auto"
+      className="marketing-download-btn group relative flex items-center justify-between gap-4 md:gap-6 px-6 md:px-8 py-4 md:py-5 bg-white text-black rounded-[28px] md:rounded-[32px] overflow-hidden active:scale-[0.97] transition-[transform,background-color] duration-200 ease-out-ui w-full sm:w-auto"
     >
       <div className="flex items-center gap-3">
         <Download size={22} strokeWidth={2} className="opacity-80" />
@@ -26,9 +26,13 @@ export function DownloadButton({ apkUrl }: DownloadButtonProps) {
           {apkUrl ? "Download Latest" : "View Releases"}
         </span>
       </div>
-      
-      <div className="w-8 h-8 md:w-10 md:h-10 rounded-[12px] md:rounded-[14px] bg-black/5 flex items-center justify-center group-hover:bg-black/10 transition-colors duration-300 ml-2">
-        <ArrowRight size={18} strokeWidth={2} className="group-hover:translate-x-0.5 transition-transform duration-300" />
+
+      <div className="marketing-download-btn-icon-wrap w-8 h-8 md:w-10 md:h-10 rounded-[12px] md:rounded-[14px] bg-black/5 flex items-center justify-center transition-[transform,background-color] duration-200 ease-out-ui ml-2">
+        <ArrowRight
+          size={18}
+          strokeWidth={2}
+          className="marketing-download-btn-arrow transition-transform duration-200 ease-out-ui"
+        />
       </div>
     </a>
   );

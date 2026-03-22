@@ -11,7 +11,9 @@ export function SpecsList() {
   return (
     <section className="w-full max-w-[1440px] mx-auto px-6 md:px-12 py-24 md:py-40">
       <div className="mb-16 md:mb-24">
-        <h2 className="text-4xl md:text-6xl font-medium tracking-tight mb-6">Built for enthusiasts.</h2>
+        <h2 className="text-4xl md:text-6xl font-medium tracking-tight mb-6 text-balance">
+          Built for enthusiasts.
+        </h2>
         <p className="text-xl md:text-2xl text-white/50 max-w-2xl font-light">
           A comprehensive feature set that rivals premium platforms, built entirely on open-source principles.
         </p>

@@ -1,6 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "svgl.app",
+        pathname: "/library/**",
+      },
+    ],
+  },
   async redirects() {
     return [
       { source: "/listen/search", destination: "/", permanent: true },

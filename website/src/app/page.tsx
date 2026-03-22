@@ -5,6 +5,7 @@ import { SpecsList } from "@/components/SpecsList";
 import { FinalCTA } from "@/components/FinalCTA";
 import { FeatureShowcase } from "@/components/FeatureShowcase";
 import { AnimatedStats } from "@/components/AnimatedStats";
+import { LlmDiscoverPrompt } from "@/components/LlmDiscoverPrompt";
 import { getLatestReleaseApkUrl } from "@/lib/github";
 import { Metadata } from "next";
 
@@ -28,10 +29,10 @@ export default async function Home() {
         {/* Editorial Hero: Massive Typography & Asymmetrical CTA */}
         <section className="relative flex flex-col xl:flex-row justify-between items-start xl:items-end gap-10 md:gap-16 pt-4 md:pt-10">
           <div className="flex-1 w-full max-w-5xl z-10">
-            <h1 className="text-[20vw] sm:text-[16vw] xl:text-[180px] leading-[0.8] md:leading-[0.85] font-semibold tracking-tighter -ml-1 md:-ml-2 xl:-ml-4 text-white">
+            <h1 className="text-[20vw] sm:text-[16vw] xl:text-[180px] leading-[0.8] md:leading-[0.85] font-semibold tracking-tighter -ml-1 md:-ml-2 xl:-ml-4 text-white text-balance">
               MUSIKA
             </h1>
-            <p className="mt-6 md:mt-12 text-xl sm:text-2xl md:text-4xl text-white/50 max-w-2xl font-light tracking-tight leading-snug">
+            <p className="mt-6 md:mt-12 text-xl sm:text-2xl md:text-4xl text-white/50 max-w-2xl font-light tracking-tight leading-snug text-balance">
               The uncompromising, <br className="hidden sm:block" />
               <span className="text-white">ad-free</span> music experience.
             </p>
@@ -47,6 +48,8 @@ export default async function Home() {
 
         {/* Feature Row 4 - Floating Statistics/Data points */}
         <AnimatedStats />
+
+        <LlmDiscoverPrompt />
 
       </div>
 
