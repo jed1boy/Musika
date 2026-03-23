@@ -75,6 +75,7 @@ import com.musika.app.ui.screens.settings.SupporterScreen
 import com.musika.app.ui.screens.settings.SupporterScreen
 import com.musika.app.ui.screens.settings.UpdaterScreen
 import com.musika.app.ui.screens.settings.AiSettings
+import com.musika.app.ui.screens.settings.MusikaAccountScreen
 import com.musika.app.ui.utils.ShowMediaInfo
 import com.musika.app.ui.player.VideoPlayerScreen
 import com.musika.app.utils.rememberEnumPreference
@@ -304,6 +305,9 @@ fun NavGraphBuilder.navigationBuilder(
     }
     composable("settings") {
         SettingsScreen(navController, scrollBehavior, latestVersionName)
+    }
+    composable("settings/musika_account") {
+        MusikaAccountScreen(navController, scrollBehavior)
     }
     composable("wrapped") {
         WrappedScreen(navController)

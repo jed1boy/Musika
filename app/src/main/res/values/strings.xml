@@ -249,6 +249,12 @@
     <string name="music_player">Music Player</string>
 
     <!-- Settings -->
+    <string name="musika_account">Musika account</string>
+    <string name="musika_account_summary">Optional sign-in for future Musika cloud features. This is not YouTube Music login.</string>
+    <string name="musika_sign_in_google">Sign in with Google</string>
+    <string name="musika_sign_out">Sign out of Musika account</string>
+    <string name="musika_auth_not_configured">Musika auth is not configured (set MUSIKA_AUTH_BASE_URL and MUSIKA_GOOGLE_WEB_CLIENT_ID).</string>
+    <string name="musika_signed_in_as">Signed in as %1$s</string>
     <string name="settings">Settings</string>
     <string name="appearance">Appearance</string>
     <string name="theme">Theme</string>

@@ -1,0 +1,23 @@
+name = "musika-auth"
+main = "src/index.ts"
+compatibility_date = "2026-03-10"
+compatibility_flags = ["nodejs_compat"]
+
+# Create DB: wrangler d1 create musika-auth
+# Then paste the generated database_id below.
+[[d1_databases]]
+binding = "DB"
+database_name = "musika-auth"
+database_id = "00000000-0000-0000-0000-000000000001"
+
+[vars]
+# Public URL of this worker (no trailing slash)
+BETTER_AUTH_URL = "http://127.0.0.1:8787"
+# Web OAuth client ID (same as Android MUSIKA_GOOGLE_WEB_CLIENT_ID)
+GOOGLE_CLIENT_ID = ""
+TRUSTED_ORIGINS = ""
+# "true" only for first deploy / local dev; set "false" in production after migrating
+ALLOW_MIGRATE = "true"
+
+# wrangler secret put BETTER_AUTH_SECRET
+# wrangler secret put GOOGLE_CLIENT_SECRET

@@ -5,6 +5,18 @@ All notable changes to Musika will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.7] - 2026-03-23
+
+### Added
+- Optional **Musika account** sign-in under Settings (Google via Credential Manager) backed by a **Better Auth** Cloudflare Worker (`auth-worker/`) with D1, bearer sessions, and `GET /api/me`. Configure `MUSIKA_AUTH_BASE_URL` and `MUSIKA_GOOGLE_WEB_CLIENT_ID` in `gradle.properties` when the worker is deployed.
+- Worker README and `.dev.vars.example` for D1, secrets, Google OAuth redirect, and one-time schema migration.
+
+### Changed
+- `AGENTS.md` and `gradle.properties` comments for auth-related workspace notes.
+
+### Notes
+- YouTube Music sign-in (`LoginScreen` WebView / InnerTube) is unchanged and separate from the Musika account flow.
+
 ## [1.2.5] - 2026-03-20
 
 ### Added

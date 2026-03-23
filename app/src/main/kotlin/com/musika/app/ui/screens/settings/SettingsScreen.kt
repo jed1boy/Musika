@@ -288,6 +288,20 @@ fun SettingsScreen(
             }
         }
 
+        Material3SettingsGroup(
+            title = stringResource(R.string.musika_account),
+            items = listOf(
+                Material3SettingsItem(
+                    icon = painterResource(R.drawable.account),
+                    title = { Text(stringResource(R.string.musika_account)) },
+                    description = { Text(stringResource(R.string.musika_account_summary)) },
+                    onClick = { navController.navigate("settings/musika_account") },
+                ),
+            ),
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
         // User Interface Section
         Material3SettingsGroup(
             title = stringResource(R.string.settings_section_ui),

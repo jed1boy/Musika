@@ -15,16 +15,20 @@ android {
         applicationId = "com.musika.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 15
-        versionName = "1.2.6"
+        versionCode = 16
+        versionName = "1.2.7"
 
         // Last.fm: add LASTFM_API_KEY and LASTFM_API_SECRET to gradle.properties (register at last.fm/api/account/create)
         val lastFmApiKey = project.findProperty("LASTFM_API_KEY") as? String ?: ""
         val lastFmApiSecret = project.findProperty("LASTFM_API_SECRET") as? String ?: ""
         val crashReportEndpoint = project.findProperty("CRASH_REPORT_ENDPOINT") as? String ?: ""
+        val musikaAuthBaseUrl = project.findProperty("MUSIKA_AUTH_BASE_URL") as? String ?: ""
+        val musikaGoogleWebClientId = project.findProperty("MUSIKA_GOOGLE_WEB_CLIENT_ID") as? String ?: ""
         buildConfigField("String", "LASTFM_API_KEY", "\"$lastFmApiKey\"")
         buildConfigField("String", "LASTFM_API_SECRET", "\"$lastFmApiSecret\"")
         buildConfigField("String", "CRASH_REPORT_ENDPOINT", "\"$crashReportEndpoint\"")
+        buildConfigField("String", "MUSIKA_AUTH_BASE_URL", "\"$musikaAuthBaseUrl\"")
+        buildConfigField("String", "MUSIKA_GOOGLE_WEB_CLIENT_ID", "\"$musikaGoogleWebClientId\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -181,6 +185,7 @@ dependencies {
 
     implementation(libs.viewmodel)
     implementation(libs.viewmodel.compose)
+    implementation(libs.lifecycle.runtime.compose)
 
     implementation(libs.material3)
     implementation(libs.palette)
@@ -240,4 +245,9 @@ dependencies {
     implementation(libs.okhttp.logging.interceptor)
 
     implementation(libs.mlkit.language.id)
+
+    implementation(libs.okhttp)
+    implementation(libs.credentials)
+    implementation(libs.credentials.play.services)
+    implementation(libs.googleid)
 }

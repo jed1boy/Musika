@@ -46,6 +46,9 @@ gson = "2.13.2"
 okhttpLogging = "4.12.0"
 composeMaterialIcons = "1.7.8"
 securityCrypto = "1.1.0"
+androidxCredentials = "1.5.0"
+googleIdentityGoogleId = "1.1.1"
+okhttp = "4.12.0"
 
 [libraries]
 annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
@@ -72,6 +75,7 @@ squigglyslider = { module = "me.saket.squigglyslider:squigglyslider", version.re
 
 viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
 
 material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 
@@ -141,7 +145,11 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 retrofit-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 okhttp-logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttpLogging" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
+credentials = { module = "androidx.credentials:credentials", version.ref = "androidxCredentials" }
+credentials-play-services = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "androidxCredentials" }
+googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleIdentityGoogleId" }
 
 [plugins]
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
