@@ -112,13 +112,16 @@ export function LlmDiscoverPrompt() {
       className="w-full flex flex-col gap-8 md:gap-10 py-4 md:py-8 border-t border-white/10"
       aria-labelledby="llm-discover-heading"
     >
-      <div className="max-w-3xl">
+      <div className="max-w-3xl flex flex-col gap-3">
         <h2
           id="llm-discover-heading"
           className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white text-balance"
         >
-          Ask your assistant
+          Want to know Musika?
         </h2>
+        <p className="text-lg md:text-xl text-white/50 font-light leading-snug text-balance max-w-2xl">
+          Open a ready-made question in your favorite AI, or read a short overview here—no sign-up required.
+        </p>
       </div>
 
       <div className="flex flex-col gap-4 md:gap-5">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { CloudOff, Mic2, Radio, ChevronDown, Music } from "lucide-react";
 
@@ -31,8 +31,26 @@ const features = [
   },
 ];
 
+const LG_MEDIA = "(min-width: 1024px)";
+
 export function FeatureShowcase() {
-  const [activeFeature, setActiveFeature] = useState<string>(features[0].id);
+  /** Mobile: start collapsed so the list is scannable; lg+: default first item for the sticky icon panel. */
+  const [activeFeature, setActiveFeature] = useState<string>("");
+
+  useEffect(() => {
+    const media = window.matchMedia(LG_MEDIA);
+    const sync = () => {
+      if (media.matches) {
+        setActiveFeature((id) => (id === "" ? features[0].id : id));
+      } else {
+        setActiveFeature("");
+      }
+    };
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
+
   const reduceMotion = useReducedMotion();
 
   const accordionSpring = reduceMotion

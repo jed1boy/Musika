@@ -49,8 +49,6 @@ export default async function Home() {
         {/* Feature Row 4 - Floating Statistics/Data points */}
         <AnimatedStats />
 
-        <LlmDiscoverPrompt />
-
       </div>
 
       {/* Infinite Scrolling Ticker */}
@@ -58,6 +56,10 @@ export default async function Home() {
 
       {/* Deep Specs Section */}
       <SpecsList />
+
+      <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12">
+        <LlmDiscoverPrompt />
+      </div>
 
       {/* Massive Bottom CTA */}
       <FinalCTA apkUrl={apkUrl} />
